@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# IDE
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Example files
+*.xml
