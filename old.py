@@ -27,7 +27,7 @@ class UtteranceGUI:
         self.origuttLabel.pack()
 
         self.labelText = StringVar()
-        self.utterance = Entry(
+        self.utterance = Text(
             master, textvariable=self.labelText)
         self.utterance.pack(fill=X, expand=True)
         self.utterance.insert(END, self.origutt)
@@ -61,7 +61,6 @@ class UtteranceGUI:
     def file_save(self, output_xml_string):
         f = filedialog.asksaveasfile(mode='wb', defaultextension=".xml")
         if f is None:
-            print('gaat fout')
             return
         f.write(output_xml_string)
         f.close()
