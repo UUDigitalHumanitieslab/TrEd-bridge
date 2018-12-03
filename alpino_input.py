@@ -1,6 +1,6 @@
-from tkinter import (DISABLED, END, INSERT, LEFT, SEL, SEL_FIRST, SEL_LAST,
-                     Frame, StringVar, Text)
-from tkinter.ttk import Button, Combobox, Entry, Label
+from tkinter import (DISABLED, END, INSERT, LEFT, BOTTOM, X, Y, SEL, SEL_FIRST, SEL_LAST,
+                     Frame, StringVar, Text, Label)
+from tkinter.ttk import Button, Combobox, Entry
 
 import config
 
@@ -50,6 +50,18 @@ class AlpinoInputPage(Frame):
                 value = "@skip"
                 bracket_selection(value)
 
+        def phantom():
+            """phantom <cursor position>"""
+            if not self.alpino_input.tag_ranges(SEL):
+                w = phantom_var.get()
+                pos = self.alpino_input.index(INSERT)
+                value = " [ @phantom %s ] " % w
+                self.alpino_input.insert(pos, value)
+
+        def parse():
+            """Parse with alpino"""
+            pass
+
         # static display of the original utterance
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
@@ -57,31 +69,63 @@ class AlpinoInputPage(Frame):
             self, textvariable=origuttVar)
         origuttLabel.pack(pady=10, padx=10)
 
-        self.alpino_input = Text(self, height=5)
+        self.alpino_input = Text(self, height=5, bg='lightgrey', bd=5)
         self.alpino_input.insert(END, origutt)
         self.alpino_input.pack(padx=10, pady=10)
 
+        control_frame = Frame(self)
+        control_frame.pack()
+
+        const_frame = Frame(control_frame)
         const_button = Button(
-            self, text="[ @cat <selection> ]", command=const)
+            const_frame, text="[ @cat <selection> ]", command=const)
         const_combobox = Combobox(
-            self, value=config.CAT_VALS, state="readonly")
+            const_frame, value=config.CAT_VALS, state="readonly")
         const_combobox.current(0)
-        const_button.pack(padx=10, pady=10)
-        const_combobox.pack(padx=10, pady=10)
+        const_button.pack(expand=True, fill=X)
+        const_combobox.pack(expand=True, fill=X)
+        const_frame.pack(side=LEFT)
 
-        pos_button = Button(text="POS of <word>", command=pos)
+        pos_frame = Frame(control_frame)
+        pos_button = Button(pos_frame, text="POS of <word>",
+                            command=pos)
         pos_combobox = Combobox(
-            self, value=list(config.POS_DICT.values()), state="readonly")
+            pos_frame, value=list(config.POS_DICT.values()), state="readonly")
         pos_combobox.current(0)
-        pos_button.pack(padx=10, pady=10)
-        pos_combobox.pack(padx=10, pady=10)
+        pos_button.pack(expand=True, fill=X)
+        pos_combobox.pack(expand=True, fill=X)
+        pos_frame.pack(side=LEFT)
 
-        tae_button = Button(text="Treat <word> as: <word2>", command=tae)
+        tae_frame = Frame(control_frame)
+        tae_button = Button(
+            tae_frame, text="Treat <word> as: <word2>", command=tae)
         tae_var = StringVar()
         tae_var.set("<word2>")
-        tae_entrybox = Entry(self, textvariable=tae_var, exportselection=0)
-        tae_button.pack(padx=10, pady=10)
-        tae_entrybox.pack(padx=10, pady=10)
+        tae_entrybox = Entry(
+            tae_frame, textvariable=tae_var, exportselection=0)
+        tae_button.pack(expand=True, fill=X)
+        tae_entrybox.pack(expand=True, fill=X)
+        tae_frame.pack(side=LEFT)
 
-        skip_button = Button(text="[ @skip <selection> ]", command=skip)
-        skip_button.pack(padx=10, pady=10)
+        phantom_frame = Frame(control_frame)
+        phantom_button = Button(
+            phantom_frame, text="[ @phantom <word> ]", command=phantom)
+        phantom_var = StringVar()
+        phantom_var.set("<word>")
+        phantom_entrybox = Entry(
+            phantom_frame, textvariable=phantom_var, exportselection=0)
+        phantom_entrybox.pack(expand=True, fill=X)
+        phantom_button.pack(expand=True, fill=X)
+        phantom_frame.pack(side=LEFT)
+
+        skip_frame = Frame(control_frame)
+        skip_button = Button(
+            skip_frame, text="[ @skip <selection> ]", command=skip)
+        skip_button.pack(expand=True, fill=X)
+        skip_frame.pack(side=LEFT)
+
+        parse_frame = Frame(control_frame)
+        parse_button = Button(parse_frame, text="parse",
+                              command=parse)
+        parse_button.pack(expand=True, fill=X)
+        parse_frame.pack(side=LEFT)

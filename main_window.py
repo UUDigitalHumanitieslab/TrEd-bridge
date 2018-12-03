@@ -31,6 +31,5 @@ class TredBridgeMain(Tk):
 
 if __name__ == '__main__':
     app = TredBridgeMain(input_path='vk_example.xml')
-    app.geometry('500x500')
     app.focus()
     app.mainloop()
