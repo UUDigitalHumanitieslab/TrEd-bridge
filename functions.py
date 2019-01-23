@@ -1,4 +1,5 @@
 import lxml.etree as ET
+from TK_extensions.entry_dialog import EntryDialog
 
 
 def process_input(input_path):
@@ -13,3 +14,9 @@ def process_input(input_path):
     new_metadata = ET.tostring(metadata) + b'\n'
 
     return origutt.get('value'), new_metadata
+
+
+def ask_input(frame, label_text=''):
+    inputDialog = EntryDialog(frame, labeltext=label_text)
+    frame.wait_window(inputDialog.top)
+    return inputDialog.results

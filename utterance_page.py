@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import *
+from tkinter import Label
 
 from chamd.cleanCHILDESMD import cleantext
 
@@ -36,7 +37,10 @@ class UtterancePage(Frame):
                 self.grid_rowconfigure(i, {'minsize': 85})
             for i in range(0, num_cols):
                 self.grid_columnconfigure(i, {'minsize': 85})
-            # self.grid_rowconfigure(4, {'minsize': 0})
+
+        def reset_utterance():
+            self.utterance.delete("1.0", END)
+            self.utterance.insert(END, origutt)
 
         configure_grid(self)
 
@@ -44,24 +48,31 @@ class UtterancePage(Frame):
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
         origuttLabel = Label(
-            self, text="Original utterance:\n" + origutt)
-        origuttLabel.grid(row=1, column=2, columnspan=8, sticky='NWSE')
+            self, text="Original utterance:\n" + origutt, background="lightgrey")
+        origuttLabel.grid(row=1, column=2, columnspan=7, sticky='NWSE')
 
         self.utterance = Text(self, height=5)
         self.utterance.insert(END, origutt)
         self.utterance.grid(row=2, column=2, rowspan=2,
                             columnspan=8, sticky='NWSE')
 
+        utterance_reset_button = Button(
+            self, text="Reset", command=reset_utterance)
+        utterance_reset_button.grid(row=1, column=9, sticky='NWSE')
+
         parenthesize_button = Button(
-            self, text="parenthesize selection", command=parenthesize_selection)
+            self, text=" ( <selection> ) ", command=parenthesize_selection)
         ampersand_button = Button(
-            self, text="prefix &", command=prefix_ampersand)
+            self, text="&<word>", command=prefix_ampersand)
         correct_button = Button(self, text="correct", command=correct)
         clean_button = Button(self, text="clean (CHAMD)", command=clean)
 
-        parenthesize_button.grid(row=4, column=2, columnspan=2, sticky='NWSE')
-        ampersand_button.grid(row=4, column=4, columnspan=2, sticky='NWSE')
-        correct_button.grid(row=4, column=6, columnspan=2, sticky='NWSE')
+        parenthesize_button.grid(
+            row=4, column=2, columnspan=2, sticky='NWSE')
+        ampersand_button.grid(row=4, column=4,
+                              columnspan=2, sticky='NWSE')
+        correct_button.grid(row=4, column=6,
+                            columnspan=2, sticky='NWSE')
         clean_button.grid(row=4, column=8, columnspan=2, sticky='NWSE')
 
         correct_button["state"] = DISABLED

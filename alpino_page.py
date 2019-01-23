@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
-
 import config
+from functions import ask_input
 
 
 class AlpinoInputPage(Frame):
@@ -39,7 +39,8 @@ class AlpinoInputPage(Frame):
 
         def tae():
             """Treat < word > as"""
-            w2 = tae_var.get()
+            # w2 = tae_var.get()
+            w2 = ask_input(self, label_text="<word2>:")
             value = "@add_lex %s" % w2
             bracket_word(value)
 
@@ -79,7 +80,7 @@ class AlpinoInputPage(Frame):
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
         origuttLabel = Label(
-            self, textvariable=origuttVar)
+            self, text="Original utterance:\n" + origutt, anchor="center")
         origuttLabel.grid(row=1, column=2, columnspan=8, sticky='NWSE')
 
         self.alpino_input = Text(self)
