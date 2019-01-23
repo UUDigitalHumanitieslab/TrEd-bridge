@@ -1,3 +1,6 @@
+# Custom
+kivy/kivy-designer
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -111,3 +114,4 @@ venv.bak/
 
 # Example files
 *.xml
+

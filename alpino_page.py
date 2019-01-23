@@ -1,6 +1,5 @@
-from tkinter import (DISABLED, END, INSERT, LEFT, BOTTOM, X, Y, SEL, SEL_FIRST, SEL_LAST,
-                     Frame, StringVar, Text, Label)
-from tkinter.ttk import Button, Combobox, Entry
+from tkinter import *
+from tkinter.ttk import *
 
 import config
 
@@ -62,70 +61,72 @@ class AlpinoInputPage(Frame):
             """Parse with alpino"""
             pass
 
+        def save():
+            """Write and save file"""
+            pass
+
+        def configure_grid(frame):
+            num_rows = 8
+            num_cols = 12
+            for i in range(0, num_rows):
+                self.grid_rowconfigure(i, {'minsize': 85})
+            for i in range(0, num_cols):
+                self.grid_columnconfigure(i, {'minsize': 85})
+            self.grid_rowconfigure(4, {'minsize': 0})
+
+        configure_grid(self)
         # static display of the original utterance
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
         origuttLabel = Label(
             self, textvariable=origuttVar)
-        origuttLabel.pack(pady=10, padx=10)
+        origuttLabel.grid(row=1, column=2, columnspan=8, sticky='NWSE')
 
-        self.alpino_input = Text(self, height=5, bg='lightgrey', bd=5)
+        self.alpino_input = Text(self)
         self.alpino_input.insert(END, origutt)
-        self.alpino_input.pack(padx=10, pady=10)
+        self.alpino_input.grid(row=2, column=2, rowspan=2,
+                               columnspan=8, sticky='NWSE')
 
-        control_frame = Frame(self)
-        control_frame.pack()
-
-        const_frame = Frame(control_frame)
-        const_button = Button(
-            const_frame, text="[ @cat <selection> ]", command=const)
         const_combobox = Combobox(
-            const_frame, value=config.CAT_VALS, state="readonly")
+            self, value=config.CAT_VALS, state="readonly")
         const_combobox.current(0)
-        const_button.pack(expand=True, fill=X)
-        const_combobox.pack(expand=True, fill=X)
-        const_frame.pack(side=LEFT)
+        const_button = Button(
+            self, text="[ @cat <selection> ]", command=const)
+        const_combobox.grid(row=4, column=1, columnspan=2, sticky='NWSE')
+        const_button.grid(row=5, column=1, columnspan=2, sticky='NWSE')
 
-        pos_frame = Frame(control_frame)
-        pos_button = Button(pos_frame, text="POS of <word>",
+        pos_button = Button(self, text="POS of <word>",
                             command=pos)
         pos_combobox = Combobox(
-            pos_frame, value=list(config.POS_DICT.values()), state="readonly")
+            self, value=list(config.POS_DICT.values()), state="readonly")
         pos_combobox.current(0)
-        pos_button.pack(expand=True, fill=X)
-        pos_combobox.pack(expand=True, fill=X)
-        pos_frame.pack(side=LEFT)
+        pos_combobox.grid(row=4, column=3, columnspan=2, sticky='NWSE')
+        pos_button.grid(row=5, column=3, columnspan=2, sticky='NWSE')
 
-        tae_frame = Frame(control_frame)
         tae_button = Button(
-            tae_frame, text="Treat <word> as: <word2>", command=tae)
+            self, text="Treat <word> as: <word2>", command=tae)
         tae_var = StringVar()
         tae_var.set("<word2>")
         tae_entrybox = Entry(
-            tae_frame, textvariable=tae_var, exportselection=0)
-        tae_button.pack(expand=True, fill=X)
-        tae_entrybox.pack(expand=True, fill=X)
-        tae_frame.pack(side=LEFT)
+            self, textvariable=tae_var, exportselection=0)
+        tae_entrybox.grid(row=4, column=5, columnspan=2, sticky='NWSE')
+        tae_button.grid(row=5, column=5, columnspan=2, sticky='NWSE')
 
-        phantom_frame = Frame(control_frame)
         phantom_button = Button(
-            phantom_frame, text="[ @phantom <word> ]", command=phantom)
+            self, text="[ @phantom <word> ]", command=phantom)
         phantom_var = StringVar()
         phantom_var.set("<word>")
         phantom_entrybox = Entry(
-            phantom_frame, textvariable=phantom_var, exportselection=0)
-        phantom_entrybox.pack(expand=True, fill=X)
-        phantom_button.pack(expand=True, fill=X)
-        phantom_frame.pack(side=LEFT)
+            self, textvariable=phantom_var, exportselection=0)
+        phantom_entrybox.grid(row=4, column=7, columnspan=2, sticky='NWSE')
+        phantom_button.grid(row=5, column=7, columnspan=2, sticky='NWSE')
 
-        skip_frame = Frame(control_frame)
         skip_button = Button(
-            skip_frame, text="[ @skip <selection> ]", command=skip)
-        skip_button.pack(expand=True, fill=X)
-        skip_frame.pack(side=LEFT)
+            self, text="[ @skip <selection> ]", command=skip)
+        skip_button.grid(row=5, column=9, columnspan=2, sticky='NWSE')
 
-        parse_frame = Frame(control_frame)
-        parse_button = Button(parse_frame, text="parse",
-                              command=parse)
-        parse_button.pack(expand=True, fill=X)
-        parse_frame.pack(side=LEFT)
+        parse_button = Button(self, text="parse", command=parse)
+        parse_button.grid(row=6, column=1, columnspan=5, sticky='NWSE')
+
+        save_button = Button(self, text="save", command=save)
+        save_button.grid(row=6, column=6, columnspan=5, sticky='NWSE')

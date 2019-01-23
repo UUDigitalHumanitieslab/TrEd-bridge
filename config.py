@@ -1,5 +1,3 @@
-LARGE_FONT = ("Verdana", 12)
-
 CAT_VALS = [
     "no cat",
     "advp", "ahi", "ap",

@@ -1,6 +1,6 @@
-from tkinter import (DISABLED, END, INSERT, LEFT, SEL, SEL_FIRST, SEL_LAST,
-                     Frame, StringVar, Text)
-from tkinter.ttk import Label, Button
+from tkinter import *
+from tkinter import messagebox
+from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
 
@@ -14,9 +14,9 @@ class UtterancePage(Frame):
                 self.utterance.insert(SEL_FIRST, '(')
                 self.utterance.insert(SEL_LAST, ')')
             else:
-                print('No selected text.')
+                messagebox.showerror("Error", "No text selected.")
 
-        def prefix_ampersande():
+        def prefix_ampersand():
             ws = self.utterance.index(INSERT) + " wordstart"
             self.utterance.insert(ws, "&")
 
@@ -29,26 +29,39 @@ class UtterancePage(Frame):
             self.utterance.delete("1.0", END)
             self.utterance.insert(END, cleaned_text)
 
+        def configure_grid(frame):
+            num_rows = 7
+            num_cols = 12
+            for i in range(0, num_rows):
+                self.grid_rowconfigure(i, {'minsize': 85})
+            for i in range(0, num_cols):
+                self.grid_columnconfigure(i, {'minsize': 85})
+            # self.grid_rowconfigure(4, {'minsize': 0})
+
+        configure_grid(self)
+
         # static display of the original utterance
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
         origuttLabel = Label(
-            self, textvariable=origuttVar)
-        origuttLabel.pack(pady=10, padx=10)
+            self, text="Original utterance:\n" + origutt)
+        origuttLabel.grid(row=1, column=2, columnspan=8, sticky='NWSE')
 
         self.utterance = Text(self, height=5)
         self.utterance.insert(END, origutt)
-        self.utterance.pack(padx=10, pady=10)
+        self.utterance.grid(row=2, column=2, rowspan=2,
+                            columnspan=8, sticky='NWSE')
 
         parenthesize_button = Button(
             self, text="parenthesize selection", command=parenthesize_selection)
-        ampersande_button = Button(
-            self, text="prefix &", command=prefix_ampersande)
+        ampersand_button = Button(
+            self, text="prefix &", command=prefix_ampersand)
         correct_button = Button(self, text="correct", command=correct)
         clean_button = Button(self, text="clean (CHAMD)", command=clean)
 
-        parenthesize_button.pack(side=LEFT, padx=10, pady=10)
-        ampersande_button.pack(side=LEFT, padx=10, pady=10)
-        correct_button.pack(side=LEFT, padx=10, pady=10)
+        parenthesize_button.grid(row=4, column=2, columnspan=2, sticky='NWSE')
+        ampersand_button.grid(row=4, column=4, columnspan=2, sticky='NWSE')
+        correct_button.grid(row=4, column=6, columnspan=2, sticky='NWSE')
+        clean_button.grid(row=4, column=8, columnspan=2, sticky='NWSE')
+
         correct_button["state"] = DISABLED
-        clean_button.pack(side=LEFT, padx=10, pady=10)
