@@ -29,7 +29,7 @@ class TredBridgeMain(Tk):
 
         utterance_page_frame.grid(row=0, column=0, sticky="nsew")
         alpino_page_frame.grid(row=0, column=0, sticky="nsew")
-        self.show_frame(AlpinoInputPage)
+        self.show_frame(UtterancePage)
 
     def show_frame(self, cont):
         frame = self.frames[cont]

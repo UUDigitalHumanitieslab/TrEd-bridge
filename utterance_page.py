@@ -4,6 +4,7 @@ from tkinter.ttk import *
 from tkinter import Label
 
 from chamd.cleanCHILDESMD import cleantext
+from functions import ask_input, correct_parenthesize
 
 
 class UtterancePage(Frame):
@@ -22,7 +23,17 @@ class UtterancePage(Frame):
             self.utterance.insert(ws, "&")
 
         def correct():
-            pass
+            ws = self.utterance.index(INSERT) + " wordstart"
+            we = self.utterance.index(INSERT) + " wordend"
+            word = self.utterance.get(ws, we)
+
+            correction = ask_input(
+                self, label_text="word: {}\ncorrection:".format(word))
+
+            corrected_string = correct_parenthesize(word, correction)
+
+            self.utterance.delete(ws, we)
+            self.utterance.insert(ws, "{} ".format(corrected_string))
 
         def clean():
             text = self.utterance.get("1.0", END)
@@ -74,5 +85,3 @@ class UtterancePage(Frame):
         correct_button.grid(row=4, column=6,
                             columnspan=2, sticky='NWSE')
         clean_button.grid(row=4, column=8, columnspan=2, sticky='NWSE')
-
-        correct_button["state"] = DISABLED
