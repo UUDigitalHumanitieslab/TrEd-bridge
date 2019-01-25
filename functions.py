@@ -2,7 +2,7 @@ import re
 
 import lxml.etree as ET
 
-from TK_extensions.entry_dialog import EntryDialog
+from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 
 
 def process_input(input_path):
@@ -19,8 +19,12 @@ def process_input(input_path):
     return origutt.get('value'), new_metadata
 
 
-def ask_input(frame, label_text=''):
-    inputDialog = EntryDialog(frame, labeltext=label_text)
+def ask_input(frame, label_text='', options=[]):
+    if options != []:
+        inputDialog = ComboBoxDialog(frame, label_text, options)
+    else:
+        inputDialog = EntryDialog(frame, label_text)
+
     frame.wait_window(inputDialog.top)
     return inputDialog.results
 
