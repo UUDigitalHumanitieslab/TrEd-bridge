@@ -39,7 +39,7 @@ class TredBridgeMain(Tk):
 if __name__ == '__main__':
     app = TredBridgeMain(input_path='vk_example.xml')
     s = ttk.Style()
-    s.theme_use('aqua')
+    s.theme_use('clam')
     apply_styles()
     # app.geometry('1048x768')
     # app.focus()
