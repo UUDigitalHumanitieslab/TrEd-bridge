@@ -1,5 +1,6 @@
 
-from tkinter import Frame, Tk, ttk, Label, Button
+from tkinter import Frame, Tk, ttk, Label
+from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
 from utterance_page import UtterancePage
@@ -27,13 +28,21 @@ class TredBridgeMain(Tk):
         self.frames[AlpinoInputPage] = alpino_page_frame
         self.frames[UtterancePage] = utterance_page_frame
 
-        utterance_page_frame.grid(row=0, column=0, sticky="nsew")
-        alpino_page_frame.grid(row=0, column=0, sticky="nsew")
+        utterance_page_frame.grid(row=1, column=0, sticky="nsew")
+        alpino_page_frame.grid(row=1, column=0, sticky="nsew")
         self.show_frame(AlpinoInputPage)
 
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+
+    def toggle_alpino_button(self):
+        global cont_alp_button
+        if not self.continue_to_alpino:
+            cont_alp_button.pack()
+        else:
+            print(self.cont_alp_button)
+            cont_alp_button.pack_forget()
 
 
 if __name__ == '__main__':

@@ -4,9 +4,9 @@ import config
 from functions import ask_input
 
 
-class AlpinoInputPage(Frame):
-    def __init__(self, origutt, parent, controller):
-        Frame.__init__(self, parent)
+class AlpinoInputPage(ttk.Frame):
+    def __init__(self, origutt, parent=None):
+        ttk.Frame.__init__(self, parent)
 
         def bracket_selection(value):
             self.alpino_input.insert(SEL_FIRST, '[ {} '.format(value))
@@ -80,10 +80,10 @@ class AlpinoInputPage(Frame):
         origuttVar = StringVar(
             value="Original utterance:\n" + origutt)
         origuttLabel = Label(
-            self, text="Original utterance:\n" + origutt, anchor="center", font=('Robot, 16'))
+            self, text="Original utterance:\n" + origutt, anchor="center", font=('Roboto, 16'))
         origuttLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
-        self.alpino_input = Text(self, height=5, font=('Robot, 16'))
+        self.alpino_input = Text(self, height=5, font=('Roboto, 16'))
         self.alpino_input.insert(END, origutt)
         self.alpino_input.grid(row=1, column=2,
                                columnspan=8, sticky='NWSE')
