@@ -8,19 +8,30 @@ from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
 from utterance_page import UtterancePage
 
+from pprint import pprint
+
 
 class TredBridgeMain(Tk):
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.input_path = input_path
-        self.origutt, self.new_metadata = process_input(self.input_path)
+        # self.origutt, self.new_metadata = process_input(self.input_path)
+
+        # input parse
+        input_info = process_input(self.input_path)
+        # all utterances and sentences
+        self.origutt = input_info['origutt']
+        self.revised_utt = input_info['revised_utt']
+        self.alpino_input = input_info['alpino_input']
+        self.sentence = input_info['sentence']
+        self.origsent = input_info['origsent']
+        # fields present at time of input parse
+        self.revised_exists = input_info['revised_exists']
+        self.origsent_exists = input_info['origsent_exists']
+        self.alpino_input_exists = input_info['alpino_input_exists']
 
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0
-
-        self.phase0 = self.origutt  # sentence at start
-        self.phase1 = ''  # sentence after utterance phase
-        self.phase2 = ''  # sentence after alpino editing
 
         # setup notebook
         self.notebook = Notebook(self)
@@ -33,10 +44,10 @@ class TredBridgeMain(Tk):
         self.notebook.grid()
 
         # fill the tab frames
-        app1 = UtterancePage(parent=frame1, origutt=self.origutt)
-        app1.grid()
-        app2 = AlpinoInputPage(parent=frame2, origutt=self.origutt)
-        app2.grid()
+        self.app1 = UtterancePage(parent=frame1, utterance=self.revised_utt)
+        self.app1.grid()
+        self.app2 = AlpinoInputPage(parent=frame2, sentence=self.sentence)
+        self.app2.grid()
 
         # toggles
         self.alpino_toggle = False

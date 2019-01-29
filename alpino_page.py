@@ -10,7 +10,7 @@ import urllib.request
 
 
 class AlpinoInputPage(ttk.Frame):
-    def __init__(self, origutt, parent=None):
+    def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
 
         def bracket_selection(value):
@@ -86,7 +86,7 @@ class AlpinoInputPage(ttk.Frame):
         def reset():
             """reset to enter state"""
             self.alpino_input.delete("1.0", END)
-            self.alpino_input.insert(END, origutt)
+            self.alpino_input.insert(END, sentence)
 
         def configure_grid(frame):
             num_rows = 8
@@ -98,14 +98,14 @@ class AlpinoInputPage(ttk.Frame):
 
         configure_grid(self)
 
-        origuttVar = StringVar(
-            value="Original utterance:\n" + origutt)
-        origuttLabel = Label(
-            self, text="Original utterance:\n" + origutt, anchor="center", font=('Roboto, 16'))
-        origuttLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
+        sentenceVar = StringVar(
+            value="Original sentence:\n" + sentence)
+        sentenceLabel = Label(
+            self, textvariable=sentenceVar, anchor="center", font=('Roboto, 16'))
+        sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
         self.alpino_input = Text(self, height=5, font=('Roboto, 16'))
-        self.alpino_input.insert(END, origutt)
+        self.alpino_input.insert(END, sentence)
         self.alpino_input.grid(row=1, column=1,
                                columnspan=9, sticky='NWSE')
 

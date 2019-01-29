@@ -7,7 +7,7 @@ from functions import ask_input, correct_parenthesize
 
 
 class UtterancePage(ttk.Frame):
-    def __init__(self, origutt, parent=None):
+    def __init__(self, utterance, parent=None):
         ttk.Frame.__init__(self, parent)
 
         def parenthesize_selection():
@@ -51,7 +51,7 @@ class UtterancePage(ttk.Frame):
 
         def reset_utterance():
             self.utterance.delete("1.0", END)
-            self.utterance.insert(END, origutt)
+            self.utterance.insert(END, utterance)
 
         def continue_to_alpino():
             '''
@@ -61,17 +61,15 @@ class UtterancePage(ttk.Frame):
             app.notebook.tab(1, state='normal')
             app.notebook.select(1)
             app.phase = 1
-            print(app.phase)
-            print(namespace)
 
         configure_grid(self)
 
         # static display of the original utterance
-        origuttLabel = Label(
-            self, text="Original utterance:\n" + origutt, anchor='center', font=('Roboto, 16'))
+        utteranceLabel = Label(
+            self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 16'))
 
         self.utterance = Text(self, height=5, font=('Roboto, 16'))
-        self.utterance.insert(END, origutt)
+        self.utterance.insert(END, utterance)
         self.utterance.grid(row=1, column=1,
                             columnspan=8, sticky='NWSE')
 
@@ -86,7 +84,7 @@ class UtterancePage(ttk.Frame):
         continue_button = Button(
             self, text="continue", command=continue_to_alpino)
 
-        origuttLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
+        utteranceLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
         utterance_reset_button.grid(row=1, column=8, sticky='NWSE')
         parenthesize_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         ampersand_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')

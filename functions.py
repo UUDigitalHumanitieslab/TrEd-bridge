@@ -8,15 +8,55 @@ from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 def process_input(input_path):
     tree = ET.parse(input_path)
     root = tree.getroot()
-    metadata = root.find('metadata')
-    origutt = root.find('.//meta[@name="origutt"]')
-    origutt_old = '<meta type="text" name="origutt_old" value="{}"/>\n'.format(
-        origutt.get('value'))
-    metadata.insert(
-        metadata.index(origutt)+1, ET.XML(origutt_old))
-    new_metadata = ET.tostring(metadata) + b'\n'
 
-    return origutt.get('value'), new_metadata
+    origutt = root.find('.//meta[@name="origutt"]')
+    origutt_value = origutt.get('value')
+    revised_utt = root.find('.//meta[@name="revisedutt"]')
+    revised_exists = True
+    if not revised_utt:
+        revised_utt = origutt
+        revised_exists = False
+
+    sentence = root.find('.//sentence')
+    sentence_value = sentence.text
+    origsent = root.find('.//meta[@name="origsent"]')
+    if not origsent:
+        origsent_value = sentence.text
+        origsent_exists = False
+    else:
+        origsent_value = origsent.get('value')
+        origsent_exists: True
+
+    alpino_input = root.find('.//meta[@name="alpino_input"]')
+    if not alpino_input:
+        alpino_input_value = sentence.text
+        alpino_input_exists = False
+    else:
+        alpino_input_value = alpino_input.get('value')
+        alpino_input_exists = True
+
+    return {'origutt': origutt_value,
+            'revised_utt': revised_utt.get('value'),
+            'revised_exists': revised_exists,
+            'sentence': sentence_value,
+            'origsent': origsent_value,
+            'origsent_exists': origsent_exists,
+            'alpino_input': alpino_input_value,
+            'alpino_input_exists': alpino_input_exists
+            }
+
+    # origutt = root.find('.//meta[@name="origutt"]')
+    # origutt_old = '<meta type="text" name="origutt_old" value="{}"/>\n'.format(
+    #     origutt.get('value'))
+    # metadata.insert(
+    #     metadata.index(origutt)+1, ET.XML(origutt_old))
+    # new_metadata = ET.tostring(metadata) + b'\n'
+
+    # return origutt.get('value'), new_metadata
+
+
+def build_new_metadata(metadata, revised_exists, revised_utt, sent_exists, sent):
+    pass
 
 
 def ask_input(frame, label_text='', options=[]):
