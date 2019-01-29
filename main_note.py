@@ -15,19 +15,22 @@ class TredBridgeMain(Tk):
         self.input_path = input_path
         self.origutt, self.new_metadata = process_input(self.input_path)
 
+        # phase the editor is currently in. 0=utterance, 1=alpino.
+        self.phase = 0
+
         self.phase0 = self.origutt  # sentence at start
         self.phase1 = ''  # sentence after utterance phase
         self.phase2 = ''  # sentence after alpino editing
 
         # setup notebook
-        notebook = Notebook(self)
-        frame1 = ttk.Frame(notebook)
-        frame2 = ttk.Frame(notebook)
+        self.notebook = Notebook(self)
+        frame1 = ttk.Frame(self.notebook)
+        frame2 = ttk.Frame(self.notebook)
 
         # add empty frames to notebook tabs
-        notebook.add(frame1, text="Utterance Editor")
-        notebook.add(frame2, text="Alpino Editor")
-        notebook.grid()
+        self.notebook.add(frame1, text="Utterance Editor")
+        self.notebook.add(frame2, text="Alpino Editor")
+        self.notebook.grid()
 
         # fill the tab frames
         app1 = UtterancePage(parent=frame1, origutt=self.origutt)
@@ -39,7 +42,7 @@ class TredBridgeMain(Tk):
         self.alpino_toggle = False
 
         # setup
-        notebook.tab(1, state='disabled')
+        self.notebook.tab(1, state='disabled')
 
 
 if __name__ == '__main__':

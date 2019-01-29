@@ -53,36 +53,43 @@ class UtterancePage(ttk.Frame):
             self.utterance.delete("1.0", END)
             self.utterance.insert(END, origutt)
 
+        def continue_to_alpino():
+            '''
+            Set tab to alpino editor, advance app phase
+            '''
+            app = parent.master.master
+            app.notebook.tab(1, state='normal')
+            app.notebook.select(1)
+            app.phase = 1
+            print(app.phase)
+            print(namespace)
+
         configure_grid(self)
 
         # static display of the original utterance
-        origuttVar = StringVar(
-            value="Original utterance:\n" + origutt)
         origuttLabel = Label(
             self, text="Original utterance:\n" + origutt, anchor='center', font=('Roboto, 16'))
-        origuttLabel.grid(row=0, column=2, columnspan=7,
-                          sticky='NWSE')
 
         self.utterance = Text(self, height=5, font=('Roboto, 16'))
         self.utterance.insert(END, origutt)
-        self.utterance.grid(row=1, column=2,
+        self.utterance.grid(row=1, column=1,
                             columnspan=8, sticky='NWSE')
 
         utterance_reset_button = Button(
             self, text="Reset", command=reset_utterance)
-        utterance_reset_button.grid(row=1, column=9, sticky='NWSE')
-
         parenthesize_button = Button(
             self, text=" ( <selection> ) ", command=parenthesize_selection)
         ampersand_button = Button(
             self, text="&<word>", command=prefix_ampersand)
         correct_button = Button(self, text="correct", command=correct)
         clean_button = Button(self, text="clean (CHAMD)", command=clean)
+        continue_button = Button(
+            self, text="continue", command=continue_to_alpino)
 
-        parenthesize_button.grid(
-            row=2, column=2, columnspan=2, sticky='NWSE')
-        ampersand_button.grid(row=2, column=4,
-                              columnspan=2, sticky='NWSE')
-        correct_button.grid(row=2, column=6,
-                            columnspan=2, sticky='NWSE')
-        clean_button.grid(row=2, column=8, columnspan=2, sticky='NWSE')
+        origuttLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
+        utterance_reset_button.grid(row=1, column=8, sticky='NWSE')
+        parenthesize_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
+        ampersand_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
+        correct_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
+        clean_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
+        continue_button.grid(row=1, column=9, rowspan=2, sticky='NWSE')
