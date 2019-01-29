@@ -6,12 +6,19 @@ from alpino_page import AlpinoInputPage
 from functions import process_input
 from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
-from utterance_page import UtterancePage
+from chat_page import CHATPage
 
 from pprint import pprint
 
 
 class TredBridgeMain(Tk):
+    def print_state(self):
+        print('Origutt:\t{}'.format(self.origutt))
+        print('Revisedutt:\t{}'.format(self.revised_utt))
+        print('Alpino input:\t{}'.format(self.alpino_input))
+        print('Sentence:\t{}'.format(self.sentence))
+        print('Origsent:\t{}'.format(self.origsent))
+
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.input_path = input_path
@@ -30,6 +37,7 @@ class TredBridgeMain(Tk):
         self.origsent_exists = input_info['origsent_exists']
         self.alpino_input_exists = input_info['alpino_input_exists']
 
+        self.print_state()
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0
 
@@ -39,12 +47,12 @@ class TredBridgeMain(Tk):
         frame2 = ttk.Frame(self.notebook)
 
         # add empty frames to notebook tabs
-        self.notebook.add(frame1, text="Utterance Editor")
+        self.notebook.add(frame1, text="CHAT Editor")
         self.notebook.add(frame2, text="Alpino Editor")
         self.notebook.grid()
 
         # fill the tab frames
-        self.app1 = UtterancePage(parent=frame1, utterance=self.revised_utt)
+        self.app1 = CHATPage(parent=frame1, utterance=self.revised_utt)
         self.app1.grid()
         self.app2 = AlpinoInputPage(parent=frame2, sentence=self.sentence)
         self.app2.grid()
@@ -57,7 +65,7 @@ class TredBridgeMain(Tk):
 
 
 if __name__ == '__main__':
-    app = TredBridgeMain(input_path='vk_example.xml')
+    app = TredBridgeMain(input_path='jan_example.xml')
     s = ttk.Style()
     s.theme_use('clam')
     apply_styles()

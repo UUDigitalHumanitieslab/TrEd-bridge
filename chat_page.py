@@ -6,40 +6,39 @@ from chamd.cleanCHILDESMD import cleantext
 from functions import ask_input, correct_parenthesize
 
 
-class UtterancePage(ttk.Frame):
+class CHATPage(ttk.Frame):
     def __init__(self, utterance, parent=None):
         ttk.Frame.__init__(self, parent)
 
         def parenthesize_selection():
-            if self.utterance.tag_ranges(SEL):
-                self.utterance.insert(SEL_FIRST, '(')
-                self.utterance.insert(SEL_LAST, ')')
+            if self.chat_edit.tag_ranges(SEL):
+                self.chat_edit.insert(SEL_FIRST, '(')
+                self.chat_edit.insert(SEL_LAST, ')')
             else:
                 messagebox.showerror("Error", "No text selected.")
 
         def prefix_ampersand():
-            ws = self.utterance.index(INSERT) + " wordstart"
-            self.utterance.insert(ws, "&")
+            ws = self.chat_edit.index(INSERT) + " wordstart"
+            self.chat_edit.insert(ws, "&")
 
         def correct():
-            ws = self.utterance.index(INSERT) + " wordstart"
-            we = self.utterance.index(INSERT) + " wordend"
-            word = self.utterance.get(ws, we)
+            ws = self.chat_edit.index(INSERT) + " wordstart"
+            we = self.chat_edit.index(INSERT) + " wordend"
+            word = self.chat_edit.get(ws, we)
 
             correction = ask_input(
                 self, label_text="word: {}\ncorrection:".format(word))
 
             corrected_string = correct_parenthesize(word, correction)
 
-            self.utterance.delete(ws, we)
-            self.utterance.insert(ws, "{} ".format(corrected_string))
+            self.chat_edit.delete(ws, we)
+            self.chat_edit.insert(ws, "{} ".format(corrected_string))
 
         def clean():
-            text = self.utterance.get("1.0", END)
+            text = self.chat_edit.get("1.0", END)
             cleaned_text = cleantext(text)
-            self.utterance.delete("1.0", END)
-            self.utterance.insert(END, cleaned_text)
-            parent.master.tab(1, state='normal')
+            self.chat_edit.delete("1.0", END)
+            self.chat_edit.insert(END, cleaned_text)
 
         def configure_grid(frame):
             num_rows = 7
@@ -49,9 +48,9 @@ class UtterancePage(ttk.Frame):
             for i in range(0, num_cols):
                 self.grid_columnconfigure(i, {'minsize': 85})
 
-        def reset_utterance():
-            self.utterance.delete("1.0", END)
-            self.utterance.insert(END, utterance)
+        def reset_chat_edit():
+            self.chat_edit.delete("1.0", END)
+            self.chat_edit.insert(END, utterance)
 
         def continue_to_alpino():
             '''
@@ -65,16 +64,16 @@ class UtterancePage(ttk.Frame):
         configure_grid(self)
 
         # static display of the original utterance
-        utteranceLabel = Label(
+        chat_editLabel = Label(
             self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 16'))
 
-        self.utterance = Text(self, height=5, font=('Roboto, 16'))
-        self.utterance.insert(END, utterance)
-        self.utterance.grid(row=1, column=1,
+        self.chat_edit = Text(self, height=5, font=('Roboto, 16'))
+        self.chat_edit.insert(END, utterance)
+        self.chat_edit.grid(row=1, column=1,
                             columnspan=8, sticky='NWSE')
 
-        utterance_reset_button = Button(
-            self, text="Reset", command=reset_utterance)
+        chat_edit_reset_button = Button(
+            self, text="Reset", command=reset_chat_edit)
         parenthesize_button = Button(
             self, text=" ( <selection> ) ", command=parenthesize_selection)
         ampersand_button = Button(
@@ -84,8 +83,8 @@ class UtterancePage(ttk.Frame):
         continue_button = Button(
             self, text="continue", command=continue_to_alpino)
 
-        utteranceLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
-        utterance_reset_button.grid(row=1, column=8, sticky='NWSE')
+        chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
+        chat_edit_reset_button.grid(row=1, column=8, sticky='NWSE')
         parenthesize_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         ampersand_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
         correct_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')

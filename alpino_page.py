@@ -14,20 +14,20 @@ class AlpinoInputPage(ttk.Frame):
         ttk.Frame.__init__(self, parent)
 
         def bracket_selection(value):
-            self.alpino_input.insert(SEL_FIRST, '[ {} '.format(value))
-            self.alpino_input.insert(SEL_LAST, ' ] ')
+            self.alpino_edit.insert(SEL_FIRST, '[ {} '.format(value))
+            self.alpino_edit.insert(SEL_LAST, ' ] ')
 
         def bracket_word(value, word=''):
-            ws = self.alpino_input.index(INSERT) + " wordstart"
-            we = self.alpino_input.index(INSERT) + " wordend"
-            word = self.alpino_input.get(ws, we)
-            self.alpino_input.delete(ws, we)
-            self.alpino_input.insert(
+            ws = self.alpino_edit.index(INSERT) + " wordstart"
+            we = self.alpino_edit.index(INSERT) + " wordend"
+            word = self.alpino_edit.get(ws, we)
+            self.alpino_edit.delete(ws, we)
+            self.alpino_edit.insert(
                 ws+"-1c", " [ {} {} ] ".format(value, word))
 
         def const():
             """Specify constituent of <selection>"""
-            if self.alpino_input.tag_ranges(SEL):
+            if self.alpino_edit.tag_ranges(SEL):
                 cat = ask_input(self, label_text="Constituent:",
                                 options=config.CAT_DICT)
                 value = "" if cat == "no cat" else "@"+cat
@@ -47,24 +47,24 @@ class AlpinoInputPage(ttk.Frame):
 
         def skip():
             """Skip < selection >"""
-            if self.alpino_input.tag_ranges(SEL):
+            if self.alpino_edit.tag_ranges(SEL):
                 value = "@skip"
                 bracket_selection(value)
 
         def phantom():
             """phantom <cursor position>"""
-            if not self.alpino_input.tag_ranges(SEL):
+            if not self.alpino_edit.tag_ranges(SEL):
                 w = ask_input(self, label_text="<word>:")
-                pos = self.alpino_input.index(INSERT)
+                pos = self.alpino_edit.index(INSERT)
                 value = " [ @phantom {} ] ".format(w)
-                self.alpino_input.insert(pos, value)
+                self.alpino_edit.insert(pos, value)
 
         def parse():
             """Parse with alpino"""
-            sent = self.alpino_input.get(1.0, "end-1c")
+            sent = self.alpino_edit.get(1.0, "end-1c")
             sent = clean_punctuation(sent)
-            self.alpino_input.delete("1.0", END)
-            self.alpino_input.insert(END, sent)
+            self.alpino_edit.delete("1.0", END)
+            self.alpino_edit.insert(END, sent)
 
             base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
             base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
@@ -85,8 +85,8 @@ class AlpinoInputPage(ttk.Frame):
 
         def reset():
             """reset to enter state"""
-            self.alpino_input.delete("1.0", END)
-            self.alpino_input.insert(END, sentence)
+            self.alpino_edit.delete("1.0", END)
+            self.alpino_edit.insert(END, sentence)
 
         def configure_grid(frame):
             num_rows = 8
@@ -104,10 +104,10 @@ class AlpinoInputPage(ttk.Frame):
             self, textvariable=sentenceVar, anchor="center", font=('Roboto, 16'))
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
-        self.alpino_input = Text(self, height=5, font=('Roboto, 16'))
-        self.alpino_input.insert(END, sentence)
-        self.alpino_input.grid(row=1, column=1,
-                               columnspan=9, sticky='NWSE')
+        self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))
+        self.alpino_edit.insert(END, sentence)
+        self.alpino_edit.grid(row=1, column=1,
+                              columnspan=9, sticky='NWSE')
 
         reset_button = Button(self, text="Reset", command=reset)
         reset_button.grid(row=1, column=10, sticky='NWSE')
