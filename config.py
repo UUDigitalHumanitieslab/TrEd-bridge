@@ -1,4 +1,5 @@
 CAT_DICT = {
+    'no category': '',
     'aan het infinitive': 'ahi',
     'adjectival phrase': 'ap',
     'adverbial phrase': 'advp',

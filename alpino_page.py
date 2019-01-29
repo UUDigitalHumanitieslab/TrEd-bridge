@@ -1,7 +1,12 @@
+import tkinter
 from tkinter import *
 from tkinter.ttk import *
 import config
-from functions import ask_input
+from functions import ask_input, clean_punctuation
+from tkinter import filedialog
+
+import urllib.parse
+import urllib.request
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -56,11 +61,27 @@ class AlpinoInputPage(ttk.Frame):
 
         def parse():
             """Parse with alpino"""
-            pass
+            sent = self.alpino_input.get(1.0, "end-1c")
+            sent = clean_punctuation(sent)
+            self.alpino_input.delete("1.0", END)
+            self.alpino_input.insert(END, sent)
+
+            base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
+            base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
+            encoded_query = urllib.parse.quote(sent)
+            url = base_url + encoded_query
+
+            try:
+                contents = urllib.request.urlopen(url).read()
+                self.alp_out_txt.set(contents)
+            except urllib.error.HTTPError as e:
+                self.alp_out_txt.set('{}\n{}'.format(url, e))
 
         def save():
             """Write and save file"""
-            pass
+            # print(parent.master.master.input_path)
+            f = filedialog.asksaveasfilename(title="Save as")
+            print(f)
 
         def reset():
             """reset to enter state"""
@@ -68,7 +89,7 @@ class AlpinoInputPage(ttk.Frame):
             self.alpino_input.insert(END, origutt)
 
         def configure_grid(frame):
-            num_rows = 4
+            num_rows = 8
             num_cols = 12
             for i in range(0, num_rows):
                 self.grid_rowconfigure(i, {'minsize': 85})
@@ -85,8 +106,8 @@ class AlpinoInputPage(ttk.Frame):
 
         self.alpino_input = Text(self, height=5, font=('Roboto, 16'))
         self.alpino_input.insert(END, origutt)
-        self.alpino_input.grid(row=1, column=2,
-                               columnspan=8, sticky='NWSE')
+        self.alpino_input.grid(row=1, column=1,
+                               columnspan=9, sticky='NWSE')
 
         reset_button = Button(self, text="Reset", command=reset)
         reset_button.grid(row=1, column=10, sticky='NWSE')
@@ -114,3 +135,8 @@ class AlpinoInputPage(ttk.Frame):
 
         save_button = Button(self, text="save", command=save)
         save_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
+
+        self.alp_out_txt = StringVar(value="Alpino output")
+        alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
+        alpino_out.grid(row=4, rowspan=4, column=1,
+                        columnspan=10, sticky='NWSE')

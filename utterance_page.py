@@ -65,7 +65,7 @@ class UtterancePage(ttk.Frame):
 
         self.utterance = Text(self, height=5, font=('Roboto, 16'))
         self.utterance.insert(END, origutt)
-        self.utterance.grid(row=1, column=2, rowspan=2,
+        self.utterance.grid(row=1, column=2,
                             columnspan=8, sticky='NWSE')
 
         utterance_reset_button = Button(
@@ -80,9 +80,9 @@ class UtterancePage(ttk.Frame):
         clean_button = Button(self, text="clean (CHAMD)", command=clean)
 
         parenthesize_button.grid(
-            row=4, column=2, columnspan=2, sticky='NWSE')
-        ampersand_button.grid(row=4, column=4,
+            row=2, column=2, columnspan=2, sticky='NWSE')
+        ampersand_button.grid(row=2, column=4,
                               columnspan=2, sticky='NWSE')
-        correct_button.grid(row=4, column=6,
+        correct_button.grid(row=2, column=6,
                             columnspan=2, sticky='NWSE')
-        clean_button.grid(row=4, column=8, columnspan=2, sticky='NWSE')
+        clean_button.grid(row=2, column=8, columnspan=2, sticky='NWSE')
