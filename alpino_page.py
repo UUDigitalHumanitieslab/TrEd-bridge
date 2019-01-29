@@ -2,7 +2,7 @@ import tkinter
 from tkinter import *
 from tkinter.ttk import *
 import config
-from functions import ask_input, clean_punctuation
+from functions import ask_input, clean_string
 from tkinter import filedialog
 
 import urllib.parse
@@ -62,12 +62,12 @@ class AlpinoInputPage(ttk.Frame):
         def parse():
             """Parse with alpino"""
             sent = self.alpino_edit.get(1.0, "end-1c")
-            sent = clean_punctuation(sent)
+            sent = clean_string(sent)
             self.alpino_edit.delete("1.0", END)
             self.alpino_edit.insert(END, sent)
 
             base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
-            base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
+            # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
             encoded_query = urllib.parse.quote(sent)
             url = base_url + encoded_query
 
@@ -101,7 +101,7 @@ class AlpinoInputPage(ttk.Frame):
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
         sentenceLabel = Label(
-            self, textvariable=sentenceVar, anchor="center", font=('Roboto, 16'))
+            self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 16'))
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
         self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))

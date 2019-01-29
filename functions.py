@@ -97,12 +97,18 @@ def correct_parenthesize(original, correction):
     return split_whitespace
 
 
-def clean_punctuation(string):
+def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
     # remove newlines
-    string = string.replace('\n', '')
-    string = string.replace('\r', '')
+    if newlines:
+        string = string.replace('\n', '')
+        string = string.replace('\r', '')
+
     # add spaces around punctuation
-    string = re.sub('([.,!?()\[\]])', r' \1 ', string)
+    if punctuation:
+        string = re.sub('([.,!?()\[\]])', r' \1 ', string)
+
     # reduce double spaces to singles
-    string = re.sub('\s{2,}', ' ', string)
+    if doublespaces:
+        string = re.sub('\s{2,}', ' ', string)
+
     return string

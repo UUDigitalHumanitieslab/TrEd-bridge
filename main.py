@@ -17,7 +17,7 @@ class TredBridgeMain(Tk):
         print('Revisedutt:\t{}'.format(self.revised_utt))
         print('Alpino input:\t{}'.format(self.alpino_input))
         print('Sentence:\t{}'.format(self.sentence))
-        print('Origsent:\t{}'.format(self.origsent))
+        print('Origsent:\t{}\n'.format(self.origsent))
 
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -68,5 +68,6 @@ if __name__ == '__main__':
     app = TredBridgeMain(input_path='jan_example.xml')
     s = ttk.Style()
     s.theme_use('clam')
+    app.configure(background="lightgrey")
     apply_styles()
     app.mainloop()

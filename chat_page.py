@@ -3,7 +3,7 @@ from tkinter import messagebox
 from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
-from functions import ask_input, correct_parenthesize
+from functions import ask_input, correct_parenthesize, clean_string
 
 
 class CHATPage(ttk.Frame):
@@ -36,7 +36,7 @@ class CHATPage(ttk.Frame):
 
         def clean():
             text = self.chat_edit.get("1.0", END)
-            cleaned_text = cleantext(text)
+            cleaned_text = clean_string(cleantext(text), punctuation=False)
             self.chat_edit.delete("1.0", END)
             self.chat_edit.insert(END, cleaned_text)
 
@@ -52,11 +52,28 @@ class CHATPage(ttk.Frame):
             self.chat_edit.delete("1.0", END)
             self.chat_edit.insert(END, utterance)
 
-        def continue_to_alpino():
+        def clean_continue_to_alpino():
             '''
-            Set tab to alpino editor, advance app phase
+            Clean input, set tab to alpino editor, advance app phase
             '''
+            # clean
+            text = self.chat_edit.get("1.0", END)
+            cleaned_text = cleantext(text)
+            double_cleaned_text = cleaned_text
+
+            self.chat_edit.delete("1.0", END)
+            self.chat_edit.insert(END, cleaned_text)
+
+            # set utterances & sentences
             app = parent.master.master
+            app.revised_utt = clean_string(text, punctuation=False)
+            app.sentence = cleaned_text
+            app.alpino_input = cleaned_text
+
+            # TODO: Remove print statements
+            app.print_state()
+
+            # switch to alpino editor
             app.notebook.tab(1, state='normal')
             app.notebook.select(1)
             app.phase = 1
@@ -81,7 +98,7 @@ class CHATPage(ttk.Frame):
         correct_button = Button(self, text="correct", command=correct)
         clean_button = Button(self, text="clean (CHAMD)", command=clean)
         continue_button = Button(
-            self, text="continue", command=continue_to_alpino)
+            self, text="  clean\n     &\ncontinue", command=clean_continue_to_alpino)
 
         chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
         chat_edit_reset_button.grid(row=1, column=8, sticky='NWSE')
