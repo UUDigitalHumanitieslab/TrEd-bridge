@@ -1,6 +1,7 @@
 import re
 
 import lxml.etree as ET
+from bs4 import BeautifulSoup, Tag
 
 from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 
@@ -8,6 +9,7 @@ from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 def process_input(input_path):
     tree = ET.parse(input_path)
     root = tree.getroot()
+    metadata = root.find('metadata')
 
     origutt = root.find('.//meta[@name="origutt"]')
     origutt_value = origutt.get('value')
@@ -42,7 +44,8 @@ def process_input(input_path):
             'origsent': origsent_value,
             'origsent_exists': origsent_exists,
             'alpino_input': alpino_input_value,
-            'alpino_input_exists': alpino_input_exists
+            'alpino_input_exists': alpino_input_exists,
+            'old_metadata': ET.tostring(metadata)
             }
 
     # origutt = root.find('.//meta[@name="origutt"]')
@@ -55,8 +58,16 @@ def process_input(input_path):
     # return origutt.get('value'), new_metadata
 
 
-def build_new_metadata(metadata, revised_exists, revised_utt, sent_exists, sent):
-    pass
+def build_new_metadata(metadata, revised_exists=None, revised_utt=None, sent_exists=None, sent=None):
+    soup = BeautifulSoup(metadata, "xml")
+    # new_tag = soup.new_tag('meta', type="text",
+    #                        name="nieuwe", value="MottherMia")
+    new_tag = Tag(builder=soup.builder,
+                  name='meta',
+                  attrs={'value': 'MotherMia', 'name': 'nieuwe'})
+    meta = soup.find('metadata')
+    meta.append(new_tag)
+    print(soup.prettify())
 
 
 def ask_input(frame, label_text='', options=[]):

@@ -27,7 +27,7 @@ class AlpinoInputPage(ttk.Frame):
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
                             options=config.CAT_DICT)
-            value = "" if cat == "no cat" else "@"+cat
+            value = "" if cat == "" else "@"+cat
             self.bracket_selection(value)
 
     def pos(self):
@@ -63,6 +63,13 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, sent)
 
+        app = self.master.master.master
+        app.alpino_input = sent
+
+        # TODO remove print statements
+        print('before alpino parse:')
+        app.print_state()
+
         base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
         # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)
@@ -82,8 +89,9 @@ class AlpinoInputPage(ttk.Frame):
 
     def reset(self):
         """reset to enter state"""
+        app = self.master.master.master
         self.alpino_edit.delete("1.0", END)
-        self.alpino_edit.insert(END, sentence)
+        self.alpino_edit.insert(END, app.alpino_input)
 
     def configure_grid(self):
         num_rows = 8
@@ -92,6 +100,10 @@ class AlpinoInputPage(ttk.Frame):
             self.grid_rowconfigure(i, {'minsize': 85})
         for i in range(0, num_cols):
             self.grid_columnconfigure(i, {'minsize': 85})
+
+    def set_alpino_input(self, alpino_input):
+        self.alpino_edit.delete("1.0", END)
+        self.alpino_edit.insert(END, alpino_input)
 
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)

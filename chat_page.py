@@ -69,9 +69,11 @@ class CHATPage(ttk.Frame):
         app.alpino_input = cleaned_text
 
         # TODO: Remove print statements
+        print('after CHAT')
         app.print_state()
 
         # switch to alpino editor
+        app.alp_app.set_alpino_input(cleaned_text)
         app.notebook.tab(1, state='normal')
         app.notebook.select(1)
         app.phase = 1

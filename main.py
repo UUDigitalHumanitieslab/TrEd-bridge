@@ -3,7 +3,7 @@ from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
 from chat_page import CHATPage
-from functions import process_input
+from functions import process_input, build_new_metadata
 from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
 
@@ -29,13 +29,16 @@ class TredBridgeMain(Tk):
         self.alpino_input = input_info['alpino_input']
         self.sentence = input_info['sentence']
         self.origsent = input_info['origsent']
+        self.old_metadata = input_info['old_metadata']
         # fields present at time of input parse
         self.revised_exists = input_info['revised_exists']
         self.origsent_exists = input_info['origsent_exists']
         self.alpino_input_exists = input_info['alpino_input_exists']
 
         # TODO remove prints
+        print('initial')
         self.print_state()
+        build_new_metadata(self.old_metadata)
 
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0
@@ -49,10 +52,10 @@ class TredBridgeMain(Tk):
         self.notebook.add(frame2, text="Alpino Editor")
         self.notebook.grid()
         # fill the tab frames
-        self.app1 = CHATPage(parent=frame1, utterance=self.revised_utt)
-        self.app1.grid()
-        self.app2 = AlpinoInputPage(parent=frame2, sentence=self.sentence)
-        self.app2.grid()
+        self.chat_app = CHATPage(parent=frame1, utterance=self.revised_utt)
+        self.chat_app.grid()
+        self.alp_app = AlpinoInputPage(parent=frame2, sentence=self.sentence)
+        self.alp_app.grid()
         # setup tabs
         self.notebook.tab(1, state='disabled')
 
