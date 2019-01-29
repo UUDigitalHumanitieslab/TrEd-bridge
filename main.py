@@ -28,17 +28,18 @@ class TredBridgeMain(Tk):
         self.revised_utt = input_info['revised_utt']
         self.alpino_input = input_info['alpino_input']
         self.sentence = input_info['sentence']
+        self.sentid = input_info['sent_id']
         self.origsent = input_info['origsent']
-        self.old_metadata = input_info['old_metadata']
+        self.xml_content = input_info['xml_content']
         # fields present at time of input parse
         self.revised_exists = input_info['revised_exists']
         self.origsent_exists = input_info['origsent_exists']
         self.alpino_input_exists = input_info['alpino_input_exists']
 
         # TODO remove prints
-        print('initial')
-        self.print_state()
-        build_new_metadata(self.old_metadata)
+        # print('initial')
+        # self.print_state()
+        # build_new_metadata(self)
 
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0

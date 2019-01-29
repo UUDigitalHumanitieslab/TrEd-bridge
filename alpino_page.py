@@ -6,7 +6,7 @@ from tkinter import filedialog
 from tkinter.ttk import *
 
 import config
-from functions import ask_input, clean_string
+from functions import ask_input, build_new_metadata, clean_string
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -67,8 +67,10 @@ class AlpinoInputPage(ttk.Frame):
         app.alpino_input = sent
 
         # TODO remove print statements
-        print('before alpino parse:')
-        app.print_state()
+        # print('before alpino parse:')
+        # app.print_state()
+
+        new_soup = build_new_metadata(app)
 
         base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
         # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'

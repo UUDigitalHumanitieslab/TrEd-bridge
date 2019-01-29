@@ -47,8 +47,9 @@ class CHATPage(ttk.Frame):
             self.grid_columnconfigure(i, {'minsize': 85})
 
     def reset_chat_edit(self):
+        app = self.master.master.master
         self.chat_edit.delete("1.0", END)
-        self.chat_edit.insert(END, utterance)
+        self.chat_edit.insert(END, app.revised_utt)
 
     def clean_continue_to_alpino(self):
         '''

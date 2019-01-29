@@ -15,14 +15,15 @@ def process_input(input_path):
     origutt_value = origutt.get('value')
     revised_utt = root.find('.//meta[@name="revisedutt"]')
     revised_exists = True
-    if not revised_utt:
+    if revised_utt is None:
         revised_utt = origutt
         revised_exists = False
 
     sentence = root.find('.//sentence')
     sentence_value = sentence.text
+    sent_id = sentence.get('sentid')
     origsent = root.find('.//meta[@name="origsent"]')
-    if not origsent:
+    if origsent is None:
         origsent_value = sentence.text
         origsent_exists = False
     else:
@@ -30,7 +31,7 @@ def process_input(input_path):
         origsent_exists: True
 
     alpino_input = root.find('.//meta[@name="alpino_input"]')
-    if not alpino_input:
+    if alpino_input is None:
         alpino_input_value = sentence.text
         alpino_input_exists = False
     else:
@@ -41,33 +42,54 @@ def process_input(input_path):
             'revised_utt': revised_utt.get('value'),
             'revised_exists': revised_exists,
             'sentence': sentence_value,
+            'sent_id': sent_id,
             'origsent': origsent_value,
             'origsent_exists': origsent_exists,
             'alpino_input': alpino_input_value,
             'alpino_input_exists': alpino_input_exists,
-            'old_metadata': ET.tostring(metadata)
+            'xml_content': ET.tostring(root)
             }
 
-    # origutt = root.find('.//meta[@name="origutt"]')
-    # origutt_old = '<meta type="text" name="origutt_old" value="{}"/>\n'.format(
-    #     origutt.get('value'))
-    # metadata.insert(
-    #     metadata.index(origutt)+1, ET.XML(origutt_old))
-    # new_metadata = ET.tostring(metadata) + b'\n'
 
-    # return origutt.get('value'), new_metadata
+def build_new_metadata(frame):
+    app = frame
+    xml_content = app.xml_content
+    soup = BeautifulSoup(xml_content, "xml")
+    meta = soup.metadata
 
+    revised_utt_tag = Tag(builder=soup.builder,
+                          name="meta",
+                          attrs={'name': 'revisedutt', 'value': app.revised_utt})
+    alpino_input_tag = Tag(builder=soup.builder,
+                           name="meta",
+                           attrs={'name': 'alpino_input', 'value': app.alpino_input})
+    sentence_tag = Tag(builder=soup.builder,
+                       name="sentence",
+                       attrs={'sentid': app.sentid})
+    sentence_tag.string = app.sentence
 
-def build_new_metadata(metadata, revised_exists=None, revised_utt=None, sent_exists=None, sent=None):
-    soup = BeautifulSoup(metadata, "xml")
-    # new_tag = soup.new_tag('meta', type="text",
-    #                        name="nieuwe", value="MottherMia")
-    new_tag = Tag(builder=soup.builder,
-                  name='meta',
-                  attrs={'value': 'MotherMia', 'name': 'nieuwe'})
-    meta = soup.find('metadata')
-    meta.append(new_tag)
-    print(soup.prettify())
+    # guaranteed replacements
+    soup.sentence.replace_with(sentence_tag)
+
+    # conditional replacements/additions
+    if app.revised_exists:
+        meta.revised_utt.replace_with(revised_utt_tag)
+    else:
+        meta.append(revised_utt_tag)
+
+    if app.alpino_input_exists:
+        orig_alpino_input = meta.find('meta', {'name': 'alpino_input'})
+        orig_alpino_input.replace_with(alpino_input_tag)
+    else:
+        meta.append(alpino_input_tag)
+
+    if not app.origsent_exists:
+        orig_sent_tag = Tag(builder=soup.builder,
+                            name="meta",
+                            attrs={'name': 'origsent', 'value': app.origsent})
+        meta.append(orig_sent_tag)
+
+    return soup.prettify()
 
 
 def ask_input(frame, label_text='', options=[]):
@@ -99,7 +121,7 @@ def correct_parenthesize(original, correction):
 
     # replace all diff with (diff)
     parenthesize = re.sub(pattern, replace_pattern, correction)
-    #remove ()
+    # remove ()
     remove_empty = re.sub(r'\(\)', '', parenthesize)
     # split corrections with whitespace
     split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
