@@ -1,102 +1,102 @@
 import tkinter
-from tkinter import *
-from tkinter.ttk import *
-import config
-from functions import ask_input, clean_string
-from tkinter import filedialog
-
 import urllib.parse
 import urllib.request
+from tkinter import *
+from tkinter import filedialog
+from tkinter.ttk import *
+
+import config
+from functions import ask_input, clean_string
 
 
 class AlpinoInputPage(ttk.Frame):
+    def bracket_selection(self, value):
+        self.alpino_edit.insert(SEL_FIRST, '[ {} '.format(value))
+        self.alpino_edit.insert(SEL_LAST, ' ] ')
+
+    def bracket_word(self, value, word=''):
+        ws = self.alpino_edit.index(INSERT) + " wordstart"
+        we = self.alpino_edit.index(INSERT) + " wordend"
+        word = self.alpino_edit.get(ws, we)
+        self.alpino_edit.delete(ws, we)
+        self.alpino_edit.insert(
+            ws+"-1c", " [ {} {} ] ".format(value, word))
+
+    def const(self):
+        """Specify constituent of <selection>"""
+        if self.alpino_edit.tag_ranges(SEL):
+            cat = ask_input(self, label_text="Constituent:",
+                            options=config.CAT_DICT)
+            value = "" if cat == "no cat" else "@"+cat
+            self.bracket_selection(value)
+
+    def pos(self):
+        """Specify Part-Of-Speech of <word>"""
+        value = ask_input(self, label_text="POS-tag:",
+                          options=config.POS_DICT)
+        self.bracket_word("@"+value)
+
+    def tae(self):
+        """Treat < word > as"""
+        w2 = ask_input(self, label_text="<word2>:")
+        value = "@add_lex {}".format(w2)
+        self.bracket_word(value)
+
+    def skip(self):
+        """Skip < selection >"""
+        if self.alpino_edit.tag_ranges(SEL):
+            value = "@skip"
+            self.bracket_selection(value)
+
+    def phantom(self):
+        """phantom <cursor position>"""
+        if not self.alpino_edit.tag_ranges(SEL):
+            w = ask_input(self, label_text="<word>:")
+            pos = self.alpino_edit.index(INSERT)
+            value = " [ @phantom {} ] ".format(w)
+            self.alpino_edit.insert(pos, value)
+
+    def parse(self):
+        """Parse with alpino"""
+        sent = self.alpino_edit.get(1.0, "end-1c")
+        sent = clean_string(sent)
+        self.alpino_edit.delete("1.0", END)
+        self.alpino_edit.insert(END, sent)
+
+        base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
+        # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
+        encoded_query = urllib.parse.quote(sent)
+        url = base_url + encoded_query
+
+        try:
+            contents = urllib.request.urlopen(url).read()
+            self.alp_out_txt.set(contents)
+        except urllib.error.HTTPError as e:
+            self.alp_out_txt.set('{}\n{}'.format(url, e))
+
+    def save(self):
+        """Write and save file"""
+        # print(parent.master.master.input_path)
+        f = filedialog.asksaveasfilename(title="Save as")
+        print(f)
+
+    def reset(self):
+        """reset to enter state"""
+        self.alpino_edit.delete("1.0", END)
+        self.alpino_edit.insert(END, sentence)
+
+    def configure_grid(self):
+        num_rows = 8
+        num_cols = 12
+        for i in range(0, num_rows):
+            self.grid_rowconfigure(i, {'minsize': 85})
+        for i in range(0, num_cols):
+            self.grid_columnconfigure(i, {'minsize': 85})
+
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
 
-        def bracket_selection(value):
-            self.alpino_edit.insert(SEL_FIRST, '[ {} '.format(value))
-            self.alpino_edit.insert(SEL_LAST, ' ] ')
-
-        def bracket_word(value, word=''):
-            ws = self.alpino_edit.index(INSERT) + " wordstart"
-            we = self.alpino_edit.index(INSERT) + " wordend"
-            word = self.alpino_edit.get(ws, we)
-            self.alpino_edit.delete(ws, we)
-            self.alpino_edit.insert(
-                ws+"-1c", " [ {} {} ] ".format(value, word))
-
-        def const():
-            """Specify constituent of <selection>"""
-            if self.alpino_edit.tag_ranges(SEL):
-                cat = ask_input(self, label_text="Constituent:",
-                                options=config.CAT_DICT)
-                value = "" if cat == "no cat" else "@"+cat
-                bracket_selection(value)
-
-        def pos():
-            """Specify Part-Of-Speech of <word>"""
-            value = ask_input(self, label_text="POS-tag:",
-                              options=config.POS_DICT)
-            bracket_word("@"+value)
-
-        def tae():
-            """Treat < word > as"""
-            w2 = ask_input(self, label_text="<word2>:")
-            value = "@add_lex {}".format(w2)
-            bracket_word(value)
-
-        def skip():
-            """Skip < selection >"""
-            if self.alpino_edit.tag_ranges(SEL):
-                value = "@skip"
-                bracket_selection(value)
-
-        def phantom():
-            """phantom <cursor position>"""
-            if not self.alpino_edit.tag_ranges(SEL):
-                w = ask_input(self, label_text="<word>:")
-                pos = self.alpino_edit.index(INSERT)
-                value = " [ @phantom {} ] ".format(w)
-                self.alpino_edit.insert(pos, value)
-
-        def parse():
-            """Parse with alpino"""
-            sent = self.alpino_edit.get(1.0, "end-1c")
-            sent = clean_string(sent)
-            self.alpino_edit.delete("1.0", END)
-            self.alpino_edit.insert(END, sent)
-
-            base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
-            # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
-            encoded_query = urllib.parse.quote(sent)
-            url = base_url + encoded_query
-
-            try:
-                contents = urllib.request.urlopen(url).read()
-                self.alp_out_txt.set(contents)
-            except urllib.error.HTTPError as e:
-                self.alp_out_txt.set('{}\n{}'.format(url, e))
-
-        def save():
-            """Write and save file"""
-            # print(parent.master.master.input_path)
-            f = filedialog.asksaveasfilename(title="Save as")
-            print(f)
-
-        def reset():
-            """reset to enter state"""
-            self.alpino_edit.delete("1.0", END)
-            self.alpino_edit.insert(END, sentence)
-
-        def configure_grid(frame):
-            num_rows = 8
-            num_cols = 12
-            for i in range(0, num_rows):
-                self.grid_rowconfigure(i, {'minsize': 85})
-            for i in range(0, num_cols):
-                self.grid_columnconfigure(i, {'minsize': 85})
-
-        configure_grid(self)
+        self.configure_grid()
 
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
@@ -109,31 +109,32 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.grid(row=1, column=1,
                               columnspan=9, sticky='NWSE')
 
-        reset_button = Button(self, text="Reset", command=reset)
+        reset_button = Button(self, text="Reset", command=self.reset)
         reset_button.grid(row=1, column=10, sticky='NWSE')
 
-        const_button = Button(self, text="[ @cat <selection> ]", command=const)
+        const_button = Button(
+            self, text="[ @cat <selection> ]", command=self.const)
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
 
-        pos_button = Button(self, text="POS of <word>", command=pos)
+        pos_button = Button(self, text="POS of <word>", command=self.pos)
         pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
 
         tae_button = Button(
-            self, text="Treat <word> as: <word2>", command=tae)
+            self, text="Treat <word> as: <word2>", command=self.tae)
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
 
         phantom_button = Button(
-            self, text="[ @phantom <word> ]", command=phantom)
+            self, text="[ @phantom <word> ]", command=self.phantom)
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
 
         skip_button = Button(
-            self, text="[ @skip <selection> ]", command=skip)
+            self, text="[ @skip <selection> ]", command=self.skip)
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
 
-        parse_button = Button(self, text="parse", command=parse)
+        parse_button = Button(self, text="parse", command=self.parse)
         parse_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
 
-        save_button = Button(self, text="save", command=save)
+        save_button = Button(self, text="save", command=self.save)
         save_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
 
         self.alp_out_txt = StringVar(value="Alpino output")

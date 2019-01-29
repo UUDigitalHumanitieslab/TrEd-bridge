@@ -1,14 +1,11 @@
-
 from tkinter import Frame, Label, Tk, ttk
 from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
+from chat_page import CHATPage
 from functions import process_input
 from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
-from chat_page import CHATPage
-
-from pprint import pprint
 
 
 class TredBridgeMain(Tk):
@@ -37,7 +34,9 @@ class TredBridgeMain(Tk):
         self.origsent_exists = input_info['origsent_exists']
         self.alpino_input_exists = input_info['alpino_input_exists']
 
+        # TODO remove prints
         self.print_state()
+
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0
 
@@ -45,22 +44,16 @@ class TredBridgeMain(Tk):
         self.notebook = Notebook(self)
         frame1 = ttk.Frame(self.notebook)
         frame2 = ttk.Frame(self.notebook)
-
         # add empty frames to notebook tabs
         self.notebook.add(frame1, text="CHAT Editor")
         self.notebook.add(frame2, text="Alpino Editor")
         self.notebook.grid()
-
         # fill the tab frames
         self.app1 = CHATPage(parent=frame1, utterance=self.revised_utt)
         self.app1.grid()
         self.app2 = AlpinoInputPage(parent=frame2, sentence=self.sentence)
         self.app2.grid()
-
-        # toggles
-        self.alpino_toggle = False
-
-        # setup
+        # setup tabs
         self.notebook.tab(1, state='disabled')
 
 
