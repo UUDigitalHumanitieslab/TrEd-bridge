@@ -70,8 +70,6 @@ class AlpinoInputPage(ttk.Frame):
         # print('before alpino parse:')
         # app.print_state()
 
-        new_soup = build_new_metadata(app)
-
         base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
         # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)
@@ -80,14 +78,17 @@ class AlpinoInputPage(ttk.Frame):
         try:
             contents = urllib.request.urlopen(url).read()
             self.alp_out_txt.set(contents)
+            new_soup = build_new_metadata(app, contents)
+            self.save(new_soup)
         except urllib.error.HTTPError as e:
             self.alp_out_txt.set('{}\n{}'.format(url, e))
 
-    def save(self):
+    def save(self, xml_content):
         """Write and save file"""
         # print(parent.master.master.input_path)
-        f = filedialog.asksaveasfilename(title="Save as")
-        print(f)
+        fileloc = filedialog.asksaveasfilename(title="Save as")
+        with open(fileloc, "w+") as f:
+            f.write(xml_content)
 
     def reset(self):
         """reset to enter state"""

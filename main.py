@@ -30,11 +30,14 @@ class TredBridgeMain(Tk):
         self.sentence = input_info['sentence']
         self.sentid = input_info['sent_id']
         self.origsent = input_info['origsent']
-        self.xml_content = input_info['xml_content']
         # fields present at time of input parse
         self.revised_exists = input_info['revised_exists']
         self.origsent_exists = input_info['origsent_exists']
         self.alpino_input_exists = input_info['alpino_input_exists']
+
+        # XML contents
+        self.xml_content = input_info['xml_content']
+        self.new_xml = ''
 
         # TODO remove prints
         # print('initial')

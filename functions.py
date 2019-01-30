@@ -51,7 +51,7 @@ def process_input(input_path):
             }
 
 
-def build_new_metadata(frame):
+def build_new_metadata(frame, alpino_return=None):
     app = frame
     xml_content = app.xml_content
     soup = BeautifulSoup(xml_content, "xml")
@@ -89,6 +89,10 @@ def build_new_metadata(frame):
                             attrs={'name': 'origsent', 'value': app.origsent})
         meta.append(orig_sent_tag)
 
+    if alpino_return:
+        a_r = BeautifulSoup(alpino_return, "xml")
+        soup.node.replace_with(a_r.node)
+
     return soup.prettify()
 
 
@@ -113,21 +117,29 @@ def correct_parenthesize(original, correction):
     replace_pattern = r''
     i = 1
 
-    for letter in original:
-        pattern += ('({})(.*)'.format(letter))
-        replace_pattern += '(\{})\{}'.format(i, i+1)
-        i += 2
-    pattern = re.compile(pattern)
+    if len(correction) > len(original):
+        ws_pattern = re.compile(r'(\S+)\s+(\S+)')
+        pattern = r'(.*)'
+        replace_pattern = r''
+        i = 1
 
-    # replace all diff with (diff)
-    parenthesize = re.sub(pattern, replace_pattern, correction)
-    # remove ()
-    remove_empty = re.sub(r'\(\)', '', parenthesize)
-    # split corrections with whitespace
-    split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
-                              r'(\1)\2(\3)', remove_empty)
+        for letter in original:
+            pattern += ('({})(.*)'.format(letter))
+            replace_pattern += '(\{})\{}'.format(i, i+1)
+            i += 2
+        pattern = re.compile(pattern)
 
-    return split_whitespace
+        # replace all diff with (diff)
+        parenthesize = re.sub(pattern, replace_pattern, correction)
+        # remove ()
+        remove_empty = re.sub(r'\(\)', '', parenthesize)
+        # split corrections with whitespace
+        split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
+                                  r'(\1)\2(\3)', remove_empty)
+        return split_whitespace
+
+    else:
+        return '{} [:{}] '.format(original, correction)
 
 
 def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
