@@ -19,7 +19,6 @@ class TredBridgeMain(Tk):
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.input_path = input_path
-        # self.origutt, self.new_metadata = process_input(self.input_path)
 
         # input parse
         input_info = process_input(self.input_path)

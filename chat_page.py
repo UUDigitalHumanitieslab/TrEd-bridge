@@ -35,8 +35,9 @@ class CHATPage(ttk.Frame):
     def clean(self):
         text = self.chat_edit.get("1.0", END)
         cleaned_text = clean_string(cleantext(text), punctuation=False)
-        self.chat_edit.delete("1.0", END)
-        self.chat_edit.insert(END, cleaned_text)
+        # self.chat_edit.delete("1.0", END)
+        # self.chat_edit.insert(END, cleaned_text)
+        messagebox.showinfo("Cleaned utterance", cleaned_text)
 
     def configure_grid(self):
         num_rows = 7
@@ -100,7 +101,8 @@ class CHATPage(ttk.Frame):
         ampersand_button = Button(
             self, text="&<word>", command=self.prefix_ampersand)
         correct_button = Button(self, text="correct", command=self.correct)
-        clean_button = Button(self, text="clean (CHAMD)", command=self.clean)
+        clean_button = Button(
+            self, text="preview cleaning (CHAMD)", command=self.clean)
         continue_button = Button(
             self, text="  clean\n     &\ncontinue", command=self.clean_continue_to_alpino)
 
