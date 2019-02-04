@@ -60,7 +60,7 @@ class TredBridgeMain(Tk):
         self.alp_app = AlpinoInputPage(parent=frame2, sentence=self.sentence)
         self.alp_app.grid()
         # setup tabs
-        self.notebook.tab(1, state='disabled')
+        # self.notebook.tab(1, state='disabled')
 
 
 if __name__ == '__main__':

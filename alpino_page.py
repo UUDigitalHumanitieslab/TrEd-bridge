@@ -27,7 +27,7 @@ class AlpinoInputPage(ttk.Frame):
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
                             options=config.CAT_DICT)
-            value = "" if cat == "" else "@"+cat
+            value = "" if cat == " " else "@"+cat
             self.bracket_selection(value)
 
     def pos(self):
@@ -79,7 +79,7 @@ class AlpinoInputPage(ttk.Frame):
             contents = urllib.request.urlopen(url).read()
             self.alp_out_txt.set(contents)
             new_soup = build_new_metadata(app, contents)
-            self.save(new_soup)
+            # self.save(new_soup)
         except urllib.error.HTTPError as e:
             self.alp_out_txt.set('{}\n{}'.format(url, e))
 
@@ -108,6 +108,17 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, alpino_input)
 
+    def key_callback(self, event):
+        if event.state == 4:
+            key = event.keysym if event.keysym != '??' else None
+            if key is not None:
+                try:
+                    bind = config.ALPINO_KEYBINDS[key]
+                    exec('self.{}()'.format(bind))
+                    print(key, bind)
+                except:
+                    pass
+
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
 
@@ -124,26 +135,28 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.grid(row=1, column=1,
                               columnspan=9, sticky='NWSE')
 
-        reset_button = Button(self, text="Reset", command=self.reset)
+        reset_button = Button(self, text="reset",
+                              underline=0, command=self.reset)
         reset_button.grid(row=1, column=10, sticky='NWSE')
 
         const_button = Button(
-            self, text="[ @cat <selection> ]", command=self.const)
+            self, text="constituent\n[ @cat <selection> ]", underline=1, command=self.const)
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
 
-        pos_button = Button(self, text="POS of <word>", command=self.pos)
+        pos_button = Button(
+            self, text="part-of-speech\n[ @pos <word> ]", underline=0, command=self.pos)
         pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
 
         tae_button = Button(
-            self, text="Treat <word> as: <word2>", command=self.tae)
+            self, text="treat as ...\n[ @add_lex <word> <word2> ]", underline=0, command=self.tae)
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
 
         phantom_button = Button(
-            self, text="[ @phantom <word> ]", command=self.phantom)
+            self, text="phantom word\n[ @phantom <word> ]", underline=1, command=self.phantom)
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
 
         skip_button = Button(
-            self, text="[ @skip <selection> ]", command=self.skip)
+            self, text="skip\n[ @skip <selection> ]", underline=0, command=self.skip)
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
 
         parse_button = Button(self, text="parse", command=self.parse)
@@ -156,3 +169,6 @@ class AlpinoInputPage(ttk.Frame):
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
         alpino_out.grid(row=4, rowspan=4, column=1,
                         columnspan=10, sticky='NWSE')
+
+        self.bind("<Control-Key>", self.key_callback)
+        self.alpino_edit.bind("<Control-Key>", self.key_callback)

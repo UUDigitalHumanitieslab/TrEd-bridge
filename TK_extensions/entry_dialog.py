@@ -29,10 +29,15 @@ class ComboBoxDialog:
     def __init__(self, parent, labeltext, options):
         top = self.top = tk.Toplevel(parent)
         self.options = options
-        self.value = list(options.keys()) if isinstance(
-            options, dict) else options
+        if isinstance(options, list):
+            self.value = options
+        else:
+            self.value = ['{} - {}'.format(value, key)
+                          for key, value in options.items()]
+        # self.value = list(options.keys()) if isinstance(
+        #     options, dict) else options
         self.width = math.floor(
-            max([len(item) for item in list(options.keys())])*1.2)
+            max([len(key)+len(value) for key, value in list(options.items())])*1.2)
         self.myLabel = tk.Label(top, text=labeltext)
         self.myLabel.pack()
         self.myComboBox = ttk.Combobox(
@@ -41,9 +46,18 @@ class ComboBoxDialog:
         self.myComboBox.current(0)
         self.myComboBox.focus()
         self.mySubmitButton = ttk.Button(top, text='Submit', command=self.send)
-        self.mySubmitButton.pack()
+        self.mySubmitButton.pack(fill=tk.X, expand=1)
+        self.myComboBox.bind("<Return>", self.key)
+
+    def key(self, event):
+        self.send()
 
     def send(self):
-        self.results = self.options[self.myComboBox.get()] if isinstance(
-            self.options, dict) else self.myComboBox.get()
+        if isinstance(self.options, list):
+            self.results = self.myComboBox.get()
+        else:
+            self.results = list(self.options.values())[
+                self.myComboBox.current()]
+        # self.results = self.options[self.myComboBox.get()] if isinstance(
+        #     self.options, dict) else self.myComboBox.get()
         self.top.destroy()

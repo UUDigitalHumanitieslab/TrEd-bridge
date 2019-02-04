@@ -1,5 +1,25 @@
+ALPINO_KEYBINDS = {
+    # key: function name
+    'p': 'pos',
+    't': 'tae',
+    'o': 'const',
+    's': 'skip',
+    'h': 'phantom',
+    'r': 'reset'
+}
+
+CHAT_KEYBINDS = {
+    # key: function name
+    'p': 'parenthesize_selection',
+    'g': 'prefix_ampersand',
+    'o': 'correct',
+    'e': 'clean',
+    'l': 'clean_continue_to_alpino',
+    'r': 'reset_chat_edit'
+}
+
 CAT_DICT = {
-    'no category': '',
+    'no category': ' ',
     'aan het infinitive': 'ahi',
     'adjectival phrase': 'ap',
     'adverbial phrase': 'advp',
