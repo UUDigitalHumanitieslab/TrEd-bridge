@@ -15,15 +15,18 @@ class CHATPage(ttk.Frame):
             self.chat_edit.insert(SEL_LAST, ')')
         else:
             messagebox.showerror("Error", "No text selected.")
+        self.chat_edit.focus()
 
     def prefix_ampersand(self):
         ws = self.chat_edit.index(INSERT) + " wordstart"
         self.chat_edit.insert(ws, "&")
+        self.chat_edit.focus()
 
     def correct(self):
         ws = self.chat_edit.index(INSERT) + " wordstart"
         we = self.chat_edit.index(INSERT) + " wordend"
         word = self.chat_edit.get(ws, we)
+        self.chat_edit.focus()
 
         correction = ask_input(
             self, label_text="word: {}\ncorrection:".format(word))
@@ -39,6 +42,7 @@ class CHATPage(ttk.Frame):
         # self.chat_edit.delete("1.0", END)
         # self.chat_edit.insert(END, cleaned_text)
         messagebox.showinfo("Cleaned utterance", cleaned_text)
+        self.chat_edit.focus()
 
     def configure_grid(self):
         num_rows = 7
@@ -52,6 +56,7 @@ class CHATPage(ttk.Frame):
         app = self.master.master.master
         self.chat_edit.delete("1.0", END)
         self.chat_edit.insert(END, app.revised_utt)
+        self.chat_edit.focus()
 
     def clean_continue_to_alpino(self):
         '''
@@ -109,9 +114,9 @@ class CHATPage(ttk.Frame):
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct",
-                                underline=1, command=self.correct)
+                                underline=6, command=self.correct)
         clean_button = Button(
-            self, text="preview cleaning (CHAMD)", underline=1, command=self.clean)
+            self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
         continue_button = Button(
             self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 

@@ -96,7 +96,8 @@ class TredBridgeMain(Tk):
         self.alp_app.grid()
         # setup tabs
         self.notebook.tab(1, state='disabled')
-
+        # focus on first screen
+        self.chat_app.chat_edit.focus()
         # mouse binding
         self.notebook.bind('<Button-1>', self.on_click_tab)
 
