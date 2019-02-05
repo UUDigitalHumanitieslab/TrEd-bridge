@@ -27,26 +27,30 @@ class AlpinoInputPage(ttk.Frame):
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
                             options=config.CAT_DICT)
-            value = "" if cat == "" else "@"+cat
+            value = "" if cat == " " else "@"+cat
             self.bracket_selection(value)
+            self.alpino_edit.focus()
 
     def pos(self):
         """Specify Part-Of-Speech of <word>"""
         value = ask_input(self, label_text="POS-tag:",
                           options=config.POS_DICT)
         self.bracket_word("@"+value)
+        self.alpino_edit.focus()
 
     def tae(self):
         """Treat < word > as"""
         w2 = ask_input(self, label_text="<word2>:")
         value = "@add_lex {}".format(w2)
         self.bracket_word(value)
+        self.alpino_edit.focus()
 
     def skip(self):
         """Skip < selection >"""
         if self.alpino_edit.tag_ranges(SEL):
             value = "@skip"
             self.bracket_selection(value)
+            self.alpino_edit.focus()
 
     def phantom(self):
         """phantom <cursor position>"""
@@ -55,6 +59,7 @@ class AlpinoInputPage(ttk.Frame):
             pos = self.alpino_edit.index(INSERT)
             value = " [ @phantom {} ] ".format(w)
             self.alpino_edit.insert(pos, value)
+            self.alpino_edit.focus()
 
     def parse(self):
         """Parse with alpino"""
@@ -79,22 +84,29 @@ class AlpinoInputPage(ttk.Frame):
             contents = urllib.request.urlopen(url).read()
             self.alp_out_txt.set(contents)
             new_soup = build_new_metadata(app, contents)
-            self.save(new_soup)
+            app.new_xml = new_soup
+            # print(new_soup)
+            self.save_button.state(["!disabled"])
         except urllib.error.HTTPError as e:
             self.alp_out_txt.set('{}\n{}'.format(url, e))
 
-    def save(self, xml_content):
+        self.alpino_edit.focus()
+
+    def save(self):
         """Write and save file"""
-        # print(parent.master.master.input_path)
-        fileloc = filedialog.asksaveasfilename(title="Save as")
-        with open(fileloc, "w+") as f:
-            f.write(xml_content)
+        print(self.save_button.state())
+        app = self.winfo_toplevel()
+        if self.save_button.state() == ():
+            fileloc = filedialog.asksaveasfilename(title="Save as")
+            with open(fileloc, "w+") as f:
+                f.write(app.new_xml)
 
     def reset(self):
         """reset to enter state"""
         app = self.master.master.master
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, app.alpino_input)
+        self.alpino_edit.focus()
 
     def configure_grid(self):
         num_rows = 8
@@ -108,51 +120,67 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, alpino_input)
 
+    def key_callback(self, event):
+        if event.state == 4:
+            key = event.keysym if event.keysym != '??' else None
+            if key is not None:
+                try:
+                    bind = config.ALPINO_KEYBINDS[key]
+                    exec('self.{}()'.format(bind))
+                except:
+                    pass
+
+    def back_to_chat(self):
+        app = self.winfo_toplevel()
+        app.switch_to_tab(0)
+
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
 
         self.configure_grid()
-
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
         sentenceLabel = Label(
             self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 16'))
-        sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
         self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))
         self.alpino_edit.insert(END, sentence)
-        self.alpino_edit.grid(row=1, column=1,
-                              columnspan=9, sticky='NWSE')
-
-        reset_button = Button(self, text="Reset", command=self.reset)
-        reset_button.grid(row=1, column=10, sticky='NWSE')
-
+        reset_button = Button(self, text="reset",
+                              underline=0, command=self.reset)
+        back_to_chat_button = Button(self, text="back to\nCHAT editor",
+                                     underline=0, command=self.back_to_chat)
         const_button = Button(
-            self, text="[ @cat <selection> ]", command=self.const)
-        const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
-
-        pos_button = Button(self, text="POS of <word>", command=self.pos)
-        pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
-
+            self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
+        pos_button = Button(
+            self, text="part-of-speech\n[ @pos <word> ]", underline=0, command=self.pos)
         tae_button = Button(
-            self, text="Treat <word> as: <word2>", command=self.tae)
-        tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
-
+            self, text="treat as ...\n[ @add_lex <word> <word2> ]", underline=0, command=self.tae)
         phantom_button = Button(
-            self, text="[ @phantom <word> ]", command=self.phantom)
-        phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
-
+            self, text="phantom word\n[ @phantom <word> ]", underline=1, command=self.phantom)
         skip_button = Button(
-            self, text="[ @skip <selection> ]", command=self.skip)
-        skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
-
-        parse_button = Button(self, text="parse", command=self.parse)
-        parse_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
-
-        save_button = Button(self, text="save", command=self.save)
-        save_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
+            self, text="skip\n[ @skip <selection> ]", underline=0, command=self.skip)
+        parse_button = Button(self, text="parse",
+                              underline=1, command=self.parse)
+        self.save_button = Button(
+            self, text="save", underline=0, command=self.save)
+        self.save_button.state(["disabled"])
 
         self.alp_out_txt = StringVar(value="Alpino output")
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
+
+        sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
+        self.alpino_edit.grid(row=1, column=2, columnspan=9, sticky='NWSE')
+        reset_button.grid(row=1, column=10, sticky='NWSE')
+        back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
+        const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
+        pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
+        tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
+        phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
+        skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
+        parse_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        self.save_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
         alpino_out.grid(row=4, rowspan=4, column=1,
                         columnspan=10, sticky='NWSE')
+
+        self.bind("<Control-Key>", self.key_callback)
+        self.alpino_edit.bind("<Control-Key>", self.key_callback)

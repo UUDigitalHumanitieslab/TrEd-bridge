@@ -5,6 +5,7 @@ from tkinter.ttk import *
 from chamd.cleanCHILDESMD import cleantext
 
 from functions import ask_input, clean_string, correct_parenthesize
+import config
 
 
 class CHATPage(ttk.Frame):
@@ -14,15 +15,18 @@ class CHATPage(ttk.Frame):
             self.chat_edit.insert(SEL_LAST, ')')
         else:
             messagebox.showerror("Error", "No text selected.")
+        self.chat_edit.focus()
 
     def prefix_ampersand(self):
         ws = self.chat_edit.index(INSERT) + " wordstart"
         self.chat_edit.insert(ws, "&")
+        self.chat_edit.focus()
 
     def correct(self):
         ws = self.chat_edit.index(INSERT) + " wordstart"
         we = self.chat_edit.index(INSERT) + " wordend"
         word = self.chat_edit.get(ws, we)
+        self.chat_edit.focus()
 
         correction = ask_input(
             self, label_text="word: {}\ncorrection:".format(word))
@@ -38,6 +42,7 @@ class CHATPage(ttk.Frame):
         # self.chat_edit.delete("1.0", END)
         # self.chat_edit.insert(END, cleaned_text)
         messagebox.showinfo("Cleaned utterance", cleaned_text)
+        self.chat_edit.focus()
 
     def configure_grid(self):
         num_rows = 7
@@ -51,6 +56,7 @@ class CHATPage(ttk.Frame):
         app = self.master.master.master
         self.chat_edit.delete("1.0", END)
         self.chat_edit.insert(END, app.revised_utt)
+        self.chat_edit.focus()
 
     def clean_continue_to_alpino(self):
         '''
@@ -71,21 +77,28 @@ class CHATPage(ttk.Frame):
         app.alpino_input = cleaned_text
 
         # TODO: Remove print statements
-        print('after CHAT')
-        app.print_state()
+        # print('after CHAT')
+        # app.print_state()
 
         # switch to alpino editor
         app.alp_app.set_alpino_input(cleaned_text)
-        app.notebook.tab(1, state='normal')
-        app.notebook.select(1)
-        app.phase = 1
+        app.transist_phase(0, 1)
+
+    def key_callback(self, event):
+        if event.state == 4:
+            key = event.keysym if event.keysym != '??' else None
+            if key is not None:
+                try:
+                    bind = config.CHAT_KEYBINDS[key]
+                    exec('self.{}()'.format(bind))
+                except:
+                    pass
 
     def __init__(self, utterance, parent=None):
         ttk.Frame.__init__(self, parent)
 
         self.configure_grid()
 
-        # static display of the original utterance
         chat_editLabel = Label(
             self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 16'))
 
@@ -95,16 +108,17 @@ class CHATPage(ttk.Frame):
                             columnspan=8, sticky='NWSE')
 
         chat_edit_reset_button = Button(
-            self, text="Reset", command=self.reset_chat_edit)
+            self, text="reset", underline=0, command=self.reset_chat_edit)
         parenthesize_button = Button(
-            self, text=" ( <selection> ) ", command=self.parenthesize_selection)
+            self, text="parenthesize\n( <selection> ) ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
-            self, text="&<word>", command=self.prefix_ampersand)
-        correct_button = Button(self, text="correct", command=self.correct)
+            self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
+        correct_button = Button(self, text="correct",
+                                underline=6, command=self.correct)
         clean_button = Button(
-            self, text="preview cleaning (CHAMD)", command=self.clean)
+            self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
         continue_button = Button(
-            self, text="  clean\n     &\ncontinue", command=self.clean_continue_to_alpino)
+            self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 
         chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
         chat_edit_reset_button.grid(row=1, column=8, sticky='NWSE')
@@ -113,3 +127,6 @@ class CHATPage(ttk.Frame):
         correct_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         clean_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         continue_button.grid(row=1, column=9, rowspan=2, sticky='NWSE')
+
+        self.bind("<Control-Key>", self.key_callback)
+        self.chat_edit.bind("<Control-Key>", self.key_callback)
