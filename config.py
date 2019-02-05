@@ -6,7 +6,9 @@ ALPINO_KEYBINDS = {
     's': 'skip',
     'h': 'phantom',
     'r': 'reset',
-    'b': 'back_to_chat'
+    'b': 'back_to_chat',
+    's': 'save',
+    'a': 'parse',
 }
 
 CHAT_KEYBINDS = {

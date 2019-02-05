@@ -3,7 +3,7 @@ from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
 from chat_page import CHATPage
-from functions import process_input, build_new_metadata
+from functions import build_new_metadata, process_input
 from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
 
@@ -45,6 +45,11 @@ class TredBridgeMain(Tk):
         self.notebook.tab(old_phase, state='disabled')
         self.notebook.tab(new_phase, state='normal')
         app.notebook.select(new_phase)
+
+        if new_phase == 0:
+            self.chat_app.chat_edit.focus()
+        elif new_phase == 1:
+            self.alp_app.alpino_edit.focus()
 
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)

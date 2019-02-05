@@ -83,12 +83,12 @@ class AlpinoInputPage(ttk.Frame):
         except urllib.error.HTTPError as e:
             self.alp_out_txt.set('{}\n{}'.format(url, e))
 
-    def save(self, xml_content):
+    def save(self):
         """Write and save file"""
         # print(parent.master.master.input_path)
         fileloc = filedialog.asksaveasfilename(title="Save as")
         with open(fileloc, "w+") as f:
-            f.write(xml_content)
+            f.write(self.xml_content)
 
     def reset(self):
         """reset to enter state"""
@@ -136,8 +136,8 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
-        back_button = Button(self, text="back to\nCHAT editor",
-                             underline=0, command=self.back_to_chat)
+        back_to_chat_button = Button(self, text="back to\nCHAT editor",
+                                     underline=0, command=self.back_to_chat)
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=1, command=self.const)
         pos_button = Button(
@@ -148,8 +148,9 @@ class AlpinoInputPage(ttk.Frame):
             self, text="phantom word\n[ @phantom <word> ]", underline=1, command=self.phantom)
         skip_button = Button(
             self, text="skip\n[ @skip <selection> ]", underline=0, command=self.skip)
-        parse_button = Button(self, text="parse", command=self.parse)
-        save_button = Button(self, text="save", command=self.save)
+        parse_button = Button(self, text="parse",
+                              underline=1, command=self.parse)
+        save_button = Button(self, text="save", underline=0, command=self.save)
 
         self.alp_out_txt = StringVar(value="Alpino output")
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
@@ -157,7 +158,7 @@ class AlpinoInputPage(ttk.Frame):
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
         self.alpino_edit.grid(row=1, column=2, columnspan=9, sticky='NWSE')
         reset_button.grid(row=1, column=10, sticky='NWSE')
-        back_button.grid(row=1, column=1, sticky="NWSE")
+        back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')

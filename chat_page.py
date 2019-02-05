@@ -113,7 +113,7 @@ class CHATPage(ttk.Frame):
         clean_button = Button(
             self, text="preview cleaning (CHAMD)", underline=1, command=self.clean)
         continue_button = Button(
-            self, text="  clean\n     &\ncontinue", underline=2, command=self.clean_continue_to_alpino)
+            self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 
         chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
         chat_edit_reset_button.grid(row=1, column=8, sticky='NWSE')
