@@ -115,9 +115,12 @@ class AlpinoInputPage(ttk.Frame):
                 try:
                     bind = config.ALPINO_KEYBINDS[key]
                     exec('self.{}()'.format(bind))
-                    print(key, bind)
                 except:
                     pass
+
+    def back_to_chat(self):
+        app = self.winfo_toplevel()
+        app.switch_to_tab(0)
 
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
@@ -132,12 +135,16 @@ class AlpinoInputPage(ttk.Frame):
 
         self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))
         self.alpino_edit.insert(END, sentence)
-        self.alpino_edit.grid(row=1, column=1,
+        self.alpino_edit.grid(row=1, column=2,
                               columnspan=9, sticky='NWSE')
 
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
         reset_button.grid(row=1, column=10, sticky='NWSE')
+
+        back_button = Button(self, text="back to\nCHAT editor",
+                             underline=0, command=self.back_to_chat)
+        back_button.grid(row=1, column=1, sticky="NWSE")
 
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=1, command=self.const)

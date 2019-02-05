@@ -1,4 +1,4 @@
-from tkinter import Frame, Label, Tk, ttk
+from tkinter import Frame, Label, messagebox, Tk, ttk
 from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
@@ -15,6 +15,36 @@ class TredBridgeMain(Tk):
         print('Alpino input:\t{}'.format(self.alpino_input))
         print('Sentence:\t{}'.format(self.sentence))
         print('Origsent:\t{}\n'.format(self.origsent))
+
+    def on_click_tab(self, event):
+        clicked_tab = self.notebook.tk.call(
+            self.notebook._w, "identify", "tab", event.x, event.y)
+        if clicked_tab != '':
+            self.switch_to_tab(clicked_tab)
+
+    def switch_to_tab(self, target_tab):
+        if self.phase == 0 and target_tab == 1:
+            result = messagebox.askquestion(
+                "Continue to Alpino editor", "Are you done editing the CHAT-utterance?")
+            if result == 'yes':
+                self.chat_app.clean_continue_to_alpino()
+                self.transist_phase(0, 1)
+
+        elif self.phase == 1 and target_tab == 0:
+            result = messagebox.askquestion(
+                "Return to CHAT editor",
+                "Do you wish to return to the CHAT-editor?" +
+                "\nWarning: all changes in the alpino editor are undone.",
+                icon='warning')
+            if result == 'yes':
+                self.alp_app.reset()
+                self.transist_phase(1, 0)
+
+    def transist_phase(self, old_phase, new_phase):
+        self.phase = new_phase
+        self.notebook.tab(old_phase, state='disabled')
+        self.notebook.tab(new_phase, state='normal')
+        app.notebook.select(new_phase)
 
     def __init__(self, input_path, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -60,7 +90,10 @@ class TredBridgeMain(Tk):
         self.alp_app = AlpinoInputPage(parent=frame2, sentence=self.sentence)
         self.alp_app.grid()
         # setup tabs
-        # self.notebook.tab(1, state='disabled')
+        self.notebook.tab(1, state='disabled')
+
+        # mouse binding
+        self.notebook.bind('<Button-1>', self.on_click_tab)
 
 
 if __name__ == '__main__':

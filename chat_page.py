@@ -72,14 +72,12 @@ class CHATPage(ttk.Frame):
         app.alpino_input = cleaned_text
 
         # TODO: Remove print statements
-        print('after CHAT')
-        app.print_state()
+        # print('after CHAT')
+        # app.print_state()
 
         # switch to alpino editor
         app.alp_app.set_alpino_input(cleaned_text)
-        app.notebook.tab(1, state='normal')
-        app.notebook.select(1)
-        app.phase = 1
+        app.transist_phase(0, 1)
 
     def key_callback(self, event):
         if event.state == 4:
@@ -96,7 +94,6 @@ class CHATPage(ttk.Frame):
 
         self.configure_grid()
 
-        # static display of the original utterance
         chat_editLabel = Label(
             self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 16'))
 
