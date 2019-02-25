@@ -28,7 +28,7 @@ def process_input(input_path):
         origsent_exists = False
     else:
         origsent_value = origsent.get('value')
-        origsent_exists: True
+        origsent_exists = True
 
     alpino_input = root.find('.//meta[@name="alpino_input"]')
     if alpino_input is None:
@@ -73,7 +73,8 @@ def build_new_metadata(frame, alpino_return=None):
 
     # conditional replacements/additions
     if app.revised_exists:
-        meta.revised_utt.replace_with(revised_utt_tag)
+        revised_utt = meta.find('meta', {'name': 'revisedutt'})
+        revised_utt.replace_with(revised_utt_tag)
     else:
         meta.append(revised_utt_tag)
 

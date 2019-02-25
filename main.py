@@ -1,4 +1,7 @@
-from tkinter import Frame, Label, messagebox, Tk, ttk
+#!/Users/3248526/git/tred-bridge/.env/bin/python
+import sys
+from optparse import OptionParser
+from tkinter import Frame, Label, Tk, messagebox, ttk
 from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
@@ -44,7 +47,7 @@ class TredBridgeMain(Tk):
         self.phase = new_phase
         self.notebook.tab(old_phase, state='disabled')
         self.notebook.tab(new_phase, state='normal')
-        app.notebook.select(new_phase)
+        self.notebook.select(new_phase)
 
         if new_phase == 0:
             self.chat_app.chat_edit.focus()
@@ -102,10 +105,27 @@ class TredBridgeMain(Tk):
         self.notebook.bind('<Button-1>', self.on_click_tab)
 
 
-if __name__ == '__main__':
-    app = TredBridgeMain(input_path='jan_example.xml')
-    s = ttk.Style()
-    s.theme_use('clam')
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
+    parser = OptionParser()
+    parser.add_option("-f", "--file", dest="filename",
+                      default=None, help="edit the given file (default: None)")
+    (options, args) = parser.parse_args(args)
+
+    app = None
+    if options.filename is not None:
+        app = TredBridgeMain(input_path=options.filename)
+    else:
+        app = TredBridgeMain(input_path='test_example.xml')
+
+    # s = ttk.Style()
+    # s.theme_use('clam')
     app.configure(background="lightgrey")
     apply_styles()
     app.mainloop()
+
+
+if __name__ == '__main__':
+    main()

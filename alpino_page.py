@@ -87,16 +87,17 @@ class AlpinoInputPage(ttk.Frame):
             app.new_xml = new_soup
             # print(new_soup)
             self.save_button.state(["!disabled"])
+            print(self.save_button.state())
         except urllib.error.HTTPError as e:
+            print(url)
             self.alp_out_txt.set('{}\n{}'.format(url, e))
 
         self.alpino_edit.focus()
 
     def save(self):
         """Write and save file"""
-        print(self.save_button.state())
         app = self.winfo_toplevel()
-        if self.save_button.state() == ():
+        if self.save_button.state()[0] == 'active':
             fileloc = filedialog.asksaveasfilename(title="Save as")
             with open(fileloc, "w+") as f:
                 f.write(app.new_xml)
