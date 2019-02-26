@@ -1,7 +1,8 @@
 from tkinter import ttk
 
 
-def apply_styles():
+def apply_styles(app):
+    app.configure(background="lightgrey")
     gui_style = ttk.Style()
     gui_style.theme_use('clam')
     # gui_style.configure('TLabel', background='#A8CD28')

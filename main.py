@@ -115,8 +115,7 @@ def main(args=None):
     else:
         app = TredBridgeMain(input_path='test_example.xml')
 
-    app.configure(background="lightgrey")
-    apply_styles()
+    apply_styles(app)
     app.mainloop()
 
 
