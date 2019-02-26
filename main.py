@@ -76,11 +76,6 @@ class TredBridgeMain(Tk):
         self.xml_content = input_info['xml_content']
         self.new_xml = ''
 
-        # TODO remove prints
-        # print('initial')
-        # self.print_state()
-        # build_new_metadata(self)
-
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0
 
@@ -120,8 +115,6 @@ def main(args=None):
     else:
         app = TredBridgeMain(input_path='test_example.xml')
 
-    # s = ttk.Style()
-    # s.theme_use('clam')
     app.configure(background="lightgrey")
     apply_styles()
     app.mainloop()

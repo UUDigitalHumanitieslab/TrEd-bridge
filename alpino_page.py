@@ -4,6 +4,7 @@ import urllib.request
 from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import *
+import webbrowser
 
 import config
 from functions import ask_input, build_new_metadata, clean_string
@@ -71,12 +72,7 @@ class AlpinoInputPage(ttk.Frame):
         app = self.master.master.master
         app.alpino_input = sent
 
-        # TODO remove print statements
-        # print('before alpino parse:')
-        # app.print_state()
-
         base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
-        # base_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)
         url = base_url + encoded_query
 
@@ -85,9 +81,8 @@ class AlpinoInputPage(ttk.Frame):
             self.alp_out_txt.set(contents)
             new_soup = build_new_metadata(app, contents)
             app.new_xml = new_soup
-            # print(new_soup)
             self.save_button.state(["!disabled"])
-            print(self.save_button.state())
+            self.treepreview_button.state(["!disabled"])
         except urllib.error.HTTPError as e:
             print(url)
             self.alp_out_txt.set('{}\n{}'.format(url, e))
@@ -101,6 +96,18 @@ class AlpinoInputPage(ttk.Frame):
             fileloc = filedialog.asksaveasfilename(title="Save as")
             with open(fileloc, "w+") as f:
                 f.write(app.new_xml)
+
+    def tree_preview(self):
+        visualizer_url = 'http://localhost:4200/visualize_tree'
+        app = self.winfo_toplevel()
+        sent = self.alpino_edit.get(1.0, "end-1c")
+        xml = app.new_xml
+        parameter = urllib.parse.urlencode({
+            'sent': sent,
+            'XML': xml
+        })
+        url = "{}?{}".format(visualizer_url, parameter)
+        webbrowser.get().open(url, new=2)
 
     def reset(self):
         """reset to enter state"""
@@ -165,6 +172,9 @@ class AlpinoInputPage(ttk.Frame):
         self.save_button = Button(
             self, text="save", underline=0, command=self.save)
         self.save_button.state(["disabled"])
+        self.treepreview_button = Button(
+            self, text="preview tree", underline=0, command=self.tree_preview)
+        self.treepreview_button.state(["disabled"])
 
         self.alp_out_txt = StringVar(value="Alpino output")
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
@@ -179,7 +189,8 @@ class AlpinoInputPage(ttk.Frame):
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
         parse_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
-        self.save_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
+        self.save_button.grid(row=3, column=7, columnspan=4, sticky='NWSE')
+        self.treepreview_button.grid(row=3, column=6, sticky='NWSE')
         alpino_out.grid(row=4, rowspan=4, column=1,
                         columnspan=10, sticky='NWSE')
 

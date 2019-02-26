@@ -76,10 +76,6 @@ class CHATPage(ttk.Frame):
         app.sentence = cleaned_text
         app.alpino_input = cleaned_text
 
-        # TODO: Remove print statements
-        # print('after CHAT')
-        # app.print_state()
-
         # switch to alpino editor
         app.alp_app.set_alpino_input(cleaned_text)
         app.transist_phase(0, 1)
