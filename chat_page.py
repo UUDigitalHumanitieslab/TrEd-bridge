@@ -4,7 +4,7 @@ from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
 
-from functions import ask_input, clean_string, correct_parenthesize
+from functions import ask_input, clean_string, correct_parenthesize, hard_reset_metadata
 import config
 
 
@@ -39,8 +39,6 @@ class CHATPage(ttk.Frame):
     def clean(self):
         text = self.chat_edit.get("1.0", END)
         cleaned_text = clean_string(cleantext(text), punctuation=False)
-        # self.chat_edit.delete("1.0", END)
-        # self.chat_edit.insert(END, cleaned_text)
         messagebox.showinfo("Cleaned utterance", cleaned_text)
         self.chat_edit.focus()
 
@@ -90,6 +88,13 @@ class CHATPage(ttk.Frame):
                 except:
                     pass
 
+    def hard_reset(self):
+        result = messagebox.askokcancel(
+            "Hard Reset", "This will reset this document to its original state.\nThis operation is irreversible.\nReset?")
+        if result:
+            app = self.winfo_toplevel()
+            hard_reset_metadata(app)
+
     def __init__(self, utterance, parent=None):
         ttk.Frame.__init__(self, parent)
 
@@ -105,6 +110,8 @@ class CHATPage(ttk.Frame):
 
         chat_edit_reset_button = Button(
             self, text="reset", underline=0, command=self.reset_chat_edit)
+        hard_reset_button = Button(
+            self, text="hard reset", style="Red.TButton", command=self.hard_reset)
         parenthesize_button = Button(
             self, text="parenthesize\n( <selection> ) ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
@@ -117,12 +124,13 @@ class CHATPage(ttk.Frame):
             self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 
         chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
-        chat_edit_reset_button.grid(row=1, column=8, sticky='NWSE')
+        chat_edit_reset_button.grid(row=2, column=9, sticky='NWSE')
+        hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         parenthesize_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         ampersand_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
         correct_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         clean_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
-        continue_button.grid(row=1, column=9, rowspan=2, sticky='NWSE')
+        continue_button.grid(row=1, column=10, rowspan=2, sticky='NWSE')
 
         self.bind("<Control-Key>", self.key_callback)
         self.chat_edit.bind("<Control-Key>", self.key_callback)

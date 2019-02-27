@@ -51,10 +51,37 @@ def process_input(input_path):
             }
 
 
-def build_new_metadata(frame, alpino_return=None):
-    app = frame
-    xml_content = app.xml_content
-    soup = BeautifulSoup(xml_content, "xml")
+def hard_reset_metadata(app):
+    soup = BeautifulSoup(app.xml_content, "xml")
+    meta = soup.metadata
+
+    # remove revisedutt and alpino_input
+    revised_utt = meta.find('meta', {'name': 'revisedutt'})
+    if revised_utt:
+        revised_utt.decompose()
+    alpino_input = meta.find('meta', {'name': 'alpino_input'})
+    if alpino_input:
+        alpino_input.decompose()
+
+    # reset sentence
+    orig_sent = meta.find('meta', {'name': 'origsent'})
+    if orig_sent:
+        sentence_tag = Tag(builder=soup.builder,
+                           name="sentence",
+                           attrs={'sentid': app.sentid})
+        sentence_tag.string = orig_sent.attrs['value']
+        soup.sentence.replace_with(sentence_tag)
+        orig_sent.decompose()
+
+    # save the xml
+    with open(app.input_path, 'w+') as f:
+        f.write(soup.prettify())
+
+    #
+
+
+def build_new_metadata(app, alpino_return=None):
+    soup = BeautifulSoup(app.xml_content, "xml")
     meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
