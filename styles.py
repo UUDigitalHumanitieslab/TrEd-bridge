@@ -7,6 +7,6 @@ def apply_styles(app):
     gui_style.theme_use('clam')
     gui_style.configure('TButton', background='#A8CD28')
     gui_style.configure('TButton', foreground='white')
-    gui_style.configure('Red.TButton', background='red')
+    gui_style.configure('Red.TButton', background='indian red')
     gui_style.configure('Red.TButton', foreground='white')
-    gui_style.configure('.', font=('Roboto', 18))
+    gui_style.configure('.', font=('Roboto', 20))

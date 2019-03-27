@@ -156,9 +156,9 @@ class AlpinoInputPage(ttk.Frame):
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
         sentenceLabel = Label(
-            self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 16'))
+            self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 20'))
 
-        self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))
+        self.alpino_edit = Text(self, height=5, font=('Roboto, 20'))
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
