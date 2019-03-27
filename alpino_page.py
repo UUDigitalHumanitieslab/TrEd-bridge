@@ -7,7 +7,7 @@ from tkinter.ttk import *
 import webbrowser
 
 import config
-from functions import ask_input, build_new_metadata, clean_string
+from functions import ask_input, build_new_metadata, clean_string, hard_reset_metadata
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -98,13 +98,13 @@ class AlpinoInputPage(ttk.Frame):
                 f.write(app.new_xml)
 
     def tree_preview(self):
-        visualizer_url = 'http://localhost:4200/visualize_tree'
+        visualizer_url = 'http://localhost:4200/tree'
         app = self.winfo_toplevel()
         sent = self.alpino_edit.get(1.0, "end-1c")
         xml = app.new_xml
         parameter = urllib.parse.urlencode({
-            'sent': sent,
-            'XML': xml
+            # 'sent': sent,
+            'xml': xml
         })
         url = "{}?{}".format(visualizer_url, parameter)
         webbrowser.get().open(url, new=2)
@@ -142,6 +142,13 @@ class AlpinoInputPage(ttk.Frame):
         app = self.winfo_toplevel()
         app.switch_to_tab(0)
 
+    def hard_reset(self):
+        result = messagebox.askokcancel(
+            "Hard Reset", "This will reset this document to its original state.\nThis operation is irreversible.\nReset?")
+        if result:
+            app = self.winfo_toplevel()
+            hard_reset_metadata(app)
+
     def __init__(self, sentence, parent=None):
         ttk.Frame.__init__(self, parent)
 
@@ -149,12 +156,14 @@ class AlpinoInputPage(ttk.Frame):
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
         sentenceLabel = Label(
-            self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 16'))
+            self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 20'))
 
-        self.alpino_edit = Text(self, height=5, font=('Roboto, 16'))
+        self.alpino_edit = Text(self, height=5, font=('Roboto, 20'))
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
+        self.hard_reset_button = Button(
+            self, text="hard reset", style="Red.TButton", command=self.hard_reset)
         back_to_chat_button = Button(self, text="back to\nCHAT editor",
                                      underline=0, command=self.back_to_chat)
         const_button = Button(
@@ -180,8 +189,9 @@ class AlpinoInputPage(ttk.Frame):
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
-        self.alpino_edit.grid(row=1, column=2, columnspan=9, sticky='NWSE')
+        self.alpino_edit.grid(row=1, column=2, columnspan=8, sticky='NWSE')
         reset_button.grid(row=1, column=10, sticky='NWSE')
+        self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
