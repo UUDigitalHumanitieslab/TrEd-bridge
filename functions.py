@@ -1,53 +1,54 @@
 import re
+import sys
 
 import lxml.etree as ET
 from bs4 import BeautifulSoup, Tag
 
 from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
+from tkinter import messagebox
 
 
 def process_input(input_path):
-    tree = ET.parse(input_path)
-    root = tree.getroot()
-    metadata = root.find('metadata')
+    # read xml
+    f = open(input_path, 'r')
+    xml_content = f.read()
+    f.close()
+    soup = BeautifulSoup(xml_content, 'xml')
+    meta = soup.metadata
 
-    origutt = root.find('.//meta[@name="origutt"]')
-    origutt_value = origutt.get('value')
-    revised_utt = root.find('.//meta[@name="revisedutt"]')
-    revised_exists = True
+    # original utterane
+    origutt = meta.find('meta', {'name': 'origutt'})
+    # revised utterance (optional)
+    revised_utt = meta.find('meta', {'name': 'revisedutt'})
+    revised_exists = False if revised_utt is None else True
     if revised_utt is None:
         revised_utt = origutt
-        revised_exists = False
+    # sentence
+    sentence = soup.sentence
+    sentence_id = sentence['sentid']
+    sentence_text = clean_string(
+        sentence.text, newlines=True, punctuation=False, doublespaces=False)
+    # orignal sentence (optional)
+    orig_sent = meta.find('meta', {'name': 'origsent'})
+    (orig_sent_text, orig_sent_exists) = \
+        (sentence_text, False) if orig_sent is None \
+        else (orig_sent['value'], True)
+    # Alpino input (optional)
+    alpino_input = meta.find('meta', {'name': 'alpino_input'})
+    (alpino_input_text, alpino_input_exists) = \
+        (sentence_text, False) if alpino_input is None \
+        else (alpino_input['value'], True)
 
-    sentence = root.find('.//sentence')
-    sentence_value = sentence.text
-    sent_id = sentence.get('sentid')
-    origsent = root.find('.//meta[@name="origsent"]')
-    if origsent is None:
-        origsent_value = sentence.text
-        origsent_exists = False
-    else:
-        origsent_value = origsent.get('value')
-        origsent_exists = True
-
-    alpino_input = root.find('.//meta[@name="alpino_input"]')
-    if alpino_input is None:
-        alpino_input_value = sentence.text
-        alpino_input_exists = False
-    else:
-        alpino_input_value = alpino_input.get('value')
-        alpino_input_exists = True
-
-    return {'origutt': origutt_value,
-            'revised_utt': revised_utt.get('value'),
+    return {'origutt': origutt['value'],
+            'revised_utt': revised_utt['value'],
             'revised_exists': revised_exists,
-            'sentence': sentence_value,
-            'sent_id': sent_id,
-            'origsent': origsent_value,
-            'origsent_exists': origsent_exists,
-            'alpino_input': alpino_input_value,
+            'sentence': sentence_text,
+            'sent_id': sentence_id,
+            'origsent': orig_sent_text,
+            'origsent_exists': orig_sent_exists,
+            'alpino_input': alpino_input_text,
             'alpino_input_exists': alpino_input_exists,
-            'xml_content': ET.tostring(root)
+            'xml_content': soup.prettify()
             }
 
 
@@ -77,11 +78,15 @@ def hard_reset_metadata(app):
     with open(app.input_path, 'w+') as f:
         f.write(soup.prettify())
 
-    #
+    messagebox.showinfo(
+        "", "Succesfully reset!\nPress OK to exit the program.")
+
+    # exit the program
+    sys.exit()
 
 
 def build_new_metadata(app, alpino_return=None):
-    soup = BeautifulSoup(app.xml_content, "xml")
+    soup = BeautifulSoup(app.xml_content, "lxml")
     meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
