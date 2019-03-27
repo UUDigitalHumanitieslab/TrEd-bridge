@@ -24,7 +24,7 @@ class AlpinoInputPage(ttk.Frame):
             ws+"-1c", " [ {} {} ] ".format(value, word))
 
     def const(self):
-        """Specify constituent of <selection>"""
+        """Specify constituent of < selection >"""
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
                             options=config.CAT_DICT)
@@ -33,7 +33,7 @@ class AlpinoInputPage(ttk.Frame):
             self.alpino_edit.focus()
 
     def pos(self):
-        """Specify Part-Of-Speech of <word>"""
+        """Specify Part-Of-Speech of < word >"""
         value = ask_input(self, label_text="POS-tag:",
                           options=config.POS_DICT)
         self.bracket_word("@"+value)

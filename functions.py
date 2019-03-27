@@ -39,25 +39,22 @@ def process_input(input_path):
         (sentence_text, False) if alpino_input is None \
         else (alpino_input['value'], True)
 
-    r = {'origutt': origutt['value'],
-         'revised_utt': revised_utt['value'],
-         'revised_exists': revised_exists,
-         'sentence': sentence_text,
-         'sent_id': sentence_id,
-         'origsent': orig_sent_text,
-         'origsent_exists': orig_sent_exists,
-         'alpino_input': alpino_input_text,
-         'alpino_input_exists': alpino_input_exists,
-         'xml_content': soup
-         }
-    pprint(r)
-    return r
+    return {'origutt': origutt['value'],
+            'revised_utt': revised_utt['value'],
+            'revised_exists': revised_exists,
+            'sentence': sentence_text,
+            'sent_id': sentence_id,
+            'origsent': orig_sent_text,
+            'origsent_exists': orig_sent_exists,
+            'alpino_input': alpino_input_text,
+            'alpino_input_exists': alpino_input_exists,
+            'xml_content': soup.prettify()
+            }
 
 
-def build_new_metadata(frame, alpino_return=None):
-    app = frame
+def build_new_metadata(app, alpino_return=None):
     xml_content = app.xml_content
-    soup = BeautifulSoup(xml_content, "xml")
+    soup = BeautifulSoup(xml_content, "lxml")
     meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
