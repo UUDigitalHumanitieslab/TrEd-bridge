@@ -1,7 +1,6 @@
 import re
 import sys
 
-import lxml.etree as ET
 from bs4 import BeautifulSoup, Tag
 
 from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
@@ -86,7 +85,7 @@ def hard_reset_metadata(app):
 
 
 def build_new_metadata(app, alpino_return=None):
-    soup = BeautifulSoup(app.xml_content, "lxml")
+    soup = BeautifulSoup(app.xml_content, "xml")
     meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,

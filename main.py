@@ -13,6 +13,7 @@ from TK_extensions.entry_dialog import EntryDialog
 
 class TredBridgeMain(Tk):
     def print_state(self):
+        ''' print state of different metadata fields for debugging puprposes'''
         print('Origutt:\t{}'.format(self.origutt))
         print('Revisedutt:\t{}'.format(self.revised_utt))
         print('Alpino input:\t{}'.format(self.alpino_input))
