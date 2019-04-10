@@ -36,7 +36,7 @@ class AlpinoInputPage(ttk.Frame):
         """Specify Part-Of-Speech of < word >"""
         value = ask_input(self, label_text="POS-tag:",
                           options=config.POS_DICT)
-        self.bracket_word("@"+value)
+        self.bracket_word("@posflt {}".format(value))
         self.alpino_edit.focus()
 
     def tae(self):
