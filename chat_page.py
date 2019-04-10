@@ -38,7 +38,8 @@ class CHATPage(ttk.Frame):
 
     def clean(self):
         text = self.chat_edit.get("1.0", END)
-        cleaned_text = clean_string(cleantext(text), punctuation=False)
+        cleaned_text = clean_string(
+            cleantext(text, repkeep=False), punctuation=False)
         messagebox.showinfo("Cleaned utterance", cleaned_text)
         self.chat_edit.focus()
 
@@ -62,7 +63,7 @@ class CHATPage(ttk.Frame):
         '''
         # clean
         text = self.chat_edit.get("1.0", END)
-        cleaned_text = cleantext(text)
+        cleaned_text = cleantext(text, repkeep=False)
         double_cleaned_text = cleaned_text
 
         self.chat_edit.delete("1.0", END)

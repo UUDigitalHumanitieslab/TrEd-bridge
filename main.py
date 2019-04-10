@@ -110,7 +110,11 @@ def main(args=None):
                       default=None, help="edit the given file (default: None)")
     (options, args) = parser.parse_args(args)
 
-    app = TredBridgeMain(input_path=options.filename)
+    app = None
+    if options.filename == None:
+        app = TredBridgeMain(input_path='test.xml')
+    else:
+        app = TredBridgeMain(input_path=options.filename)
 
     apply_styles(app)
     app.mainloop()

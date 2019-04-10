@@ -98,12 +98,12 @@ class AlpinoInputPage(ttk.Frame):
                 f.write(app.new_xml)
 
     def tree_preview(self):
-        visualizer_url = 'http://localhost:4200/tree'
+        visualizer_url = 'http://gretel.hum.uu.nl/tree'
         app = self.winfo_toplevel()
         sent = self.alpino_edit.get(1.0, "end-1c")
         xml = app.new_xml
         parameter = urllib.parse.urlencode({
-            # 'sent': sent,
+            'sent': sent,
             'xml': xml
         })
         url = "{}?{}".format(visualizer_url, parameter)
