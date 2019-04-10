@@ -14,6 +14,7 @@ class AlpinoInputPage(ttk.Frame):
     def bracket_selection(self, value):
         self.alpino_edit.insert(SEL_FIRST, '[ {} '.format(value))
         self.alpino_edit.insert(SEL_LAST, ' ] ')
+        self.alpino_edit.focus()
 
     def bracket_word(self, value, word=''):
         ws = self.alpino_edit.index(INSERT) + " wordstart"
@@ -33,10 +34,17 @@ class AlpinoInputPage(ttk.Frame):
             self.alpino_edit.focus()
 
     def pos(self):
-        """Specify Part-Of-Speech of < word >"""
-        value = ask_input(self, label_text="POS-tag:",
-                          options=config.POS_DICT)
-        self.bracket_word("@posflt {}".format(value))
+        """Specify Part-Of-Speech of < word > or < selection >"""
+        if self.alpino_edit.tag_ranges(SEL):
+            print('selection')
+            value = ask_input(self, label_text="POS-tag:",
+                              options=config.POS_DICT)
+            self.bracket_selection("@posflt {}".format(value))
+        else:
+            value = ask_input(self, label_text="POS-tag:",
+                              options=config.POS_DICT)
+            self.bracket_word("@posflt {}".format(value))
+
         self.alpino_edit.focus()
 
     def tae(self):
@@ -169,7 +177,7 @@ class AlpinoInputPage(ttk.Frame):
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
         pos_button = Button(
-            self, text="part-of-speech\n[ @pos <word> ]", underline=0, command=self.pos)
+            self, text="part-of-speech\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
         tae_button = Button(
             self, text="treat as ...\n[ @add_lex <word> <word2> ]", underline=0, command=self.tae)
         phantom_button = Button(
