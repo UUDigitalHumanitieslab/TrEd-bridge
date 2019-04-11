@@ -20,9 +20,11 @@ class AlpinoInputPage(ttk.Frame):
         ws = self.alpino_edit.index(INSERT) + " wordstart"
         we = self.alpino_edit.index(INSERT) + " wordend"
         word = self.alpino_edit.get(ws, we)
+        self.alpino_edit.mark_set("start_pos", ws)
+        start_pos = self.alpino_edit.index("start_pos")
         self.alpino_edit.delete(ws, we)
         self.alpino_edit.insert(
-            ws+"-1c", " [ {} {} ] ".format(value, word))
+            start_pos+"-1c", " [ {} {} ] ".format(value, word))
 
     def const(self):
         """Specify constituent of < selection >"""
