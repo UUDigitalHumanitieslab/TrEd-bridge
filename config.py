@@ -1,3 +1,6 @@
+
+GRETEL_URL = 'http://gretel.hum.uu.nl'
+
 ALPINO_KEYBINDS = {
     # key: function name
     'p': 'pos',

@@ -1,13 +1,15 @@
+import os
 import tkinter
 import urllib.parse
 import urllib.request
+import webbrowser
 from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import *
-import webbrowser
 
 import config
-from functions import ask_input, build_new_metadata, clean_string, hard_reset_metadata
+from functions import (ask_input, build_new_metadata, clean_string,
+                       hard_reset_metadata)
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -82,9 +84,10 @@ class AlpinoInputPage(ttk.Frame):
         app = self.master.master.master
         app.alpino_input = sent
 
-        base_url = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
-        encoded_query = urllib.parse.quote(sent)
-        url = base_url + encoded_query
+        parse_url = os.path.join(
+            config.GRETEL_URL, 'gretel4/api/src/router.php/parse_sentence/')
+        encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
+        url = parse_url + encoded_query
 
         try:
             contents = urllib.request.urlopen(url).read()
