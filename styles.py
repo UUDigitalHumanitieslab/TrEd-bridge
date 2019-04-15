@@ -2,6 +2,7 @@ from tkinter import ttk
 
 
 def apply_styles(app):
+    app.resizable(False, False)
     app.configure(background="lightgrey")
     gui_style = ttk.Style()
     gui_style.theme_use('clam')

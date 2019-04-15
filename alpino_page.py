@@ -168,7 +168,8 @@ class AlpinoInputPage(ttk.Frame):
         sentenceLabel = Label(
             self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 20'))
 
-        self.alpino_edit = Text(self, height=5, font=('Roboto, 20'))
+        self.alpino_edit = Text(
+            self, height=5, font=('Roboto, 20'), wrap='word', width=60)
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
@@ -199,7 +200,7 @@ class AlpinoInputPage(ttk.Frame):
         alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
-        self.alpino_edit.grid(row=1, column=2, columnspan=8, sticky='NWSE')
+        self.alpino_edit.grid(row=1, column=2, columnspan=7, sticky='NWSE')
         reset_button.grid(row=1, column=10, sticky='NWSE')
         self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
