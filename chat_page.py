@@ -44,7 +44,7 @@ class CHATPage(ttk.Frame):
         self.chat_edit.focus()
 
     def configure_grid(self):
-        num_rows = 7
+        num_rows = 5
         num_cols = 12
         for i in range(0, num_rows):
             self.grid_rowconfigure(i, {'minsize': 85})
@@ -101,18 +101,17 @@ class CHATPage(ttk.Frame):
 
         self.configure_grid()
 
+        # elements
         chat_editLabel = Label(
-            self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 16'))
+            self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 20'))
 
-        self.chat_edit = Text(self, height=5, font=('Roboto, 16'))
+        self.chat_edit = Text(self, height=4, font=('Roboto, 20'))
         self.chat_edit.insert(END, utterance)
-        self.chat_edit.grid(row=1, column=1,
-                            columnspan=8, sticky='NWSE')
 
         chat_edit_reset_button = Button(
             self, text="reset", underline=0, command=self.reset_chat_edit)
         hard_reset_button = Button(
-            self, text="hard reset", style="Red.TButton", command=self.hard_reset)
+            self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
         parenthesize_button = Button(
             self, text="parenthesize\n( <selection> ) ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
@@ -124,14 +123,17 @@ class CHATPage(ttk.Frame):
         continue_button = Button(
             self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 
-        chat_editLabel.grid(row=0, column=1, columnspan=7, sticky='NWSE')
-        chat_edit_reset_button.grid(row=2, column=9, sticky='NWSE')
+        # grid
+        chat_editLabel.grid(row=0, column=1, columnspan=8, sticky='NWSE')
+        self.chat_edit.grid(row=1, column=1, columnspan=8, sticky='NWSE')
+        chat_edit_reset_button.grid(row=1, column=10, sticky='NWSE')
         hard_reset_button.grid(row=1, column=9, sticky='NWSE')
-        parenthesize_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
-        ampersand_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
-        correct_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
-        clean_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
-        continue_button.grid(row=1, column=10, rowspan=2, sticky='NWSE')
+        parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
+        ampersand_button.grid(row=2, column=5, columnspan=3, sticky='NWSE')
+        correct_button.grid(row=2, column=8, columnspan=3, sticky='NWSE')
+        clean_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        continue_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
 
+        # keybinds
         self.bind("<Control-Key>", self.key_callback)
         self.chat_edit.bind("<Control-Key>", self.key_callback)

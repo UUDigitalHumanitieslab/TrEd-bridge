@@ -86,6 +86,7 @@ class AlpinoInputPage(ttk.Frame):
 
         parse_url = os.path.join(
             config.GRETEL_URL, 'gretel4/api/src/router.php/parse_sentence/')
+        # parse_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
         url = parse_url + encoded_query
 
@@ -111,7 +112,7 @@ class AlpinoInputPage(ttk.Frame):
                 f.write(app.new_xml)
 
     def tree_preview(self):
-        visualizer_url = 'http://gretel.hum.uu.nl/tree'
+        visualizer_url = os.path.join(config.GRETEL_URL, 'tree')
         app = self.winfo_toplevel()
         sent = self.alpino_edit.get(1.0, "end-1c")
         xml = app.new_xml
@@ -130,7 +131,7 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.focus()
 
     def configure_grid(self):
-        num_rows = 8
+        num_rows = 5
         num_cols = 12
         for i in range(0, num_rows):
             self.grid_rowconfigure(i, {'minsize': 85})
@@ -172,7 +173,7 @@ class AlpinoInputPage(ttk.Frame):
             self, text="Original sentence:\n" + sentence, anchor="center", font=('Roboto, 20'))
 
         self.alpino_edit = Text(
-            self, height=5, font=('Roboto, 20'), wrap='word', width=60)
+            self, height=4, font=('Roboto, 20'), wrap='word', width=60)
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
@@ -212,11 +213,13 @@ class AlpinoInputPage(ttk.Frame):
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
-        parse_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        parse_button.grid(row=3, column=1, columnspan=4, sticky='NWSE')
         self.save_button.grid(row=3, column=7, columnspan=4, sticky='NWSE')
-        self.treepreview_button.grid(row=3, column=6, sticky='NWSE')
-        alpino_out.grid(row=4, rowspan=4, column=1,
-                        columnspan=10, sticky='NWSE')
+        self.treepreview_button.grid(
+            row=3, column=5, columnspan=2, sticky='NWSE')
+        if config.DEBUG:
+            alpino_out.grid(row=4, rowspan=4, column=1,
+                            columnspan=10, sticky='NWSE')
 
         self.bind("<Control-Key>", self.key_callback)
         self.alpino_edit.bind("<Control-Key>", self.key_callback)

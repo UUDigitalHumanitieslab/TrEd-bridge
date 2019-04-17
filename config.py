@@ -1,5 +1,8 @@
+# Debug mode (True/False)
+DEBUG = False
 
 GRETEL_URL = 'http://gretel.hum.uu.nl'
+# GRETEL_URL = 'http://localhost:4200'
 
 ALPINO_KEYBINDS = {
     # key: function name
