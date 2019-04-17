@@ -1,11 +1,14 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import Label as TKLabel
 from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
 
-from functions import ask_input, clean_string, correct_parenthesize, hard_reset_metadata
+from functions import (ask_input, clean_string,
+                       correct_parenthesize, hard_reset_metadata)
 import config
+from TK_extensions.text import TextWithCallback
 
 
 class CHATPage(ttk.Frame):
@@ -46,10 +49,16 @@ class CHATPage(ttk.Frame):
     def configure_grid(self):
         num_rows = 5
         num_cols = 12
+
         for i in range(0, num_rows):
             self.grid_rowconfigure(i, {'minsize': 85})
         for i in range(0, num_cols):
             self.grid_columnconfigure(i, {'minsize': 85})
+
+        if config.DEBUG:
+            self.grid_rowconfigure(num_rows-1, {'minsize': 20})
+        for i in [0, num_cols-1]:
+            self.grid_columnconfigure(i, {'minsize': 20})
 
     def reset_chat_edit(self):
         app = self.master.master.master
@@ -89,6 +98,12 @@ class CHATPage(ttk.Frame):
                 except:
                     pass
 
+    def text_changed_callback(self, event):
+        text = self.chat_edit.get("1.0", END)
+        cleaned_text = clean_string(
+            cleantext(text, repkeep=False), punctuation=False)
+        self.clean_preview_text.set('cleaned utterance:\n'+cleaned_text)
+
     def hard_reset(self):
         result = messagebox.askokcancel(
             "Hard Reset", "This will reset this document to its original state.\nThis operation is irreversible.\nReset?")
@@ -105,8 +120,9 @@ class CHATPage(ttk.Frame):
         chat_editLabel = Label(
             self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 20'))
 
-        self.chat_edit = Text(self, height=4, font=('Roboto, 20'))
+        self.chat_edit = TextWithCallback(self, height=4, font=('Roboto, 20'))
         self.chat_edit.insert(END, utterance)
+        self.chat_edit.bind("<<TextChanged>>", self.text_changed_callback)
 
         chat_edit_reset_button = Button(
             self, text="reset", underline=0, command=self.reset_chat_edit)
@@ -118,8 +134,11 @@ class CHATPage(ttk.Frame):
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct",
                                 underline=6, command=self.correct)
-        clean_button = Button(
-            self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
+        # clean_button = Button(
+        #     self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
+        self.clean_preview_text = StringVar()
+        clean_preview = TKLabel(
+            self, textvariable=self.clean_preview_text)
         continue_button = Button(
             self, text="  clean\n     &\ncontinue", underline=3, command=self.clean_continue_to_alpino)
 
@@ -131,7 +150,8 @@ class CHATPage(ttk.Frame):
         parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
         ampersand_button.grid(row=2, column=5, columnspan=3, sticky='NWSE')
         correct_button.grid(row=2, column=8, columnspan=3, sticky='NWSE')
-        clean_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        # clean_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        clean_preview.grid(row=3, column=1, columnspan=5, sticky='NWSE')
         continue_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
 
         # keybinds
