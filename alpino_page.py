@@ -131,12 +131,17 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.focus()
 
     def configure_grid(self):
-        num_rows = 5
+        num_rows = 8 if config.DEBUG else 5
         num_cols = 12
         for i in range(0, num_rows):
             self.grid_rowconfigure(i, {'minsize': 85})
         for i in range(0, num_cols):
             self.grid_columnconfigure(i, {'minsize': 85})
+
+        if config.DEBUG:
+            self.grid_rowconfigure(num_rows-1, {'minsize': 20})
+        for i in [0, num_cols-1]:
+            self.grid_columnconfigure(i, {'minsize': 20})
 
     def set_alpino_input(self, alpino_input):
         self.alpino_edit.delete("1.0", END)

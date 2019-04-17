@@ -11,3 +11,4 @@ def apply_styles(app):
     gui_style.configure('Red.TButton', background='indian red')
     gui_style.configure('Red.TButton', foreground='white')
     gui_style.configure('.', font=('Roboto', 20))
+    gui_style.configure('Bordered.TLabel', borderwidth=2)
