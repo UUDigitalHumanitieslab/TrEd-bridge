@@ -26,10 +26,21 @@ class CHATPage(ttk.Frame):
         self.chat_edit.focus()
 
     def correct(self):
+        # ws = self.alpino_edit.index(INSERT) + " wordstart"
+        # we = self.alpino_edit.index(INSERT) + " wordend"
+        # word = self.alpino_edit.get(ws, we)
+        # self.alpino_edit.mark_set("start_pos", ws)
+        # start_pos = self.alpino_edit.index("start_pos")
+        # self.alpino_edit.delete(ws, we)
+        # self.alpino_edit.insert(
+        #     start_pos+"-1c", " [ {} {} ] ".format(value, word))
+
         ws = self.chat_edit.index(INSERT) + " wordstart"
         we = self.chat_edit.index(INSERT) + " wordend"
         word = self.chat_edit.get(ws, we)
-        self.chat_edit.focus()
+
+        self.chat_edit.mark_set("start_pos", ws)
+        start_pos = self.chat_edit.index("start_pos")
 
         correction = ask_input(
             self, label_text="word: {}\ncorrection:".format(word))
@@ -37,7 +48,9 @@ class CHATPage(ttk.Frame):
         corrected_string = correct_parenthesize(word, correction)
 
         self.chat_edit.delete(ws, we)
-        self.chat_edit.insert(ws, "{} ".format(corrected_string))
+        self.chat_edit.insert(start_pos, "{} ".format(corrected_string))
+
+        self.chat_edit.focus()
 
     def clean(self):
         text = self.chat_edit.get("1.0", END)

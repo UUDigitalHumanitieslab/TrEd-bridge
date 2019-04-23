@@ -149,7 +149,18 @@ def correct_parenthesize(original, correction):
     replace_pattern = r''
     i = 1
 
-    if len(correction) > len(original):
+    # only edits at start or end
+    if original in correction:
+        pattern = r'(.*)({})(.*)'.format(original)
+        replace_pattern = r'(\1)\2(\3)'
+
+        parenthesize = re.sub(pattern, replace_pattern, correction)
+        remove_empty = re.sub(r'\(\)', '', parenthesize)
+        split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
+                                  r'(\1)\2(\3)', remove_empty)
+        return split_whitespace
+
+    else:
         ws_pattern = re.compile(r'(\S+)\s+(\S+)')
         pattern = r'(.*)'
         replace_pattern = r''
@@ -159,19 +170,26 @@ def correct_parenthesize(original, correction):
             pattern += ('({})(.*)'.format(letter))
             replace_pattern += '(\{})\{}'.format(i, i+1)
             i += 2
+
+        pattern += r'(.*)'
         pattern = re.compile(pattern)
+
+        # if the pattern is not in the correction, a ()-notation is not possible
+        # in this case, return [: ]-notation
+        if not re.match(pattern, correction):
+            return '{} [:{}]'.format(original, correction)
 
         # replace all diff with (diff)
         parenthesize = re.sub(pattern, replace_pattern, correction)
+
         # remove ()
         remove_empty = re.sub(r'\(\)', '', parenthesize)
+        print(remove_empty)
+
         # split corrections with whitespace
         split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
                                   r'(\1)\2(\3)', remove_empty)
         return split_whitespace
-
-    else:
-        return '{} [:{}] '.format(original, correction)
 
 
 def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
