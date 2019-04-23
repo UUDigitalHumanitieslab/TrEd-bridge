@@ -58,11 +58,17 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.focus()
 
     def skip(self):
-        """Skip < selection >"""
+        """Skip < selection > or < word >"""
+        value = "@skip"
         if self.alpino_edit.tag_ranges(SEL):
-            value = "@skip"
-            self.bracket_selection(value)
-            self.alpino_edit.focus()
+            sel = self.alpino_edit.get(SEL_FIRST, SEL_LAST)
+            sel = re.sub(r'\b(\w+)\b', r'[ @skip \1 ]', sel)
+            self.alpino_edit.mark_set("start_pos", SEL_FIRST)
+            start_pos = self.alpino_edit.index("start_pos")
+            self.alpino_edit.delete(SEL_FIRST, SEL_LAST)
+            self.alpino_edit.insert(start_pos, sel)
+        else:
+            self.bracket_word(value)
 
     def phantom(self):
         """phantom <cursor position>"""
@@ -83,9 +89,9 @@ class AlpinoInputPage(ttk.Frame):
         app = self.master.master.master
         app.alpino_input = sent
 
-        parse_url = os.path.join(
-            config.GRETEL_URL, 'gretel4/api/src/router.php/parse_sentence/')
-        # parse_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
+        # parse_url = os.path.join(
+        #     config.GRETEL_URL, 'gretel4/api/src/router.php/parse_sentence/')
+        parse_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
         url = parse_url + encoded_query
 
@@ -215,7 +221,7 @@ class AlpinoInputPage(ttk.Frame):
         phantom_button = Button(
             self, text="phantom word\n[ @phantom <word> ]", underline=1, command=self.phantom)
         skip_button = Button(
-            self, text="skip\n[ @skip <selection> ]", underline=0, command=self.skip)
+            self, text="skip\n[ @skip <word>/<selection> ]", underline=0, command=self.skip)
         parse_button = Button(self, text="parse",
                               underline=1, command=self.parse)
         self.save_button = Button(
