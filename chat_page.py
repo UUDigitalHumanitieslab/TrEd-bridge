@@ -26,14 +26,12 @@ class CHATPage(ttk.Frame):
         self.chat_edit.focus()
 
     def correct(self):
-        # ws = self.alpino_edit.index(INSERT) + " wordstart"
-        # we = self.alpino_edit.index(INSERT) + " wordend"
-        # word = self.alpino_edit.get(ws, we)
-        # self.alpino_edit.mark_set("start_pos", ws)
-        # start_pos = self.alpino_edit.index("start_pos")
-        # self.alpino_edit.delete(ws, we)
-        # self.alpino_edit.insert(
-        #     start_pos+"-1c", " [ {} {} ] ".format(value, word))
+        if self.chat_edit.tag_ranges(SEL):
+            selection = self.chat_edit.get(SEL_FIRST, SEL_LAST)
+            if ' ' in selection:
+                messagebox.showerror(
+                    "Error", "Correct only works for single words.")
+                return
 
         ws = self.chat_edit.index(INSERT) + " wordstart"
         we = self.chat_edit.index(INSERT) + " wordend"
@@ -145,7 +143,7 @@ class CHATPage(ttk.Frame):
             self, text="parenthesize\n( <selection> ) ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
-        correct_button = Button(self, text="correct",
+        correct_button = Button(self, text="correct <word>",
                                 underline=6, command=self.correct)
         # clean_button = Button(
         #     self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
