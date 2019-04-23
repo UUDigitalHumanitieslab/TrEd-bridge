@@ -77,7 +77,7 @@ class AlpinoInputPage(ttk.Frame):
     def parse(self):
         """Parse with alpino"""
         sent = self.alpino_edit.get(1.0, "end-1c")
-        sent = clean_string(sent)
+        # sent = clean_string(sent)
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, sent)
 
@@ -90,16 +90,36 @@ class AlpinoInputPage(ttk.Frame):
         encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
         url = parse_url + encoded_query
 
+        if config.DEBUG:
+            self.alpino_out.grid_remove()
+        else:
+            self.alp_msg.grid_remove()
+
         try:
             contents = urllib.request.urlopen(url).read()
-            self.alp_out_txt.set(contents)
             new_soup = build_new_metadata(app, contents)
             app.new_xml = new_soup
             self.save_button.state(["!disabled"])
             self.treepreview_button.state(["!disabled"])
+            if config.DEBUG:
+                self.alp_out_txt.set(contents)
+                self.alpino_out.grid(row=4, rowspan=4, column=1,
+                                     columnspan=10, sticky='NWSE')
+            else:
+                self.alp_msg_txt.set('Parse succesful!')
+                self.alp_msg.configure(background='#A8CD28')
+                self.alp_msg.grid(
+                    row=4, column=1, columnspan=4, sticky='NWSE')
+
         except urllib.error.HTTPError as e:
-            print(url)
-            self.alp_out_txt.set('{}\n{}'.format(url, e))
+            if config.DEBUG:
+                self.alp_out_txt.set('{}\n{}'.format(url, e))
+            else:
+                alp_message = tkinter.Label(self, text='joehoe')
+                self.alp_msg_txt.set('Parse failed: {}'.format(e))
+                self.alp_msg.configure(background="indian red")
+                self.alp_msg.grid(
+                    row=4, column=1, columnspan=4, sticky='NWSE')
 
         self.alpino_edit.focus()
 
@@ -112,7 +132,7 @@ class AlpinoInputPage(ttk.Frame):
                 f.write(app.new_xml)
 
     def tree_preview(self):
-        visualizer_url = os.path.join(config.GRETEL_URL, 'tree')
+        visualizer_url = 'http:/localhost:4200/tree'
         app = self.winfo_toplevel()
         sent = self.alpino_edit.get(1.0, "end-1c")
         xml = app.new_xml
@@ -172,6 +192,7 @@ class AlpinoInputPage(ttk.Frame):
         ttk.Frame.__init__(self, parent)
 
         self.configure_grid()
+
         sentenceVar = StringVar(
             value="Original sentence:\n" + sentence)
         sentenceLabel = Label(
@@ -191,7 +212,7 @@ class AlpinoInputPage(ttk.Frame):
         pos_button = Button(
             self, text="part-of-speech\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
         tae_button = Button(
-            self, text="treat as ...\n[ @add_lex <word> <word2> ]", underline=0, command=self.tae)
+            self, text="treat as ...\n[ @add_lex <word2> <word> ]", underline=0, command=self.tae)
         phantom_button = Button(
             self, text="phantom word\n[ @phantom <word> ]", underline=1, command=self.phantom)
         skip_button = Button(
@@ -204,9 +225,6 @@ class AlpinoInputPage(ttk.Frame):
         self.treepreview_button = Button(
             self, text="preview tree", underline=0, command=self.tree_preview)
         self.treepreview_button.state(["disabled"])
-
-        self.alp_out_txt = StringVar(value="Alpino output")
-        alpino_out = tkinter.Label(self, textvariable=self.alp_out_txt)
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
         self.alpino_edit.grid(row=1, column=2, columnspan=7, sticky='NWSE')
@@ -222,9 +240,16 @@ class AlpinoInputPage(ttk.Frame):
         self.save_button.grid(row=3, column=7, columnspan=4, sticky='NWSE')
         self.treepreview_button.grid(
             row=3, column=5, columnspan=2, sticky='NWSE')
+
+        # Output for Alpino. Full when in DEBUG, concise otherwise
         if config.DEBUG:
-            alpino_out.grid(row=4, rowspan=4, column=1,
-                            columnspan=10, sticky='NWSE')
+            self.alp_out_txt = StringVar(value="Alpino output")
+            self.alpino_out = tkinter.Label(
+                self, textvariable=self.alp_out_txt)
+        else:
+            self.alp_msg_txt = StringVar()
+            self.alp_msg = tkinter.Label(
+                self, textvariable=self.alp_msg_txt, font=('Roboto', 20), foreground='white', borderwidth=2, relief='solid')
 
         self.bind("<Control-Key>", self.key_callback)
         self.alpino_edit.bind("<Control-Key>", self.key_callback)
