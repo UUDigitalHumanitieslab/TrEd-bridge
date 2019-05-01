@@ -8,11 +8,11 @@ use Treex::PML;
 sub Treex::PML::Node::validate_subtree {
   my ($node, $log) = @_;
   if (defined $log and ! UNIVERSAL::isa($log,'ARRAY')) {
-    croak __PACKAGE__."::validate: log must be an ARRAY reference";
+    die __PACKAGE__."::validate: log must be an ARRAY reference";
   }
   my $type = $node->type;
   if (!ref($type)) {
-    croak __PACKAGE__."::validate: Cannot determine node data type!";
+    die __PACKAGE__."::validate: Cannot determine node data type!";
   }
   $type->validate_object($node,{ log=>$log });
 }
@@ -731,8 +731,7 @@ sub after_save_hook {
     my ($filename, $saved_ok)=@_;
     if ($saved_ok) {
 	   # Find dtcanonicalize.py in the extension's resources folder:
-        use File::Basename;
-        my $path = dirname(__FILE__)."/../../resources";
+        my $path = File::Basename::dirname(__FILE__)."/../../resources";
         my $canonicalize = $path . "/dtcanonicalize.py";
 
         # kunnen we canonicalize.py wel vinden?
@@ -1247,19 +1246,19 @@ sub launch_editor {
     # my $errormsg = `$pypath $scriptpath -f $filename 2>&1`;
     
     # establish absolute path of editor and current file
-    my $path = dirname(__FILE__)."/../../resources";
-    my $editor = $path . "/chat_alpino_editor.exe" 
+    my $path = File::Basename::dirname(__FILE__)."/../../resources";
+    my $editor = $path . "/chat_alpino_editor.exe"; 
     my $filename = $grp->{FSFile}->filename;
 
     # check if editor is present at the given location
     if ( ! -e $editor) {
-        die "Error: Can't access CHAT/Alpino-Editor at $editor"
+        die "Error: Can't access CHAT/Alpino-Editor at $editor";
     }
 
     # execute the editor. any errors are piped to TrEd.
     my $errormsg = '$editor -f $filename 2>&1';
     if ($?) {
-        warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n"
+        warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
         return 'stop';
     }
 
