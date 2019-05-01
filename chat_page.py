@@ -14,8 +14,8 @@ from TK_extensions.text import TextWithCallback
 class CHATPage(ttk.Frame):
     def parenthesize_selection(self):
         if self.chat_edit.tag_ranges(SEL):
-            self.chat_edit.insert(SEL_FIRST, '(')
-            self.chat_edit.insert(SEL_LAST, ')')
+            self.chat_edit.insert(SEL_FIRST, '[')
+            self.chat_edit.insert(SEL_LAST, ']')
         else:
             messagebox.showerror("Error", "No text selected.")
         self.chat_edit.focus()
@@ -140,7 +140,7 @@ class CHATPage(ttk.Frame):
         hard_reset_button = Button(
             self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
         parenthesize_button = Button(
-            self, text="parenthesize\n( <selection> ) ", underline=0, command=self.parenthesize_selection)
+            self, text="parenthesize\n[ <selection> ]) ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct <word>",
