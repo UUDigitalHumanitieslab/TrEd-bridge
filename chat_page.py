@@ -140,7 +140,7 @@ class CHATPage(ttk.Frame):
         hard_reset_button = Button(
             self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
         parenthesize_button = Button(
-            self, text="parenthesize\n[ <selection> ]) ", underline=0, command=self.parenthesize_selection)
+            self, text="parenthesize\n[<selection>] ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct <word>",
