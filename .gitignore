@@ -117,3 +117,5 @@ venv.bak/
 # Example files
 *.xml
 
+# TrEd extension defintion
+!package.xml
