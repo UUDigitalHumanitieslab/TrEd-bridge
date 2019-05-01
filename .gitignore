@@ -118,4 +118,6 @@ venv.bak/
 *.xml
 
 # TrEd extension xml's
-!/docs/**/*.xml
+!alpino_schema.xml
+!pmlbackend_conf.xml
+!package.xml
