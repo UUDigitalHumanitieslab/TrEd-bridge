@@ -82,18 +82,15 @@ class AlpinoInputPage(ttk.Frame):
     def parse(self):
         """Parse with alpino"""
         sent = self.alpino_edit.get(1.0, "end-1c")
-        # sent = clean_string(sent)
+        sent = clean_string(sent)
         self.alpino_edit.delete("1.0", END)
         self.alpino_edit.insert(END, sent)
 
-        app = self.master.master.master
+        app = self.winfo_toplevel()
         app.alpino_input = sent
 
-        # parse_url = os.path.join(
-        #     config.GRETEL_URL, 'gretel4/api/src/router.php/parse_sentence/')
-        parse_url = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
         encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
-        url = parse_url + encoded_query
+        url = config.PARSER_URL + encoded_query
 
         if config.DEBUG:
             self.alpino_out.grid_remove()
@@ -132,12 +129,17 @@ class AlpinoInputPage(ttk.Frame):
         """Write and save file"""
         app = self.winfo_toplevel()
         if self.save_button.state()[0] == 'active':
-            fileloc = filedialog.asksaveasfilename(title="Save as")
+            if config.DEBUG:
+                fileloc = filedialog.asksaveasfilename(title="Save as")
+            else:
+                fileloc = app.input_path
             with open(fileloc, "w+") as f:
                 f.write(app.new_xml)
+            if not config.DEBUG:
+                exit()
 
     def tree_preview(self):
-        visualizer_url = 'http:/localhost:4200/tree'
+        visualizer_url = config.TREE_VIS_URL
         app = self.winfo_toplevel()
         sent = self.alpino_edit.get(1.0, "end-1c")
         xml = app.new_xml
@@ -225,7 +227,7 @@ class AlpinoInputPage(ttk.Frame):
         parse_button = Button(self, text="parse",
                               underline=1, command=self.parse)
         self.save_button = Button(
-            self, text="save", underline=0, command=self.save)
+            self, text="save" if config.DEBUG else "save & exit", underline=0, command=self.save)
         self.save_button.state(["disabled"])
         self.treepreview_button = Button(
             self, text="preview tree", underline=0, command=self.tree_preview)
