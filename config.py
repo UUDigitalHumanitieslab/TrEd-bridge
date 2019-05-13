@@ -17,6 +17,7 @@ ALPINO_KEYBINDS = {
     'b': 'back_to_chat',
     's': 'save',
     'a': 'parse',
+    'v': 'tree_preview',
 }
 
 CHAT_KEYBINDS = {
@@ -24,7 +25,7 @@ CHAT_KEYBINDS = {
     'p': 'parenthesize_selection',
     'g': 'prefix_ampersand',
     't': 'correct',
-    'e': 'clean',
+    # 'e': 'clean',
     'l': 'clean_continue_to_alpino',
     'r': 'reset_chat_edit'
 }

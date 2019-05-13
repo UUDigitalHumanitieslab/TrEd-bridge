@@ -230,7 +230,7 @@ class AlpinoInputPage(ttk.Frame):
             self, text="save" if config.DEBUG else "save & exit", underline=0, command=self.save)
         self.save_button.state(["disabled"])
         self.treepreview_button = Button(
-            self, text="preview tree", underline=0, command=self.tree_preview)
+            self, text="preview tree", underline=3, command=self.tree_preview)
         self.treepreview_button.state(["disabled"])
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
