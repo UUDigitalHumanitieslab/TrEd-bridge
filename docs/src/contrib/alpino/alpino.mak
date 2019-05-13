@@ -1248,7 +1248,7 @@ sub launch_editor {
     
     # establish absolute path of editor and current file
     my $path = dirname(__FILE__)."/../../resources";
-    my $editor = $path . "/chat_alpino_editor.exe" 
+    my $editor = $path . "/editor.exe" 
     my $filename = $grp->{FSFile}->filename;
 
     # check if editor is present at the given location
