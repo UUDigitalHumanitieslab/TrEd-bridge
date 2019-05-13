@@ -1248,18 +1248,18 @@ sub launch_editor {
     
     # establish absolute path of editor and current file
     my $path = dirname(__FILE__)."/../../resources";
-    my $editor = $path . "/editor.exe" 
+    my $editor = $path . "/editor.exe";
     my $filename = $grp->{FSFile}->filename;
 
     # check if editor is present at the given location
     if ( ! -e $editor) {
-        die "Error: Can't access CHAT/Alpino-Editor at $editor"
+        die "Error: Can't access CHAT/Alpino-Editor at $editor";
     }
 
     # execute the editor. any errors are piped to TrEd.
     my $errormsg = '$editor -f $filename 2>&1';
     if ($?) {
-        warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n"
+        warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
         return 'stop';
     }
 
