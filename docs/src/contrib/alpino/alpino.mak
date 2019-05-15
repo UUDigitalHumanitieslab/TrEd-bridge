@@ -8,11 +8,11 @@ use Treex::PML;
 sub Treex::PML::Node::validate_subtree {
   my ($node, $log) = @_;
   if (defined $log and ! UNIVERSAL::isa($log,'ARRAY')) {
-    croak __PACKAGE__."::validate: log must be an ARRAY reference";
+    warn __PACKAGE__."::validate: log must be an ARRAY reference";
   }
   my $type = $node->type;
   if (!ref($type)) {
-    croak __PACKAGE__."::validate: Cannot determine node data type!";
+    warn __PACKAGE__."::validate: Cannot determine node data type!";
   }
   $type->validate_object($node,{ log=>$log });
 }
@@ -731,7 +731,7 @@ sub after_save_hook {
     my ($filename, $saved_ok)=@_;
     if ($saved_ok) {
 	   # Find dtcanonicalize.py in the extension's resources folder:
-        use File::Basename;
+        # use File::Basename;
         my $path = dirname(__FILE__)."/../../resources";
         my $canonicalize = $path . "/dtcanonicalize.py";
 

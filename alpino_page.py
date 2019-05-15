@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter
 import urllib.parse
 import urllib.request
@@ -136,7 +137,7 @@ class AlpinoInputPage(ttk.Frame):
             with open(fileloc, "w+") as f:
                 f.write(app.new_xml)
             if not config.DEBUG:
-                exit()
+                sys.exit()
 
     def tree_preview(self):
         visualizer_url = config.TREE_VIS_URL
