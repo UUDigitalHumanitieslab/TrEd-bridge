@@ -731,8 +731,7 @@ sub after_save_hook {
     my ($filename, $saved_ok)=@_;
     if ($saved_ok) {
 	   # Find dtcanonicalize.py in the extension's resources folder:
-        # use File::Basename;
-        my $path = dirname(__FILE__)."/../../resources";
+        my $path = File::Basename::dirname(__FILE__)."/../../resources";
         my $canonicalize = $path . "/dtcanonicalize.py";
 
         # kunnen we canonicalize.py wel vinden?
@@ -1241,15 +1240,12 @@ sub launch_editor {
     # TODO: save the file at the current location.
     #       this avoids the editor not using changes made in TrEd. 
 
-    # ReloadCurrentFile();
-    # my $pypath = '/Users/3248526/git/tred-bridge/.env/bin/python';
-    # my $scriptpath = '/Users/3248526/git/tred-bridge/main.py';
-    # my $errormsg = `$pypath $scriptpath -f $filename 2>&1`;
-    
     # establish absolute path of editor and current file
-    my $path = dirname(__FILE__)."/../../resources";
+    my $path = File::Basename::dirname(__FILE__)."/../../resources";
     my $editor = $path . "/editor.exe";
     my $filename = $grp->{FSFile}->filename;
+
+    print "file:\t$filename";
 
     # check if editor is present at the given location
     if ( ! -e $editor) {
@@ -1257,7 +1253,8 @@ sub launch_editor {
     }
 
     # execute the editor. any errors are piped to TrEd.
-    my $errormsg = '$editor -f $filename 2>&1';
+    my $errormsg = `$editor -f $filename 2>&1`;
+
     if ($?) {
         warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
         return 'stop';
