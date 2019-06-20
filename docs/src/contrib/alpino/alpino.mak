@@ -1253,7 +1253,7 @@ sub launch_editor {
     }
 
     # execute the editor. any errors are piped to TrEd.
-    my $errormsg = `$editor -f $filename 2>&1`;
+    my $errormsg = `$editor -f "$filename" 2>&1`;
 
     if ($?) {
         warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
