@@ -1,7 +1,7 @@
 # TrEd-bridge
 Program to act as a bridge between TrEd treebank-editor and Alpino parser. 
 
-##Installing
+## Installing
 In Tred, select `Setup` -> `Manage Extensions...`.
 In the menu, uncheck any Alpino mode for Tred extensions currently enabled.
 Select `Edit Repositories`.
