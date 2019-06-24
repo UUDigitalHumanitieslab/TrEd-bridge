@@ -1,8 +1,10 @@
 # Debug mode (True/False)
 DEBUG = False
 
-GRETEL_URL = 'http://gretel.hum.uu.nl'
-# GRETEL_URL = 'http://localhost:4200'
+PARSER_URL = 'http://gretel.hum.uu.nl/gretel4/api/src/router.php/parse_sentence/'
+# PARSER_URL = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
+
+TREE_VIS_URL = 'http:/gretel.hum.uu.nl/gretel4/ng/tree'
 
 ALPINO_KEYBINDS = {
     # key: function name
@@ -15,6 +17,7 @@ ALPINO_KEYBINDS = {
     'b': 'back_to_chat',
     's': 'save',
     'a': 'parse',
+    'v': 'tree_preview',
 }
 
 CHAT_KEYBINDS = {
@@ -22,7 +25,7 @@ CHAT_KEYBINDS = {
     'p': 'parenthesize_selection',
     'g': 'prefix_ampersand',
     't': 'correct',
-    'e': 'clean',
+    # 'e': 'clean',
     'l': 'clean_continue_to_alpino',
     'r': 'reset_chat_edit'
 }
