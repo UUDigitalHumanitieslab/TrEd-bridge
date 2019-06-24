@@ -16,5 +16,13 @@ In `Manage Extensions` menu, enable the Alpino package you just installed\
 Quit and restart Tred once to reload the extension\
 You are now ready to use the extension\
 
+## Updating
+In Tred, select `Setup` -> `Manage Extensions...`\
+In the menu select `Check Updates`\
+If no entires are displayed here, there are no updates available\
+Check the box for the `Alpino Plus` extensions\
+Select `Install Selected`\
+CLose the menu and restart TrEd
+
 ## Usage 
 This extension adds a single macro: `Launch CHAT/Alpino Editor`. This program takes the file currently open in TrEd as input, and allows editing of utterance, sentence, CHAT-annotations and Alpino input. After editing, click `Save & Exit` to automatically return to TrEd. 
