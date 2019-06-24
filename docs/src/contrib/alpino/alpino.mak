@@ -1260,9 +1260,8 @@ sub launch_editor {
         return 'stop';
     }
 
-    # upon receiving exit code (editor closed), reload the current file.
-    # TODO: suppress "file has changed, do you want to save?"
     ReloadCurrentFile(); 
+    $FileChanged = 0;
     return;
 }
 
