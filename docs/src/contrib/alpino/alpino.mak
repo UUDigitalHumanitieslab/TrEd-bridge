@@ -1237,15 +1237,23 @@ sub add_comment {
 
 #bind launch_editor to Ctrl+Alt+l menu Launch CHAT/Alpino-Editor
 sub launch_editor {
-    if (GetFileSaveStatus() || $FileNotSaved) {
-            Save(); 
+    # TODO: save the file at the current location.
+    #       this avoids the editor not using changes made in TrEd. 
+    # if (GetFileSaveStatus() || $FileNotSaved) {
+    #         Save();
+    # }
 
     # establish absolute path of editor and current file
     my $path = File::Basename::dirname(__FILE__)."/../../resources";
-    my $editor = $path . "/editor.exe";
+    my $editor = $path . "/chat_alpino_editor.exe"; 
     my $filename = $grp->{FSFile}->filename;
 
-    print "file:\t$filename";
+    #check for filename.xml~ file, don't open editor when it exists
+    my $filename_extended = $filename."~";
+    if (-e $filename_extended) {
+        die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
+    }
+    
 
     # check if editor is present at the given location
     if ( ! -e $editor) {
@@ -1254,14 +1262,13 @@ sub launch_editor {
 
     # execute the editor. any errors are piped to TrEd.
     my $errormsg = `$editor -f "$filename" 2>&1`;
-
     if ($?) {
         warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
         return 'stop';
-    }
+    } 
 
-    ReloadCurrentFile(); 
-    $FileChanged = 0;
+    ReloadCurrentFile();
+    $FileChanged = 0; 
     return;
 }
 
