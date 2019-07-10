@@ -8,19 +8,11 @@ use Treex::PML;
 sub Treex::PML::Node::validate_subtree {
   my ($node, $log) = @_;
   if (defined $log and ! UNIVERSAL::isa($log,'ARRAY')) {
-<<<<<<< HEAD:docs/src/contrib/alpino/alpino.mak
-    die __PACKAGE__."::validate: log must be an ARRAY reference";
-  }
-  my $type = $node->type;
-  if (!ref($type)) {
-    die __PACKAGE__."::validate: Cannot determine node data type!";
-=======
     warn __PACKAGE__."::validate: log must be an ARRAY reference";
   }
   my $type = $node->type;
   if (!ref($type)) {
     warn __PACKAGE__."::validate: Cannot determine node data type!";
->>>>>>> develop:docs/src/contrib/alpino/alpino.mak
   }
   $type->validate_object($node,{ log=>$log });
 }
@@ -1247,17 +1239,29 @@ sub add_comment {
 sub launch_editor {
     # TODO: save the file at the current location.
     #       this avoids the editor not using changes made in TrEd. 
+    # if (GetFileSaveStatus() || $FileNotSaved) {
+    #         Save();
+    # }
 
     # establish absolute path of editor and current file
     my $path = File::Basename::dirname(__FILE__)."/../../resources";
+<<<<<<< HEAD
 <<<<<<< HEAD:docs/src/contrib/alpino/alpino.mak
     my $editor = $path . "/chat_alpino_editor.exe"; 
 =======
     my $editor = $path . "/editor.exe";
 >>>>>>> develop:docs/src/contrib/alpino/alpino.mak
+=======
+    my $editor = $path . "/chat_alpino_editor.exe"; 
+>>>>>>> develop
     my $filename = $grp->{FSFile}->filename;
 
-    print "file:\t$filename";
+    #check for filename.xml~ file, don't open editor when it exists
+    my $filename_extended = $filename."~";
+    if (-e $filename_extended) {
+        die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
+    }
+    
 
     # check if editor is present at the given location
     if ( ! -e $editor) {
@@ -1266,15 +1270,13 @@ sub launch_editor {
 
     # execute the editor. any errors are piped to TrEd.
     my $errormsg = `$editor -f "$filename" 2>&1`;
-
     if ($?) {
         warn "ERROR: CHAT/Alpino-Editor failed. Error message:\n\n$errormsg\n";
         return 'stop';
-    }
+    } 
 
-    # upon receiving exit code (editor closed), reload the current file.
-    # TODO: suppress "file has changed, do you want to save?"
-    ReloadCurrentFile(); 
+    ReloadCurrentFile();
+    $FileChanged = 0; 
     return;
 }
 

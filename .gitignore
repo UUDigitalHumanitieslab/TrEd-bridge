@@ -115,7 +115,7 @@ venv.bak/
 .DS_Store
 
 # Example files
-*.xml
+# *.xml
 
 # TrEd extension xml's
 !alpino_schema.xml
