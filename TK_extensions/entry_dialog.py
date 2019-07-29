@@ -26,7 +26,7 @@ class EntryDialog:
 
 
 class ComboBoxDialog:
-    def __init__(self, parent, labeltext, options, sort=False):
+    def __init__(self, parent, labeltext, options, sort=True):
         top = self.top = tk.Toplevel(parent)
         self.options = options
         if isinstance(options, list):
@@ -56,6 +56,10 @@ class ComboBoxDialog:
         if isinstance(self.options, list):
             self.results = self.myComboBox.get()
         else:
-            self.results = list(self.options.keys())[
-                self.myComboBox.current()]
+            if sorted:
+                self.results = list(sorted(self.options.keys()))[
+                    self.myComboBox.current()]
+            else:
+                self.results = list(self.options.keys())[
+                    self.myComboBox.current()]
         self.top.destroy()

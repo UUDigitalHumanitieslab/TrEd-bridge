@@ -55,6 +55,19 @@ class AlpinoInputPage(ttk.Frame):
 
         self.alpino_edit.focus()
 
+    def pos_tag(self):
+        """Specify complete Part-Of-Speech tag of < word > or < selection >"""
+        options = read_config_csv(config.POSTAGS_CONFIG)
+
+        if self.alpino_edit.tag_ranges(SEL):
+            value = ask_input(self, label_text="POS-tag:", options=options)
+            self.bracket_selection("@postag {}".format(value))
+        else:
+            value = ask_input(self, label_text="POS-tag:", options=options)
+            self.bracket_word("@postag {}".format(value))
+
+        self.alpino_edit.focus()
+
     def tae(self):
         """Treat < word > as"""
         w2 = ask_input(self, label_text="<word2>:")
@@ -222,7 +235,9 @@ class AlpinoInputPage(ttk.Frame):
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
         pos_button = Button(
-            self, text="part-of-speech\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
+            self, text="POS-tag (partial)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
+        pos_tag_button = Button(
+            self, text="POS-tag (full)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos_tag)
         tae_button = Button(
             self, text="treat as ...\n[ @add_lex <word2> <word> ]", underline=0, command=self.tae)
         phantom_button = Button(
@@ -239,15 +254,19 @@ class AlpinoInputPage(ttk.Frame):
         self.treepreview_button.state(["disabled"])
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
+
         self.alpino_edit.grid(row=1, column=2, columnspan=7, sticky='NWSE')
         reset_button.grid(row=1, column=10, sticky='NWSE')
         self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
+
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
-        pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
+        pos_button.grid(row=2, column=3, columnspan=1, sticky='NWSE')
+        pos_tag_button.grid(row=2, column=4, columnspan=1, sticky='NWSE')
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
+
         parse_button.grid(row=3, column=1, columnspan=4, sticky='NWSE')
         self.save_button.grid(row=3, column=7, columnspan=4, sticky='NWSE')
         self.treepreview_button.grid(
