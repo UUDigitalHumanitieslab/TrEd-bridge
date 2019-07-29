@@ -6,7 +6,7 @@ from tkinter.ttk import Button, Notebook
 
 from alpino_page import AlpinoInputPage
 from chat_page import CHATPage
-from functions import build_new_metadata, process_input
+from functions import build_new_metadata, process_input, read_config_csv
 from styles import apply_styles
 from TK_extensions.entry_dialog import EntryDialog
 

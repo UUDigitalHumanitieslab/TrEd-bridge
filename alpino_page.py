@@ -11,7 +11,7 @@ from tkinter.ttk import *
 
 import config
 from functions import (ask_input, build_new_metadata, clean_string,
-                       hard_reset_metadata)
+                       hard_reset_metadata, read_config_csv)
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -32,22 +32,25 @@ class AlpinoInputPage(ttk.Frame):
 
     def const(self):
         """Specify constituent of < selection >"""
+        options = read_config_csv(config.CAT_CONFIG)
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
-                            options=config.CAT_DICT)
+                            options=options)
             value = "" if cat == " " else "@"+cat
             self.bracket_selection(value)
             self.alpino_edit.focus()
 
     def pos(self):
         """Specify Part-Of-Speech of < word > or < selection >"""
+        options = read_config_csv(config.POS_CONFIG)
+
         if self.alpino_edit.tag_ranges(SEL):
             value = ask_input(self, label_text="POS-tag:",
-                              options=config.POS_DICT)
+                              options=options)
             self.bracket_selection("@posflt {}".format(value))
         else:
             value = ask_input(self, label_text="POS-tag:",
-                              options=config.POS_DICT)
+                              options=options)
             self.bracket_word("@posflt {}".format(value))
 
         self.alpino_edit.focus()

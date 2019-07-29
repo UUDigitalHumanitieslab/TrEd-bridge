@@ -1,0 +1,26 @@
+inf,bare infinitival phrase
+ap,adjectival phrase
+ti,te infinitive
+detp,determiner phrase
+sv,verb initial clause(VSO)
+mwu,multi word unit
+rel,relative clause
+list,coordinate phrase without conjunction
+whsub,subordinate clause wh-question
+du,discourse unit
+ppres,present participial phrase
+whrel,free relative
+whq,main clause wh-question
+cp,complementizer phrase
+oti,om te infinitive
+ppart,past participial phrase
+svan,van clause
+top,root of a dependency structure
+ssub,subordinate clause(SOV)
+ahi,aan het infinitive
+conj,coordinate phrase with conjunction
+advp,adverbial phrase
+smain,main clause(SVO)
+pp,prepositional phrase
+np,noun phrase
+ ,no category

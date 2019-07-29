@@ -1,10 +1,14 @@
 import re
 import sys
+import csv
+from collections import OrderedDict
 
 from bs4 import BeautifulSoup, Tag
 
 from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 from tkinter import messagebox
+
+import config
 
 
 def process_input(input_path):
@@ -207,3 +211,12 @@ def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
         string = re.sub('\s{2,}', ' ', string)
 
     return string
+
+
+def read_config_csv(csv_path):
+    out_dict = OrderedDict()
+    with open(csv_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            out_dict[row[0]] = row[1]
+    return dict(out_dict)
