@@ -236,8 +236,8 @@ class AlpinoInputPage(ttk.Frame):
             self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
         pos_button = Button(
             self, text="POS-tag (partial)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
-        pos_tag_button = Button(
-            self, text="POS-tag (full)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos_tag)
+        # pos_tag_button = Button(
+        #     self, text="POS-tag (full)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos_tag)
         tae_button = Button(
             self, text="treat as ...\n[ @add_lex <word2> <word> ]", underline=0, command=self.tae)
         phantom_button = Button(
@@ -262,7 +262,7 @@ class AlpinoInputPage(ttk.Frame):
 
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         pos_button.grid(row=2, column=3, columnspan=1, sticky='NWSE')
-        pos_tag_button.grid(row=2, column=4, columnspan=1, sticky='NWSE')
+        # pos_tag_button.grid(row=2, column=4, columnspan=1, sticky='NWSE')
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
