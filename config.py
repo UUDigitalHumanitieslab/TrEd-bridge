@@ -17,7 +17,7 @@ ALPINO_KEYBINDS = {
     'p': 'pos',
     't': 'tae',
     'n': 'const',
-    's': 'skip',
+    'k': 'skip',
     'h': 'phantom',
     'r': 'reset',
     'b': 'back_to_chat',
@@ -31,7 +31,6 @@ CHAT_KEYBINDS = {
     'p': 'parenthesize_selection',
     'g': 'prefix_ampersand',
     't': 'correct',
-    # 'e': 'clean',
     'l': 'clean_continue_to_alpino',
     'r': 'reset_chat_edit'
 }
