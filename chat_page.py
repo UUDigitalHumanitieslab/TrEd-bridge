@@ -114,6 +114,7 @@ class CHATPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
+        return 'break'
 
     def text_changed_callback(self, event):
         text = self.chat_edit.get("1.0", END)

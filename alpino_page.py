@@ -201,6 +201,7 @@ class AlpinoInputPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
+        return 'break'
 
     def back_to_chat(self):
         app = self.winfo_toplevel()
