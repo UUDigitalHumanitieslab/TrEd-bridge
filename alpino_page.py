@@ -151,7 +151,7 @@ class AlpinoInputPage(ttk.Frame):
                 fileloc = filedialog.asksaveasfilename(title="Save as")
             else:
                 fileloc = app.input_path
-            with open(fileloc, "w+") as f:
+            with open(fileloc, encoding='utf-8', mode='w+') as f:
                 f.write(app.new_xml)
             if not config.DEBUG:
                 sys.exit()
