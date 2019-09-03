@@ -37,6 +37,12 @@ class CHATPage(ttk.Frame):
         we = self.chat_edit.index(INSERT) + " wordend"
         word = self.chat_edit.get(ws, we)
 
+        # when selecting at the end of the word, take the word before it
+        if word == ' ':
+            ws = self.chat_edit.index(INSERT) + "-1c wordstart"
+            we = self.chat_edit.index(INSERT) + "-1c wordend"
+            word = self.chat_edit.get(ws, we)
+
         self.chat_edit.mark_set("start_pos", ws)
         start_pos = self.chat_edit.index("start_pos")
 

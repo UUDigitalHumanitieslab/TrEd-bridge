@@ -188,11 +188,15 @@ def correct_parenthesize(original, correction):
 
         # remove ()
         remove_empty = re.sub(r'\(\)', '', parenthesize)
-        print(remove_empty)
 
         # split corrections with whitespace
         split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
                                   r'(\1)\2(\3)', remove_empty)
+
+        # if all else fails, just use the [: ] notation
+        if not split_whitespace.replace('(', '').replace(')', '') == correction:
+            return '{} [:{}]'.format(original, correction)
+
         return split_whitespace
 
 
