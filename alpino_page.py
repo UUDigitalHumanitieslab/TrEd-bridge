@@ -229,8 +229,8 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
-        self.hard_reset_button = Button(
-            self, text="hard reset", style="Red.TButton", command=self.hard_reset)
+        # self.hard_reset_button = Button(
+        #     self, text="hard reset", style="Red.TButton", command=self.hard_reset)
         back_to_chat_button = Button(self, text="back to\nCHAT editor",
                                      underline=0, command=self.back_to_chat)
         const_button = Button(
@@ -257,12 +257,12 @@ class AlpinoInputPage(ttk.Frame):
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
 
         self.alpino_edit.grid(row=1, column=2, columnspan=7, sticky='NWSE')
-        reset_button.grid(row=1, column=10, sticky='NWSE')
-        self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
+        reset_button.grid(row=1, column=9, columnspan=2, sticky='NWSE')
+        # self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
 
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
-        pos_button.grid(row=2, column=3, columnspan=1, sticky='NWSE')
+        pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
         # pos_tag_button.grid(row=2, column=4, columnspan=1, sticky='NWSE')
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
