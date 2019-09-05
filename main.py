@@ -13,7 +13,7 @@ from TK_extensions.entry_dialog import EntryDialog
 
 class TredBridgeMain(Tk):
     def print_state(self):
-        ''' print state of different metadata fields for debugging puprposes'''
+        ''' print state of different metadata fields for debugging purposes'''
         print('Origutt:\t{}'.format(self.origutt))
         print('Revisedutt:\t{}'.format(self.revised_utt))
         print('Alpino input:\t{}'.format(self.alpino_input))
@@ -76,6 +76,7 @@ class TredBridgeMain(Tk):
         # XML contents
         self.xml_content = input_info['xml_content']
         self.new_xml = ''
+        self.metadata = input_info['metadata']
 
         # phase the editor is currently in. 0=utterance, 1=alpino.
         self.phase = 0

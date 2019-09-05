@@ -1,14 +1,14 @@
+import csv
+import os
 import re
 import sys
-import csv
 from collections import OrderedDict
+from tkinter import messagebox
 
 from bs4 import BeautifulSoup, Tag
 
-from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
-from tkinter import messagebox
-
 import config
+from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 
 
 def process_input(input_path):
@@ -18,8 +18,22 @@ def process_input(input_path):
     f.close()
     soup = BeautifulSoup(xml_content, 'xml')
     meta = soup.metadata
+    external_meta = False
 
-    # original utterane
+    if not meta:
+        # check if a TrEd-generated file (containing metadata) is available
+        if os.path.isfile('{}~'.format(input_path)):
+            f = open('{}~'.format(input_path), 'r')
+            xml_content = f.read()
+            f.close()
+            soup_tilde = BeautifulSoup(xml_content, 'xml')
+            meta = soup_tilde.metadata
+            external_meta = True
+
+    else:
+        raise RuntimeError('No metadata found, cannot use editor.')
+
+    # original utterance
     origutt = meta.find('meta', {'name': 'origutt'})
     # revised utterance (optional)
     revised_utt = meta.find('meta', {'name': 'revisedutt'})
@@ -28,7 +42,7 @@ def process_input(input_path):
         revised_utt = origutt
     # sentence
     sentence = soup.sentence
-    sentence_id = sentence['sentid']
+    sentence_id = soup_tilde.sentence['sentid'] if external_meta else sentence['sentid']
     sentence_text = clean_string(
         sentence.text, newlines=True, punctuation=False, doublespaces=False)
     # orignal sentence (optional)
@@ -51,7 +65,8 @@ def process_input(input_path):
             'origsent_exists': orig_sent_exists,
             'alpino_input': alpino_input_text,
             'alpino_input_exists': alpino_input_exists,
-            'xml_content': soup.prettify()
+            'xml_content': soup.prettify(),
+            'metadata': meta
             }
 
 
@@ -90,7 +105,12 @@ def hard_reset_metadata(app):
 
 def build_new_metadata(app, alpino_return=None):
     soup = BeautifulSoup(app.xml_content, "xml")
-    meta = soup.metadata
+
+    if not soup.metadata:
+        meta = app.metadata
+        soup.append(meta)
+    else:
+        meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
                           name="meta",
