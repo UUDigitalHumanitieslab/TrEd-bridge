@@ -11,8 +11,17 @@
     </node>
     <node begin="4" end="5" frame="punct(punt)" id="7" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
   </node>
-  <sentence>Dit is een voorbeeldzin .</sentence>
+  <sentence sentid="1">Dit is een voorbeeldzin .</sentence>
   <comments>
     <comment>Q#ng1567700517|Dit is een voorbeeldzin .|1|1|-2.0951576943999997</comment>
   </comments>
+  <metadata>
+    <meta type="text" name="location" value="LAU's home , Utrecht , Holland"/>
+    <meta type="text" name="transcriber" value="Jacqueline Frijn"/>
+    <meta type="text" name="speaker" value="JAC"/>
+    <meta type="text" name="origutt" value="Dit is een voorbeeldzin."/>
+    <meta type="text" name="role" value="Mother"/>
+    <meta type="text" name="name" value="Jacqueline"/>
+    <meta type="int" name="uttid" value="454"/>
+  </metadata>
 </alpino_ds>

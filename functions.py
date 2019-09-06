@@ -30,8 +30,8 @@ def process_input(input_path):
             meta = soup_tilde.metadata
             external_meta = True
 
-    else:
-        raise RuntimeError('No metadata found, cannot use editor.')
+        else:
+            raise RuntimeError('No metadata found, cannot use editor.')
 
     # original utterance
     origutt = meta.find('meta', {'name': 'origutt'})
