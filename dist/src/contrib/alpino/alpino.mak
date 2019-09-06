@@ -1239,9 +1239,9 @@ sub add_comment {
 sub launch_editor {
     # TODO: save the file at the current location.
     #       this avoids the editor not using changes made in TrEd. 
-    # if (GetFileSaveStatus() || $FileNotSaved) {
-    #         Save();
-    # }
+    if (GetFileSaveStatus() || $FileNotSaved) {
+            Save();
+    }
 
     # establish absolute path of editor and current file
     my $path = File::Basename::dirname(__FILE__)."/../../resources";
