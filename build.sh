@@ -1,3 +1,4 @@
+# pyinstaller main.py --distpath ./dist/src/resources --onefile --name chat_alpino_editor.exe
 rm -r dist/extensions/alpino_plus/package.xml ;
 rm -r dist/extensions/alpino_plus.zip ;
 rm -r dist/extensions/.DS_Store ;
