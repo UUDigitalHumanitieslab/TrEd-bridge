@@ -42,11 +42,6 @@
     </alpino_ds>
   </xsl:template>
 
-  <!-- only add a metadata element when there's meta data -->
-  <xsl:if test="string(pml:metadata)">
-    <xsl:apply-templates select="pml:metadata"/>
-  </xsl:if>
-
   <xsl:template match="*">
     <xsl:element name="{name()}">
       <xsl:apply-templates select="@*"/>
@@ -64,19 +59,6 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="pml:meta">
-    <xsl:element name="meta">
-      <xsl:attribute name="type">
-        <xsl:value-of select="pml:type"/>
-      </xsl:attribute>
-      <xsl:attribute name="name">
-        <xsl:value-of select="pml:name"/>
-      </xsl:attribute>
-      <xsl:attribute name="value">
-        <xsl:value-of select="pml:value"/>
-      </xsl:attribute>
-    </xsl:element>
-  </xsl:template>
 
   <xsl:template match="@*">
     <xsl:copy/>
@@ -289,11 +271,6 @@
         <xsl:attribute name="spectype">achter</xsl:attribute>
       </xsl:when>
       <xsl:when test='.="SPEC(afk)"'>
-
-
-
-
-
         <xsl:attribute name="spectype">afk</xsl:attribute>
       </xsl:when>
       <xsl:when test='.="SPEC(symb)"'>
