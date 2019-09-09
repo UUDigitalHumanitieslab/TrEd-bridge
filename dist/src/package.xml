@@ -5,7 +5,7 @@
   </head>
   <pkgname>alpino_plus</pkgname>
   <title>Alpino mode for Tred 2.0</title>
-  <version>2.2</version>
+  <version>2.2_beta</version>
   <copyright year="2008">Alexis Dimitriadis, Jelte van Boheemen, Digital Humanities Lab Utrecht University</copyright>
   <description>
     Alpino file syntax and Tred macros, structured as a Tred 2 extension package by Alexis Dimitriadis. Extended with CHAT and Alpino editors by Jelte van Boheemen, Digital Humanities Lab @ Utrecht University.</description>
