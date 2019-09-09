@@ -16,12 +16,12 @@
           <element name="comment" type="comment.type"/>
         </sequence>
       </member>
+      <member name="metadata">
+        <sequence content_pattern="meta*">
+          <element name="meta" type="meta.type"/>
+        </sequence>
+      </member>
       <member name="trees" role="#TREES">
-        <member name="metadata">
-          <sequence content_pattern="meta*">
-            <element name="meta" type="meta.type"/>
-          </sequence>
-        </member>
         <sequence content_pattern="node">
           <element name="node" type="node.type"/>
         </sequence>

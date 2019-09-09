@@ -289,6 +289,11 @@
         <xsl:attribute name="spectype">achter</xsl:attribute>
       </xsl:when>
       <xsl:when test='.="SPEC(afk)"'>
+
+
+
+
+
         <xsl:attribute name="spectype">afk</xsl:attribute>
       </xsl:when>
       <xsl:when test='.="SPEC(symb)"'>
