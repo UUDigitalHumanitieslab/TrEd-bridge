@@ -142,7 +142,7 @@ def build_new_metadata(app, alpino_return=None):
     if not app.origsent_exists:
         orig_sent_tag = Tag(builder=soup.builder,
                             name="meta",
-                            attrs={'name': 'origsent', 'value': app.origsent})
+                            attrs={'name': 'origsent', 'type':'text', 'value': app.origsent})
         meta.append(orig_sent_tag)
 
     if alpino_return:
