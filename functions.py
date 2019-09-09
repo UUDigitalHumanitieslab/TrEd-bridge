@@ -114,10 +114,10 @@ def build_new_metadata(app, alpino_return=None):
 
     revised_utt_tag = Tag(builder=soup.builder,
                           name="meta",
-                          attrs={'name': 'revisedutt', 'value': app.revised_utt})
+                          attrs={'name': 'revisedutt', 'type': 'text', 'value': app.revised_utt})
     alpino_input_tag = Tag(builder=soup.builder,
                            name="meta",
-                           attrs={'name': 'alpino_input', 'value': app.alpino_input})
+                           attrs={'name': 'alpino_input', 'type': 'text', 'value': app.alpino_input})
     sentence_tag = Tag(builder=soup.builder,
                        name="sentence",
                        attrs={'sentid': app.sentid})
