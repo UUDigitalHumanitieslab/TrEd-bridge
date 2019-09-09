@@ -24,7 +24,22 @@
       <xsl:apply-templates select="pml:trees"/>
 
       <!-- xsl:apply-templates select="pml:sentence"/> -->
+      <!-- <sentence>
+        <xsl:for-each select="//pml:node[@word]">
+          <xsl:sort select="@wordno" data-type="number"/>
+          <xsl:value-of select="@word"/>
+          <xsl:if test="position() != last()">
+            <xsl:text></xsl:text>
+          </xsl:if>
+        </xsl:for-each>
+      </sentence> -->
+
       <sentence>
+        <xsl:if test="string(pml:sentid)">
+          <xsl:attribute name="sentid">
+            <xsl:value-of select="pml:sentid"/>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:for-each select="//pml:node[@word]">
           <xsl:sort select="@wordno" data-type="number"/>
           <xsl:value-of select="@word"/>

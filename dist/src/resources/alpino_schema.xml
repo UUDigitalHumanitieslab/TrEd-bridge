@@ -11,6 +11,9 @@
         <cdata format="any"/>
       </member>
       <member name="sentence" type="sentence.type"/>
+      <member name="sentid">
+        <cdata format="any"/>
+      </member>
       <member name="comments">
         <sequence content_pattern="comment*">
           <element name="comment" type="comment.type"/>

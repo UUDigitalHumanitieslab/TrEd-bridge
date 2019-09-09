@@ -20,6 +20,9 @@
         <xsl:value-of select="@version"/>
       </version>
       <xsl:apply-templates select="sentence"/>
+      <sentid>
+        <xsl:value-of select="sentence/@sentid"/>
+      </sentid>
       <xsl:apply-templates select="comments"/>
       <metadata>
         <xsl:apply-templates select="metadata/meta"/>
