@@ -22,18 +22,6 @@
   <xsl:template match="pml:alpino_ds_pml">
     <alpino_ds version="{pml:version}">
       <xsl:apply-templates select="pml:trees"/>
-
-      <!-- xsl:apply-templates select="pml:sentence"/> -->
-      <!-- <sentence>
-        <xsl:for-each select="//pml:node[@word]">
-          <xsl:sort select="@wordno" data-type="number"/>
-          <xsl:value-of select="@word"/>
-          <xsl:if test="position() != last()">
-            <xsl:text></xsl:text>
-          </xsl:if>
-        </xsl:for-each>
-      </sentence> -->
-
       <sentence>
         <xsl:if test="string(pml:sentid)">
           <xsl:attribute name="sentid">
@@ -44,7 +32,7 @@
           <xsl:sort select="@wordno" data-type="number"/>
           <xsl:value-of select="@word"/>
           <xsl:if test="position() != last()">
-            <xsl:text></xsl:text>
+            <xsl:text> </xsl:text>
           </xsl:if>
         </xsl:for-each>
       </sentence>
