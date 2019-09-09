@@ -1249,10 +1249,10 @@ sub launch_editor {
     my $filename = $grp->{FSFile}->filename;
 
     #check for filename.xml~ file, don't open editor when it exists
-    my $filename_extended = $filename."~";
-    if (-e $filename_extended) {
-        die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
-    }
+    # my $filename_extended = $filename."~";
+    # if (-e $filename_extended) {
+    #     die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
+    # }
     
 
     # check if editor is present at the given location

@@ -7,17 +7,36 @@
 
   <type name="alpino_ds.type">
     <structure>
-      <member name="version"><cdata format="any"/></member>
-      <member name="sentence"  type="sentence.type"/>
+      <member name="version">
+        <cdata format="any"/>
+      </member>
+      <member name="sentence" type="sentence.type"/>
       <member name="comments">
         <sequence content_pattern="comment*">
           <element name="comment" type="comment.type"/>
         </sequence>
       </member>
       <member name="trees" role="#TREES">
-	<sequence content_pattern="node">
-	  <element name="node" type="node.type"/>
-	</sequence>
+        <member name="metadata">
+          <sequence content_pattern="meta*">
+            <element name="meta" type="meta.type"/>
+          </sequence>
+        </member>
+        <sequence content_pattern="node">
+          <element name="node" type="node.type"/>
+        </sequence>
+      </member>
+    </structure>
+  </type>
+
+  <type name="meta.type">
+    <structure>
+      <member name="type" type="meta.type.type"/>
+      <member name="name">
+        <cdata format="any"/>
+      </member>
+      <member name="value">
+        <cdata format="any"/>
       </member>
     </structure>
   </type>
@@ -27,15 +46,27 @@
       <attribute name="rel" type="rel.type" required="1"/>
       <attribute name="pos" type="pos.type"/>
       <attribute name="cat" type="cat.type"/>
-      <attribute name="index"><cdata format="nonNegativeInteger"/></attribute>
-      <attribute name="root"><cdata format="normalizedString"/></attribute>
-      <attribute name="postag"><cdata format="normalizedString"/></attribute>
-      <attribute name="lemma"><cdata format="normalizedString"/></attribute>
-      <attribute name="word"><cdata format="normalizedString"/></attribute>
-      <attribute name="wordno"><cdata format="nonNegativeInteger"/></attribute>
-<!--      <attribute name="begin"><cdata format="nonNegativeInteger"/></attribute> -->
-<!--      <attribute name="end"><cdata format="nonNegativeInteger"/></attribute> -->
-<!--     <attribute name="id"><cdata format="nonNegativeInteger"/></attribute> -->
+      <attribute name="index">
+        <cdata format="nonNegativeInteger"/>
+      </attribute>
+      <attribute name="root">
+        <cdata format="normalizedString"/>
+      </attribute>
+      <attribute name="postag">
+        <cdata format="normalizedString"/>
+      </attribute>
+      <attribute name="lemma">
+        <cdata format="normalizedString"/>
+      </attribute>
+      <attribute name="word">
+        <cdata format="normalizedString"/>
+      </attribute>
+      <attribute name="wordno">
+        <cdata format="nonNegativeInteger"/>
+      </attribute>
+      <!--      <attribute name="begin"><cdata format="nonNegativeInteger"/></attribute> -->
+      <!--      <attribute name="end"><cdata format="nonNegativeInteger"/></attribute> -->
+      <!--     <attribute name="id"><cdata format="nonNegativeInteger"/></attribute> -->
       <sequence role="#CHILDNODES" content_pattern="node*">
         <element name="node" type="node.type"/>
       </sequence>
@@ -50,6 +81,15 @@
     <cdata format="any"/>
   </type>
 
+  <type name="meta.type.type">
+    <choice>
+      <value>text</value>
+      <value>int</value>
+      <value>float</value>
+      <value>date</value>
+      <value>datetime</value>
+    </choice>
+  </type>
 
   <type name="rel.type">
     <choice>
