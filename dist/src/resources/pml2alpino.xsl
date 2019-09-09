@@ -39,6 +39,12 @@
       <xsl:if test="string(pml:comments)">
         <xsl:apply-templates select="pml:comments"/>
       </xsl:if>
+
+      <!-- only add a metadata element when there's meta data -->
+      <xsl:if test="string(pml:metadata)">
+        <xsl:apply-templates select="pml:metadata"/>
+      </xsl:if>
+
     </alpino_ds>
   </xsl:template>
 
@@ -57,6 +63,21 @@
         <xsl:apply-templates/>
       </xsl:element>
     </xsl:if>
+  </xsl:template>
+
+  <!-- <meta> tags -->
+  <xsl:template match="pml:meta">
+    <xsl:element name="meta">
+      <xsl:attribute name="type">
+        <xsl:value-of select="pml:type"/>
+      </xsl:attribute>
+      <xsl:attribute name="name">
+        <xsl:value-of select="pml:name"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="pml:value"/>
+      </xsl:attribute>
+    </xsl:element>
   </xsl:template>
 
 
