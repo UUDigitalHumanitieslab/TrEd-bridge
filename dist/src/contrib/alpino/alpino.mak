@@ -1235,7 +1235,7 @@ sub add_comment {
     $sequence->push_element('comment', $comment);
 }
 
-#bind launch_editor to Ctrl+Alt+l menu Launch CHAT/Alpino-Editor
+#bind launch_editor to Ctrl+l menu Launch CHAT/Alpino-Editor
 sub launch_editor {
     # TODO: save the file at the current location.
     #       this avoids the editor not using changes made in TrEd. 
