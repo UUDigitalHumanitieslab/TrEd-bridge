@@ -31,7 +31,19 @@ def process_input(input_path):
             external_meta = True
 
         else:
-            raise RuntimeError('No metadata found, cannot use editor.')
+            try:
+                new_metadata = soup.new_tag('metadata')
+                ou_tag = Tag(builder=soup.builder,
+                             name="meta",
+                             attrs={'name': 'origutt', 'type': 'text', 'value': clean_string(
+                                 soup.sentence.text, newlines=True, punctuation=False, doublespaces=False)})
+                new_metadata.append(ou_tag)
+                soup.alpino_ds.append(new_metadata)
+                meta = soup.metadata
+
+            except:
+                raise RuntimeError(
+                    'No metadata found, and unable to build new. Cannot use editor.')
 
     # original utterance
     origutt = meta.find('meta', {'name': 'origutt'})
@@ -142,7 +154,7 @@ def build_new_metadata(app, alpino_return=None):
     if not app.origsent_exists:
         orig_sent_tag = Tag(builder=soup.builder,
                             name="meta",
-                            attrs={'name': 'origsent', 'type':'text', 'value': app.origsent})
+                            attrs={'name': 'origsent', 'type': 'text', 'value': app.origsent})
         meta.append(orig_sent_tag)
 
     if alpino_return:
