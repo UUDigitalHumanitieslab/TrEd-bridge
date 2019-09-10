@@ -32,7 +32,8 @@ class AlpinoInputPage(ttk.Frame):
 
     def const(self):
         """Specify constituent of < selection >"""
-        options = read_config_csv(config.CAT_CONFIG)
+        # options = read_config_csv(config.CAT_CONFIG)
+        options = config.CAT_DICT
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
                             options=options)
@@ -42,7 +43,8 @@ class AlpinoInputPage(ttk.Frame):
 
     def pos(self):
         """Specify Part-Of-Speech of < word > or < selection >"""
-        options = read_config_csv(config.POS_CONFIG)
+        # options = read_config_csv(config.POS_CONFIG)
+        options = config.POS_CONFIG
 
         if self.alpino_edit.tag_ranges(SEL):
             value = ask_input(self, label_text="POS-tag:",
@@ -57,7 +59,8 @@ class AlpinoInputPage(ttk.Frame):
 
     def pos_tag(self):
         """Specify complete Part-Of-Speech tag of < word > or < selection >"""
-        options = read_config_csv(config.POSTAGS_CONFIG)
+        # options = read_config_csv(config.POSTAGS_CONFIG)
+        options = config.POS_TAG_DICT
 
         if self.alpino_edit.tag_ranges(SEL):
             value = ask_input(self, label_text="POS-tag:", options=options)
