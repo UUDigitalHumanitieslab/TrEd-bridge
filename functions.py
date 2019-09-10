@@ -58,9 +58,17 @@ def process_input(input_path):
     revised_exists = False if revised_utt is None else True
     if revised_utt is None:
         revised_utt = origutt
+
     # sentence
     sentence = soup.sentence
-    sentence_id = soup_tilde.sentence['sentid'] if external_meta else sentence['sentid']
+    # sentence_id = soup_tilde.sentence['sentid'] if external_meta else sentence['sentid']
+    if external_meta:
+        sentence_id = soup_tilde.sentence['sentid'] if soup_tilde.sentence.has_attr(
+            'sentid') else None
+    else:
+        sentence_id = sentence['sentid'] if sentence.has_attr(
+            'sentid') else None
+
     sentence_text = clean_string(
         sentence.text, newlines=True, punctuation=False, doublespaces=False)
     # orignal sentence (optional)
@@ -131,14 +139,15 @@ def build_new_metadata(app, alpino_return=None):
         meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
-                          name="meta",
-                          attrs={'name': 'revisedutt', 'type': 'text', 'value': app.revised_utt})
+                          name="meta", attrs={'name': 'revisedutt', 'type': 'text', 'value': app.revised_utt})
     alpino_input_tag = Tag(builder=soup.builder,
-                           name="meta",
-                           attrs={'name': 'alpino_input', 'type': 'text', 'value': app.alpino_input})
-    sentence_tag = Tag(builder=soup.builder,
-                       name="sentence",
-                       attrs={'sentid': app.sentid})
+                           name="meta", attrs={'name': 'alpino_input', 'type': 'text', 'value': app.alpino_input})
+    if app.sentid:
+        sentence_tag = Tag(builder=soup.builder,
+                           name="sentence", attrs={'sentid': app.sentid})
+    else:
+        sentence_tag = Tag(builder=soup.builder, name="sentence")
+
     sentence_tag.string = app.sentence
 
     # guaranteed replacements
