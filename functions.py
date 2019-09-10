@@ -12,6 +12,22 @@ from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
 
 
 def process_input(input_path):
+    def inital_meta(soup):
+        try:
+            new_metadata = soup.new_tag('metadata')
+            ou_tag = Tag(builder=soup.builder,
+                         name="meta",
+                         attrs={'name': 'origutt', 'type': 'text', 'value': clean_string(
+                                soup.sentence.text, newlines=True, punctuation=False, doublespaces=False)})
+            new_metadata.append(ou_tag)
+            soup.alpino_ds.append(new_metadata)
+            meta = soup.metadata
+            return soup, meta
+
+        except:
+            raise RuntimeError(
+                'No metadata found, and unable to build new. Cannot use editor.')
+
     # read xml
     f = open(input_path, 'r')
     xml_content = f.read()
@@ -28,22 +44,12 @@ def process_input(input_path):
             f.close()
             soup_tilde = BeautifulSoup(xml_content, 'xml')
             meta = soup_tilde.metadata
-            external_meta = True
-
+            if meta:
+                external_meta = True
+            else:
+                soup, meta = inital_meta(soup)
         else:
-            try:
-                new_metadata = soup.new_tag('metadata')
-                ou_tag = Tag(builder=soup.builder,
-                             name="meta",
-                             attrs={'name': 'origutt', 'type': 'text', 'value': clean_string(
-                                 soup.sentence.text, newlines=True, punctuation=False, doublespaces=False)})
-                new_metadata.append(ou_tag)
-                soup.alpino_ds.append(new_metadata)
-                meta = soup.metadata
-
-            except:
-                raise RuntimeError(
-                    'No metadata found, and unable to build new. Cannot use editor.')
+            soup, meta = inital_meta(soup)
 
     # original utterance
     origutt = meta.find('meta', {'name': 'origutt'})
