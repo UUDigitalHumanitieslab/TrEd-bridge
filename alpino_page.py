@@ -44,7 +44,7 @@ class AlpinoInputPage(ttk.Frame):
     def pos(self):
         """Specify Part-Of-Speech of < word > or < selection >"""
         # options = read_config_csv(config.POS_CONFIG)
-        options = config.POS_CONFIG
+        options = config.POS_DICT
 
         if self.alpino_edit.tag_ranges(SEL):
             value = ask_input(self, label_text="POS-tag:",

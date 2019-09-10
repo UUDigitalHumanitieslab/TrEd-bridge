@@ -102,6 +102,6 @@ POS_TAG_DICT = OrderedDict([
     ("WW(vd,vrij,zonder)", "Vd"),
     ("VNW(pers,pron,nomin,vol,1,ev)", "ik"),
     ("VNW(pers,pron,nomin,red,3,ev,masc)", "ie"),
-    ("VNW(pers,pron,nomin,vol,3v,ev,fem)", "zij (ev, vr)", "),
+    ("VNW(pers,pron,nomin,vol,3v,ev,fem)", "zij (ev, vr)"),
     ("VNW(aanw,det,stan,prenom,zonder,agr)", "zo’n")
 ])
