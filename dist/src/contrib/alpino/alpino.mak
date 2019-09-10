@@ -742,7 +742,7 @@ sub after_save_hook {
 
         # laat het script los op het bestand
 
-        my $errormsg = `python $canonicalize $filename 2>&1`;
+        my $errormsg = `python $canonicalize "$filename" 2>&1`;
 
         if ($?) {
             warn "ERROR: canonicalization failed, please fix any problems:\n\n$errormsg\n";
