@@ -4,7 +4,7 @@
     <schema href="tred_extension_schema.xml"/>
   </head>
   <pkgname>alpino_plus</pkgname>
-  <title>Alpino mode for Tred 2.0</title>
+  <title>Alpino mode for Tred</title>
   <version>2.2_beta</version>
   <copyright year="2008">Alexis Dimitriadis, Jelte van Boheemen, Digital Humanities Lab Utrecht University</copyright>
   <description>
