@@ -147,8 +147,8 @@ class CHATPage(ttk.Frame):
             self, text="reset", underline=0, command=self.reset_chat_edit)
         # hard_reset_button = Button(
         #     self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
-        parenthesize_button = Button(
-            self, text="parenthesize\n[<selection>] ", underline=0, command=self.parenthesize_selection)
+        # parenthesize_button = Button(
+        #     self, text="parenthesize\n[<selection>] ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct <word>",
@@ -165,9 +165,9 @@ class CHATPage(ttk.Frame):
         chat_edit_reset_button.grid(
             row=1, column=9, columnspan=2, sticky='NWSE')
         # hard_reset_button.grid(row=1, column=9, sticky='NWSE')
-        parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
-        ampersand_button.grid(row=2, column=5, columnspan=3, sticky='NWSE')
-        correct_button.grid(row=2, column=8, columnspan=3, sticky='NWSE')
+        # parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
+        ampersand_button.grid(row=2, column=1, columnspan=5, sticky='NWSE')
+        correct_button.grid(row=2, column=6, columnspan=5, sticky='NWSE')
         clean_preview.grid(row=3, column=1, columnspan=5, sticky='NWSE')
         continue_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
 
