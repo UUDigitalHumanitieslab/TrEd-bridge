@@ -15,7 +15,7 @@ POSTAGS_CONFIG = 'config/POS_tags.csv'
 
 ALPINO_KEYBINDS = {
     # key: function name
-    'p': 'pos',
+    'o': 'pos',
     't': 'tae',
     'n': 'const',
     'k': 'skip',
@@ -23,8 +23,8 @@ ALPINO_KEYBINDS = {
     'r': 'reset',
     'b': 'back_to_chat',
     's': 'save',
-    'a': 'parse',
-    'v': 'tree_preview',
+    'p': 'parse',
+    'e': 'tree_preview',
 }
 
 CHAT_KEYBINDS = {
@@ -35,6 +35,12 @@ CHAT_KEYBINDS = {
     'l': 'clean_continue_to_alpino',
     'r': 'reset_chat_edit'
 }
+
+SYSTEM_KEYBINDS = [
+    'c',
+    'v',
+    'a',
+]
 
 CAT_DICT = OrderedDict([
     (' ', 'no category'),

@@ -271,3 +271,7 @@ def read_config_csv(csv_path):
         for row in csv_reader:
             out_dict[row[0]] = row[1]
     return dict(out_dict)
+
+
+def is_whitelisted_system_keybind(event):
+    return True if (event.keysym != '??') and (event.keysym in config.SYSTEM_KEYBINDS) else False

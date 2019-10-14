@@ -11,7 +11,7 @@ from tkinter.ttk import *
 
 import config
 from functions import (ask_input, build_new_metadata, clean_string,
-                       hard_reset_metadata, read_config_csv)
+                       hard_reset_metadata, read_config_csv, is_whitelisted_system_keybind)
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -204,7 +204,8 @@ class AlpinoInputPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
-        return 'break'
+        if not is_whitelisted_system_keybind(event):
+            return 'break'
 
     def back_to_chat(self):
         app = self.winfo_toplevel()
@@ -239,7 +240,7 @@ class AlpinoInputPage(ttk.Frame):
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
         pos_button = Button(
-            self, text="POS-tag (partial)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
+            self, text="POS-tag (partial)\n[ @pos <word>/<selection> ]", underline=1, command=self.pos)
         # pos_tag_button = Button(
         #     self, text="POS-tag (full)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos_tag)
         tae_button = Button(
@@ -249,12 +250,12 @@ class AlpinoInputPage(ttk.Frame):
         skip_button = Button(
             self, text="skip\n[ @skip <word>/<selection> ]", underline=0, command=self.skip)
         parse_button = Button(self, text="parse",
-                              underline=1, command=self.parse)
+                              underline=0, command=self.parse)
         self.save_button = Button(
             self, text="save" if config.DEBUG else "save & exit", underline=0, command=self.save)
         self.save_button.state(["disabled"])
         self.treepreview_button = Button(
-            self, text="preview tree", underline=3, command=self.tree_preview)
+            self, text="preview tree", underline=2, command=self.tree_preview)
         self.treepreview_button.state(["disabled"])
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')

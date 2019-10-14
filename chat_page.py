@@ -1,13 +1,13 @@
+from tkinter import Label as TKLabel
 from tkinter import *
 from tkinter import messagebox
-from tkinter import Label as TKLabel
 from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
 
-from functions import (ask_input, clean_string,
-                       correct_parenthesize, hard_reset_metadata)
 import config
+from functions import (ask_input, clean_string, correct_parenthesize,
+                       hard_reset_metadata, is_whitelisted_system_keybind)
 from TK_extensions.text import TextWithCallback
 
 
@@ -114,7 +114,8 @@ class CHATPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
-        return 'break'
+        if not is_whitelisted_system_keybind(event):
+            return 'break'
 
     def text_changed_callback(self, event):
         text = self.chat_edit.get("1.0", END)
