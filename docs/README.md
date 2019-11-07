@@ -1,9 +1,6 @@
 # TrEd-bridge
 Program to act as a bridge between TrEd treebank-editor and Alpino parser. 
 
-## warning!
-Do not use the CHAT/Alpino editor on files already edited in TrEd. This is currently unsupported, and the editor will fail to launch. Open a file, use the CHAT/Alpino editor if necesarry and THEN continue editing in TrEd. This will be fixed soon.
-
 ## Installing
 - In Tred, select `Setup` -> `Manage Extensions...`  
 - In the menu, uncheck any Alpino mode for Tred extensions currently enabled  
