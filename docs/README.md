@@ -16,7 +16,7 @@ Program to act as a bridge between TrEd treebank-editor and Alpino parser.
 ## Updating
 - In Tred, select `Setup` -> `Manage Extensions...`  
 - In the menu select `Check Updates`  
-- If no entires are displayed here, there are no updates available 
+- If no entries are displayed here, there are no updates available 
 - Check the box for the `Alpino Plus` extensions  
 - Select `Install Selected`  
 - Close the menu and restart TrEd
