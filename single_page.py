@@ -99,15 +99,17 @@ class SinglePage(ttk.Frame):
 
     def parse(self):
         """Parse with alpino"""
-        sent = self.chat_edit.get(1.0, "end-1c")
-        sent = clean_string(sent)
-        # self.alpino_edit.delete("1.0", END)
-        # self.alpino_edit.insert(END, sent)
-
         app = self.winfo_toplevel()
-        app.alpino_input = sent
 
-        encoded_query = urllib.parse.quote(sent)  # %-formatted symbols
+        text = self.chat_edit.get(1.0, "end-1c")
+        chamd_cleaned_text = cleantext(text, repkeep=False)
+
+        app.alpino_input = clean_string(chamd_cleaned_text)
+        app.sentence = chamd_cleaned_text
+        app.revised_utt = clean_string(text, punctuation=False)
+
+        encoded_query = urllib.parse.quote(
+            app.alpino_input)  # %-formatted symbols
         url = config.PARSER_URL + encoded_query
 
         if config.DEBUG:
@@ -141,12 +143,15 @@ class SinglePage(ttk.Frame):
                 self.alp_msg.grid(
                     row=4, column=1, columnspan=4, sticky='NWSE')
 
-        self.alpino_edit.focus()
+        self.chat_edit.focus()
 
     def tree_preview(self):
         visualizer_url = config.TREE_VIS_URL
         app = self.winfo_toplevel()
-        sent = self.alpino_edit.get(1.0, "end-1c")
+
+        app = self.winfo_toplevel()
+        # sent = self.alpino_edit.get(1.0, "end-1c")
+        sent = app.alpino_input
         xml = app.new_xml
         parameter = urllib.parse.urlencode({
             'sent': sent,
