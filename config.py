@@ -36,6 +36,15 @@ CHAT_KEYBINDS = {
     'r': 'reset_chat_edit'
 }
 
+SINGLE_PAGE_KEYBINDS = {
+    'r': 'reset',
+    'g': 'prefix_ampersand',
+    't': 'correct',
+    'p': 'parse',
+    'e': 'tree_preview',
+    's': 'save'
+}
+
 SYSTEM_KEYBINDS = [
     'c',
     'v',

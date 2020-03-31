@@ -10,7 +10,10 @@ class TextWithCallback(tk.Text):
 
     def _proxy(self, *args):
         cmd = (self._orig,) + args
-        result = self.tk.call(cmd)
+        try:
+            result = self.tk.call(cmd)
+        except Exception:
+            return None
 
         if (args[0] in ("insert", "delete") or
                 args[0:3] == ("mark", "set", "insert")):
