@@ -1,2 +1,0 @@
-pyinstaller main.py --onefile --name editor.exe --distpath .\docs\src\resources
-zip -r .\docs\extensions\alpino_plus.zip .\docs\src

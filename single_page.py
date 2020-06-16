@@ -54,9 +54,7 @@ class SinglePage(ttk.Frame):
             self.grid_columnconfigure(i, {'minsize': 45})
 
     def reset(self):
-        # TODO FIX
-        app = self.master.master
-        print(app)
+        app = self.winfo_toplevel()
         self.chat_edit.delete("1.0", END)
         self.chat_edit.insert(END, app.revised_utt)
         self.chat_edit.focus()
