@@ -17,8 +17,11 @@ def process_input(input_path):
             new_metadata = soup.new_tag('metadata')
             ou_tag = Tag(builder=soup.builder,
                          name="meta",
-                         attrs={'name': 'origutt', 'type': 'text', 'value': clean_string(
-                                soup.sentence.text, newlines=True, punctuation=False, doublespaces=False)})
+                         attrs={'name': 'origutt',
+                                'type': 'text',
+                                'value': clean_string(
+                                    soup.sentence.text, newlines=True,
+                                    punctuation=False, doublespaces=False)})
             new_metadata.append(ou_tag)
             soup.alpino_ds.append(new_metadata)
             meta = soup.metadata
@@ -26,7 +29,7 @@ def process_input(input_path):
 
         except:
             raise RuntimeError(
-                'No metadata found, and unable to build new. Cannot use editor.')
+                'No metadata found, unable to build new. Cannot use editor.')
 
     # read xml
     f = open(input_path, 'r')
@@ -61,10 +64,9 @@ def process_input(input_path):
 
     # sentence
     sentence = soup.sentence
-    # sentence_id = soup_tilde.sentence['sentid'] if external_meta else sentence['sentid']
     if external_meta:
-        sentence_id = soup_tilde.sentence['sentid'] if soup_tilde.sentence.has_attr(
-            'sentid') else None
+        sentence_id = soup_tilde.sentence['sentid'] if \
+            soup_tilde.sentence.has_attr('sentid') else None
     else:
         sentence_id = sentence['sentid'] if sentence.has_attr(
             'sentid') else None
@@ -139,9 +141,13 @@ def build_new_metadata(app, alpino_return=None):
         meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
-                          name="meta", attrs={'name': 'revisedutt', 'type': 'text', 'value': app.revised_utt})
+                          name="meta", attrs={'name': 'revisedutt',
+                                              'type': 'text',
+                                              'value': app.revised_utt})
     alpino_input_tag = Tag(builder=soup.builder,
-                           name="meta", attrs={'name': 'alpino_input', 'type': 'text', 'value': app.alpino_input})
+                           name="meta", attrs={'name': 'alpino_input',
+                                               'type': 'text',
+                                               'value': app.alpino_input})
     if app.sentid:
         sentence_tag = Tag(builder=soup.builder,
                            name="sentence", attrs={'sentid': app.sentid})
@@ -169,7 +175,9 @@ def build_new_metadata(app, alpino_return=None):
     if not app.origsent_exists:
         orig_sent_tag = Tag(builder=soup.builder,
                             name="meta",
-                            attrs={'name': 'origsent', 'type': 'text', 'value': app.origsent})
+                            attrs={'name': 'origsent',
+                                   'type': 'text',
+                                   'value': app.origsent})
         meta.append(orig_sent_tag)
 
     if alpino_return:
@@ -225,7 +233,8 @@ def correct_parenthesize(original, correction):
         pattern += r'(.*)'
         pattern = re.compile(pattern)
 
-        # if the pattern is not in the correction, a ()-notation is not possible
+        # if the pattern is not in the correction,
+        # a ()-notation is not possible
         # in this case, return [: ]-notation
         if not re.match(pattern, correction):
             return '{} [:{}]'.format(original, correction)

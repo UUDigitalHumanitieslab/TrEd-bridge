@@ -1,8 +1,10 @@
+import sys
 import urllib.parse
 import urllib.request
 import webbrowser
-from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, Button, Label,
-                     StringVar, Tk, filedialog, ttk)
+from optparse import OptionParser
+from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, Label, StringVar,
+                     Tk, filedialog, messagebox, ttk)
 
 from chamd.cleanCHILDESMD import cleantext
 
@@ -12,10 +14,6 @@ from functions import (ask_input, build_new_metadata, clean_string,
                        process_input)
 from styles import apply_styles
 from TK_extensions.text import TextWithCallback
-
-import sys
-
-from optparse import OptionParser
 
 
 class TredBridge(Tk):
@@ -135,7 +133,6 @@ class SinglePage(ttk.Frame):
             if config.DEBUG:
                 self.alp_out_txt.set('{}\n{}'.format(url, e))
             else:
-                alp_message = tkinter.Label(self, text='joehoe')
                 self.alp_msg_txt.set('Parse failed: {}'.format(e))
                 self.alp_msg.configure(background="indian red")
                 self.alp_msg.grid(
@@ -195,7 +192,8 @@ class SinglePage(ttk.Frame):
 
         # row 0
         utterance_label = ttk.Label(
-            self, text="Original utterance:\n" + utterance, anchor='center', font=('Roboto, 20'))
+            self, text="Original utterance:\n" + utterance,
+            anchor='center', font=('Roboto, 20'))
         utterance_label.grid(row=0, column=1, columnspan=8, sticky='NWSE')
 
         # row 1
@@ -213,7 +211,8 @@ class SinglePage(ttk.Frame):
         self.clean_preview_text = StringVar()
         clean_preview = Label(self, textvariable=self.clean_preview_text)
         ignore_button = ttk.Button(
-            self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
+            self, text="ignore\n&<word>", underline=1,
+            command=self.prefix_ampersand)
         correct_button = correct_button = ttk.Button(
             self, text="correct <word>", underline=6, command=self.correct)
 
@@ -228,7 +227,8 @@ class SinglePage(ttk.Frame):
             self, text="preview tree", underline=2, command=self.tree_preview)
         self.treepreview_button.state(["disabled"])
         self.save_button = ttk.Button(
-            self, text="save" if config.DEBUG else "save & exit", underline=0, command=self.save)
+            self, text="save" if config.DEBUG else "save & exit",
+            underline=0, command=self.save)
         self.save_button.state(["disabled"])
 
         parse_button.grid(row=3, column=1, columnspan=4, sticky='NWSE')
@@ -245,7 +245,8 @@ class SinglePage(ttk.Frame):
         else:
             self.alp_msg_txt = StringVar()
             self.alp_msg = Label(
-                self, textvariable=self.alp_msg_txt, font=('Roboto', 20), foreground='white', borderwidth=2, relief='solid')
+                self, textvariable=self.alp_msg_txt, font=('Roboto', 20),
+                foreground='white', borderwidth=2, relief='solid')
 
         self.bind("<Control-Key>", self.key_callback)
         self.chat_edit.bind("<Control-Key>", self.key_callback)
@@ -261,7 +262,7 @@ def main(args=None):
     (options, args) = parser.parse_args(args)
 
     app = None
-    if options.filename == None:
+    if options.filename is None:
         app = TredBridge(input_path='test.xml')
     else:
         app = TredBridge(input_path=options.filename)

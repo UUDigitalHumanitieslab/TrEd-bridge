@@ -1,14 +1,13 @@
 #!/Users/3248526/git/tred-bridge/.env/bin/python
 import sys
 from optparse import OptionParser
-from tkinter import Frame, Label, Tk, messagebox, ttk
-from tkinter.ttk import Button, Notebook
+from tkinter import Tk, messagebox, ttk
+from tkinter.ttk import Notebook
 
 from alpino_page import AlpinoInputPage
 from chat_page import CHATPage
-from functions import build_new_metadata, process_input, read_config_csv
+from functions import process_input
 from styles import apply_styles
-from TK_extensions.entry_dialog import EntryDialog
 
 
 class TredBridgeMain(Tk):
@@ -29,7 +28,8 @@ class TredBridgeMain(Tk):
     def switch_to_tab(self, target_tab):
         if self.phase == 0 and target_tab == 1:
             result = messagebox.askquestion(
-                "Continue to Alpino editor", "Are you done editing the CHAT-utterance?")
+                "Continue to Alpino editor",
+                "Are you done editing the CHAT-utterance?")
             if result == 'yes':
                 self.chat_app.clean_continue_to_alpino()
                 self.transist_phase(0, 1)
@@ -112,7 +112,7 @@ def main(args=None):
     (options, args) = parser.parse_args(args)
 
     app = None
-    if options.filename == None:
+    if options.filename is None:
         app = TredBridgeMain(input_path='test.xml')
     else:
         app = TredBridgeMain(input_path=options.filename)
