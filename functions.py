@@ -237,7 +237,7 @@ def correct_parenthesize(original, correction):
         # a ()-notation is not possible
         # in this case, return [: ]-notation
         if not re.match(pattern, correction):
-            return '{} [:{}]'.format(original, correction)
+            return '{} [: {}]'.format(original, correction)
 
         # replace all diff with (diff)
         parenthesize = re.sub(pattern, replace_pattern, correction)
@@ -251,7 +251,7 @@ def correct_parenthesize(original, correction):
 
         # if all else fails, just use the [: ] notation
         if not split_whitespace.replace('(', '').replace(')', '') == correction:
-            return '{} [:{}]'.format(original, correction)
+            return '{} [: {}]'.format(original, correction)
 
         return split_whitespace
 
