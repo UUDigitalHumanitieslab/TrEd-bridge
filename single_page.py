@@ -3,8 +3,8 @@ import urllib.parse
 import urllib.request
 import webbrowser
 from optparse import OptionParser
-from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, Label, StringVar,
-                     Tk, filedialog, messagebox, ttk)
+from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, WORD, Label,
+                     StringVar, Tk, filedialog, messagebox, ttk)
 
 from chamd.cleanCHILDESMD import cleantext
 
@@ -47,9 +47,9 @@ class TredBridge(Tk):
 class SinglePage(ttk.Frame):
     def configure_grid(self, num_rows=5, num_cols=14):
         for i in range(0, num_rows):
-            self.grid_rowconfigure(i, {'minsize': 85})
+            self.grid_rowconfigure(i, {'minsize': 85, 'weight': 1})
         for i in range(0, num_cols):
-            self.grid_columnconfigure(i, {'minsize': 45})
+            self.grid_columnconfigure(i, {'minsize': 45, 'weight': 1})
 
     def reset(self):
         app = self.winfo_toplevel()
@@ -186,6 +186,10 @@ class SinglePage(ttk.Frame):
         if not is_whitelisted_system_keybind(event):
             return 'break'
 
+    def set_label_wrap(self, event):
+        wraplength = event.width-12  # 12, to account for padding and borderwidth
+        event.widget.configure(wraplength=wraplength)
+
     def __init__(self, parent, utterance):
         ttk.Frame.__init__(self)
         self.configure_grid()
@@ -195,10 +199,11 @@ class SinglePage(ttk.Frame):
             self, text="Original utterance:\n" + utterance,
             anchor='center', font=('Roboto, 20'))
         utterance_label.grid(row=0, column=1, columnspan=8, sticky='NWSE')
+        utterance_label.bind("<Configure>", self.set_label_wrap)
 
         # row 1
         self.chat_edit = TextWithCallback(
-            self, height=4, borderwidth=2, font=('Roboto, 20'))
+            self, height=4, borderwidth=2, font=('Roboto, 20'), wrap=WORD)
         self.chat_edit.insert(END, utterance)
         self.chat_edit.bind("<<TextChanged>>", self.text_changed_callback)
         reset_button = ttk.Button(self, text="reset",
@@ -217,6 +222,7 @@ class SinglePage(ttk.Frame):
             self, text="correct <word>", underline=6, command=self.correct)
 
         clean_preview.grid(row=2, column=1, columnspan=6, sticky='NWSE')
+        clean_preview.bind("<Configure>", self.set_label_wrap)
         ignore_button.grid(row=2, column=7, columnspan=3, sticky='NWSE')
         correct_button.grid(row=2, column=10, columnspan=3, sticky='NWSE')
 
