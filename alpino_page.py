@@ -11,7 +11,7 @@ from tkinter.ttk import *
 
 import config
 from functions import (ask_input, build_new_metadata, clean_string,
-                       hard_reset_metadata)
+                       hard_reset_metadata, read_config_csv, is_whitelisted_system_keybind)
 
 
 class AlpinoInputPage(ttk.Frame):
@@ -32,23 +32,42 @@ class AlpinoInputPage(ttk.Frame):
 
     def const(self):
         """Specify constituent of < selection >"""
+        # options = read_config_csv(config.CAT_CONFIG)
+        options = config.CAT_DICT
         if self.alpino_edit.tag_ranges(SEL):
             cat = ask_input(self, label_text="Constituent:",
-                            options=config.CAT_DICT)
+                            options=options)
             value = "" if cat == " " else "@"+cat
             self.bracket_selection(value)
             self.alpino_edit.focus()
 
     def pos(self):
         """Specify Part-Of-Speech of < word > or < selection >"""
+        # options = read_config_csv(config.POS_CONFIG)
+        options = config.POS_DICT
+
         if self.alpino_edit.tag_ranges(SEL):
             value = ask_input(self, label_text="POS-tag:",
-                              options=config.POS_DICT)
+                              options=options)
             self.bracket_selection("@posflt {}".format(value))
         else:
             value = ask_input(self, label_text="POS-tag:",
-                              options=config.POS_DICT)
+                              options=options)
             self.bracket_word("@posflt {}".format(value))
+
+        self.alpino_edit.focus()
+
+    def pos_tag(self):
+        """Specify complete Part-Of-Speech tag of < word > or < selection >"""
+        # options = read_config_csv(config.POSTAGS_CONFIG)
+        options = config.POS_TAG_DICT
+
+        if self.alpino_edit.tag_ranges(SEL):
+            value = ask_input(self, label_text="POS-tag:", options=options)
+            self.bracket_selection("@postag {}".format(value))
+        else:
+            value = ask_input(self, label_text="POS-tag:", options=options)
+            self.bracket_word("@postag {}".format(value))
 
         self.alpino_edit.focus()
 
@@ -135,7 +154,7 @@ class AlpinoInputPage(ttk.Frame):
                 fileloc = filedialog.asksaveasfilename(title="Save as")
             else:
                 fileloc = app.input_path
-            with open(fileloc, "w+") as f:
+            with open(fileloc, encoding='utf-8', mode='w+') as f:
                 f.write(app.new_xml)
             if not config.DEBUG:
                 sys.exit()
@@ -185,6 +204,8 @@ class AlpinoInputPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
+        if not is_whitelisted_system_keybind(event):
+            return 'break'
 
     def back_to_chat(self):
         app = self.winfo_toplevel()
@@ -212,14 +233,16 @@ class AlpinoInputPage(ttk.Frame):
         self.alpino_edit.insert(END, sentence)
         reset_button = Button(self, text="reset",
                               underline=0, command=self.reset)
-        self.hard_reset_button = Button(
-            self, text="hard reset", style="Red.TButton", command=self.hard_reset)
+        # self.hard_reset_button = Button(
+        #     self, text="hard reset", style="Red.TButton", command=self.hard_reset)
         back_to_chat_button = Button(self, text="back to\nCHAT editor",
                                      underline=0, command=self.back_to_chat)
         const_button = Button(
             self, text="constituent\n[ @cat <selection> ]", underline=2, command=self.const)
         pos_button = Button(
-            self, text="part-of-speech\n[ @pos <word>/<selection> ]", underline=0, command=self.pos)
+            self, text="POS-tag (partial)\n[ @pos <word>/<selection> ]", underline=1, command=self.pos)
+        # pos_tag_button = Button(
+        #     self, text="POS-tag (full)\n[ @pos <word>/<selection> ]", underline=0, command=self.pos_tag)
         tae_button = Button(
             self, text="treat as ...\n[ @add_lex <word2> <word> ]", underline=0, command=self.tae)
         phantom_button = Button(
@@ -227,24 +250,28 @@ class AlpinoInputPage(ttk.Frame):
         skip_button = Button(
             self, text="skip\n[ @skip <word>/<selection> ]", underline=0, command=self.skip)
         parse_button = Button(self, text="parse",
-                              underline=1, command=self.parse)
+                              underline=0, command=self.parse)
         self.save_button = Button(
             self, text="save" if config.DEBUG else "save & exit", underline=0, command=self.save)
         self.save_button.state(["disabled"])
         self.treepreview_button = Button(
-            self, text="preview tree", underline=3, command=self.tree_preview)
+            self, text="preview tree", underline=2, command=self.tree_preview)
         self.treepreview_button.state(["disabled"])
 
         sentenceLabel.grid(row=0, column=2, columnspan=8, sticky='NWSE')
+
         self.alpino_edit.grid(row=1, column=2, columnspan=7, sticky='NWSE')
-        reset_button.grid(row=1, column=10, sticky='NWSE')
-        self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
+        reset_button.grid(row=1, column=9, columnspan=2, sticky='NWSE')
+        # self.hard_reset_button.grid(row=1, column=9, sticky='NWSE')
         back_to_chat_button.grid(row=1, column=1, sticky="NWSE")
+
         const_button.grid(row=2, column=1, columnspan=2, sticky='NWSE')
         pos_button.grid(row=2, column=3, columnspan=2, sticky='NWSE')
+        # pos_tag_button.grid(row=2, column=4, columnspan=1, sticky='NWSE')
         tae_button.grid(row=2, column=5, columnspan=2, sticky='NWSE')
         phantom_button.grid(row=2, column=7, columnspan=2, sticky='NWSE')
         skip_button.grid(row=2, column=9, columnspan=2, sticky='NWSE')
+
         parse_button.grid(row=3, column=1, columnspan=4, sticky='NWSE')
         self.save_button.grid(row=3, column=7, columnspan=4, sticky='NWSE')
         self.treepreview_button.grid(

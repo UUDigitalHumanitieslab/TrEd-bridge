@@ -1,7 +1,7 @@
+import math
+import time
 import tkinter as tk
 import tkinter.ttk as ttk
-import time
-import math
 
 
 class EntryDialog:
@@ -26,16 +26,16 @@ class EntryDialog:
 
 
 class ComboBoxDialog:
-    def __init__(self, parent, labeltext, options):
+    def __init__(self, parent, labeltext, options, sort=True):
         top = self.top = tk.Toplevel(parent)
         self.options = options
         if isinstance(options, list):
             self.value = options
         else:
-            self.value = ['{} - {}'.format(value, key)
+            self.value = ['{} - {}'.format(key, value)
                           for key, value in options.items()]
-        # self.value = list(options.keys()) if isinstance(
-        #     options, dict) else options
+        if sort:
+            self.value = sorted(self.value)
         self.width = math.floor(
             max([len(key)+len(value) for key, value in list(options.items())])*1.2)
         self.myLabel = tk.Label(top, text=labeltext)
@@ -56,8 +56,10 @@ class ComboBoxDialog:
         if isinstance(self.options, list):
             self.results = self.myComboBox.get()
         else:
-            self.results = list(self.options.values())[
-                self.myComboBox.current()]
-        # self.results = self.options[self.myComboBox.get()] if isinstance(
-        #     self.options, dict) else self.myComboBox.get()
+            if sorted:
+                self.results = list(sorted(self.options.keys()))[
+                    self.myComboBox.current()]
+            else:
+                self.results = list(self.options.keys())[
+                    self.myComboBox.current()]
         self.top.destroy()

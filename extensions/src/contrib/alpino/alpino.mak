@@ -742,7 +742,7 @@ sub after_save_hook {
 
         # laat het script los op het bestand
 
-        my $errormsg = `python $canonicalize $filename 2>&1`;
+        my $errormsg = `python $canonicalize "$filename" 2>&1`;
 
         if ($?) {
             warn "ERROR: canonicalization failed, please fix any problems:\n\n$errormsg\n";
@@ -1235,13 +1235,13 @@ sub add_comment {
     $sequence->push_element('comment', $comment);
 }
 
-#bind launch_editor to Ctrl+Alt+l menu Launch CHAT/Alpino-Editor
+#bind launch_editor to Ctrl+l menu Launch CHAT/Alpino-Editor
 sub launch_editor {
     # TODO: save the file at the current location.
     #       this avoids the editor not using changes made in TrEd. 
-    # if (GetFileSaveStatus() || $FileNotSaved) {
-    #         Save();
-    # }
+    if (GetFileSaveStatus() || $FileNotSaved) {
+            Save();
+    }
 
     # establish absolute path of editor and current file
     my $path = File::Basename::dirname(__FILE__)."/../../resources";
@@ -1257,10 +1257,10 @@ sub launch_editor {
     my $filename = $grp->{FSFile}->filename;
 
     #check for filename.xml~ file, don't open editor when it exists
-    my $filename_extended = $filename."~";
-    if (-e $filename_extended) {
-        die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
-    }
+    # my $filename_extended = $filename."~";
+    # if (-e $filename_extended) {
+    #     die "File $filename was edited in TrEd. In the current version this means you cannot use the editor.";
+    # }
     
 
     # check if editor is present at the given location

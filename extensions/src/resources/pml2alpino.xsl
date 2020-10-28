@@ -3,102 +3,126 @@
 <!-- Author: pajas@ufal.mff.cuni.cz -->
 
 <xsl:stylesheet
-  xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
-  xmlns:pml='http://ufal.mff.cuni.cz/pdt/pml/'
-  version='1.0'>
-<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
-<xsl:namespace-alias stylesheet-prefix="pml" result-prefix="#default"/>
-<xsl:strip-space elements="*"/>
+    xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
+    xmlns:pml='http://ufal.mff.cuni.cz/pdt/pml/'
+    version='1.0'>
+  <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+  <xsl:namespace-alias stylesheet-prefix="pml" result-prefix="#default"/>
+  <xsl:strip-space elements="*"/>
 
-<xsl:template match="/">
-  <xsl:apply-templates/>
-</xsl:template>
+  <xsl:template match="/">
+    <xsl:apply-templates/>
+  </xsl:template>
 
-<xsl:template match="pml:head">
-</xsl:template>
+  <xsl:template match="pml:head">
+  </xsl:template>
 
-<xsl:template match="pml:trees">
-  <xsl:apply-templates/>
-</xsl:template>
+  <xsl:template match="pml:trees">
+    <xsl:apply-templates/>
+  </xsl:template>
 
-<xsl:template match="pml:alpino_ds_pml">
-  <alpino_ds version="{pml:version}">
-    <xsl:apply-templates select="pml:trees"/>
+  <xsl:template match="pml:alpino_ds_pml">
+    <alpino_ds version="{pml:version}">
 
-    <!-- xsl:apply-templates select="pml:sentence"/> -->
-    <sentence>
-      <xsl:for-each select="//pml:node[@word]">
-        <xsl:sort select="@wordno" data-type="number"/>
-        <xsl:value-of select="@word"/>
-        <xsl:if test="position() != last()">
-          <xsl:text> </xsl:text>
+      <!-- only add a metadata element when there's meta data -->
+      <xsl:if test="string(pml:metadata)">
+        <xsl:apply-templates select="pml:metadata"/>
+      </xsl:if>
+
+      <xsl:apply-templates select="pml:trees"/>
+
+      <!-- xsl:apply-templates select="pml:sentence"/> -->
+      <sentence>
+        <xsl:if test="string(pml:sentid)">
+          <xsl:attribute name="sentid">
+            <xsl:value-of select="pml:sentid"/>
+          </xsl:attribute>
         </xsl:if>
-      </xsl:for-each>
-    </sentence>
+        <xsl:for-each select="//pml:node[@word]">
+          <xsl:sort select="@wordno" data-type="number"/>
+          <xsl:value-of select="@word"/>
+          <xsl:if test="position() != last()">
+            <xsl:text> </xsl:text>
+          </xsl:if>
+        </xsl:for-each>
+      </sentence>
 
-    <!-- only add a comments element when there's comment data -->
-    <!--    <xsl:if test="pml:comments/pml:comment"> -->
-    <xsl:if test="string(pml:comments)">
-      <xsl:apply-templates select="pml:comments"/>
+      <!-- only add a comments element when there's comment data -->
+      <!--    <xsl:if test="pml:comments/pml:comment"> -->
+      <xsl:if test="string(pml:comments)">
+        <xsl:apply-templates select="pml:comments"/>
+      </xsl:if>
+    </alpino_ds>
+  </xsl:template>
+
+  <xsl:template match="*">
+    <xsl:element name="{name()}">
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
+
+  <!-- only add an comment element when non-empty  -->
+  <xsl:template match="pml:comment">
+    <xsl:if test="string(.)">
+      <xsl:element name="{name()}">
+        <xsl:apply-templates select="@*"/>
+        <xsl:apply-templates/>
+      </xsl:element>
     </xsl:if>
-  </alpino_ds>
-</xsl:template>
+  </xsl:template>
 
-<xsl:template match="*">
-  <xsl:element name="{name()}">
-    <xsl:apply-templates select="@*"/>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
+  <xsl:template match="pml:meta">
+    <xsl:element name="meta">
+      <xsl:attribute name="type">
+        <xsl:value-of select="pml:type"/>
+      </xsl:attribute>
+      <xsl:attribute name="name">
+        <xsl:value-of select="pml:name"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="pml:value"/>
+      </xsl:attribute>
+    </xsl:element>
+  </xsl:template>
 
-<!-- only add an comment element when non-empty  -->
-<xsl:template match="pml:comment">
-  <xsl:if test="string(.)">
-  <xsl:element name="{name()}">
-    <xsl:apply-templates select="@*"/>
-    <xsl:apply-templates/>
-  </xsl:element>
-  </xsl:if>
-</xsl:template>
-
-
-<xsl:template match="@*">
-  <xsl:copy/>
-</xsl:template>
+  <xsl:template match="@*">
+    <xsl:copy/>
+  </xsl:template>
 
 
-<!-- create begin and end attributes based on @wordno 
-     higher level begin/end attributes are added later
--->
+  <!-- create begin and end attributes based on @wordno 
+       higher level begin/end attributes are added later
+  -->
 
-<xsl:template match="@wordno">
-  <xsl:attribute name="begin">
-    <xsl:value-of select=". - 1"/>
-  </xsl:attribute>
-  <xsl:attribute name="end">
-    <xsl:value-of select="."/>
-  </xsl:attribute>
-</xsl:template>
+  <xsl:template match="@wordno">
+    <xsl:attribute name="begin">
+      <xsl:value-of select=". - 1"/>
+    </xsl:attribute>
+    <xsl:attribute name="end">
+      <xsl:value-of select="."/>
+    </xsl:attribute>
+  </xsl:template>
 
 
-<xsl:template match="@postag">
-<xsl:copy/>
-<xsl:choose>
-<xsl:when test='starts-with(.,"TSW")'> <xsl:attribute name="pt">tsw</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"N")'> <xsl:attribute name="pt">n</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"ADJ")'> <xsl:attribute name="pt">adj</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"WW")'> <xsl:attribute name="pt">ww</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"TW")'> <xsl:attribute name="pt">tw</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"VNW")'> <xsl:attribute name="pt">vnw</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"LID")'> <xsl:attribute name="pt">lid</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"VZ")'> <xsl:attribute name="pt">vz</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"VG")'> <xsl:attribute name="pt">vg</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"BW")'> <xsl:attribute name="pt">bw</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"SPEC")'> <xsl:attribute name="pt">spec</xsl:attribute></xsl:when>
-<xsl:when test='starts-with(.,"LET")'> <xsl:attribute name="pt">let</xsl:attribute></xsl:when>
+  <xsl:template match="@postag">
+    <xsl:copy/>
+    <xsl:choose>
+      <xsl:when test='starts-with(.,"TSW")'> <xsl:attribute name="pt">tsw</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"N")'> <xsl:attribute name="pt">n</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"ADJ")'> <xsl:attribute name="pt">adj</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"WW")'> <xsl:attribute name="pt">ww</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"TW")'> <xsl:attribute name="pt">tw</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"VNW")'> <xsl:attribute name="pt">vnw</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"LID")'> <xsl:attribute name="pt">lid</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"VZ")'> <xsl:attribute name="pt">vz</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"VG")'> <xsl:attribute name="pt">vg</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"BW")'> <xsl:attribute name="pt">bw</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"SPEC")'> <xsl:attribute name="pt">spec</xsl:attribute></xsl:when>
+      <xsl:when test='starts-with(.,"LET")'> <xsl:attribute name="pt">let</xsl:attribute></xsl:when>
 
-</xsl:choose>
-<xsl:choose>
+    </xsl:choose>
+    <xsl:choose>
 <xsl:when test='.="TSW(dial)"'><xsl:attribute name="dial">dial</xsl:attribute></xsl:when>
 
 <xsl:when test='.="N(soort,dial)"'> <xsl:attribute name="ntype">soort</xsl:attribute> <xsl:attribute name="dial">dial</xsl:attribute> </xsl:when>
@@ -424,7 +448,7 @@
 <xsl:when test='.="LID(bep,gen,rest3)"'> <xsl:attribute name="lwtype">bep</xsl:attribute> <xsl:attribute name="naamval">gen</xsl:attribute> <xsl:attribute name="npagr">rest3</xsl:attribute> </xsl:when>
 <xsl:when test='.="LID(onbep,stan,agr)"'> <xsl:attribute name="lwtype">onbep</xsl:attribute> <xsl:attribute name="naamval">stan</xsl:attribute> <xsl:attribute name="npagr">agr</xsl:attribute> </xsl:when>
 <xsl:when test='.="VNW(onbep,grad,stan,nom,zonder,zonder-n,sup)"'> <xsl:attribute name="vwtype">onbep</xsl:attribute> <xsl:attribute name="pdtype">grad</xsl:attribute> <xsl:attribute name="naamval">stan</xsl:attribute> <xsl:attribute name="positie">nom</xsl:attribute> <xsl:attribute name="buiging">zonder</xsl:attribute> <xsl:attribute name="getal-n">zonder-n</xsl:attribute> <xsl:attribute name="graad">sup</xsl:attribute> </xsl:when>
-</xsl:choose>
-</xsl:template>
+    </xsl:choose>
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -1,30 +1,76 @@
+import csv
+import os
 import re
 import sys
+from collections import OrderedDict
+from tkinter import messagebox
 
 from bs4 import BeautifulSoup, Tag
 
+import config
 from TK_extensions.entry_dialog import ComboBoxDialog, EntryDialog
-from tkinter import messagebox
 
 
 def process_input(input_path):
+    def inital_meta(soup):
+        try:
+            new_metadata = soup.new_tag('metadata')
+            ou_tag = Tag(builder=soup.builder,
+                         name="meta",
+                         attrs={'name': 'origutt',
+                                'type': 'text',
+                                'value': clean_string(
+                                    soup.sentence.text, newlines=True,
+                                    punctuation=False, doublespaces=False)})
+            new_metadata.append(ou_tag)
+            soup.alpino_ds.append(new_metadata)
+            meta = soup.metadata
+            return soup, meta
+
+        except:
+            raise RuntimeError(
+                'No metadata found, unable to build new. Cannot use editor.')
+
     # read xml
     f = open(input_path, 'r')
     xml_content = f.read()
     f.close()
     soup = BeautifulSoup(xml_content, 'xml')
     meta = soup.metadata
+    external_meta = False
 
-    # original utterane
+    if not meta:
+        # check if a TrEd-generated file (containing metadata) is available
+        if os.path.isfile('{}~'.format(input_path)):
+            f = open('{}~'.format(input_path), 'r')
+            xml_content = f.read()
+            f.close()
+            soup_tilde = BeautifulSoup(xml_content, 'xml')
+            meta = soup_tilde.metadata
+            if meta:
+                external_meta = True
+            else:
+                soup, meta = inital_meta(soup)
+        else:
+            soup, meta = inital_meta(soup)
+
+    # original utterance
     origutt = meta.find('meta', {'name': 'origutt'})
     # revised utterance (optional)
     revised_utt = meta.find('meta', {'name': 'revisedutt'})
     revised_exists = False if revised_utt is None else True
     if revised_utt is None:
         revised_utt = origutt
+
     # sentence
     sentence = soup.sentence
-    sentence_id = sentence['sentid']
+    if external_meta:
+        sentence_id = soup_tilde.sentence['sentid'] if \
+            soup_tilde.sentence.has_attr('sentid') else None
+    else:
+        sentence_id = sentence['sentid'] if sentence.has_attr(
+            'sentid') else None
+
     sentence_text = clean_string(
         sentence.text, newlines=True, punctuation=False, doublespaces=False)
     # orignal sentence (optional)
@@ -47,7 +93,8 @@ def process_input(input_path):
             'origsent_exists': orig_sent_exists,
             'alpino_input': alpino_input_text,
             'alpino_input_exists': alpino_input_exists,
-            'xml_content': soup.prettify()
+            'xml_content': soup.prettify(),
+            'metadata': meta
             }
 
 
@@ -86,17 +133,27 @@ def hard_reset_metadata(app):
 
 def build_new_metadata(app, alpino_return=None):
     soup = BeautifulSoup(app.xml_content, "xml")
-    meta = soup.metadata
+
+    if not soup.metadata:
+        meta = app.metadata
+        soup.append(meta)
+    else:
+        meta = soup.metadata
 
     revised_utt_tag = Tag(builder=soup.builder,
-                          name="meta",
-                          attrs={'name': 'revisedutt', 'value': app.revised_utt})
+                          name="meta", attrs={'name': 'revisedutt',
+                                              'type': 'text',
+                                              'value': app.revised_utt})
     alpino_input_tag = Tag(builder=soup.builder,
-                           name="meta",
-                           attrs={'name': 'alpino_input', 'value': app.alpino_input})
-    sentence_tag = Tag(builder=soup.builder,
-                       name="sentence",
-                       attrs={'sentid': app.sentid})
+                           name="meta", attrs={'name': 'alpino_input',
+                                               'type': 'text',
+                                               'value': app.alpino_input})
+    if app.sentid:
+        sentence_tag = Tag(builder=soup.builder,
+                           name="sentence", attrs={'sentid': app.sentid})
+    else:
+        sentence_tag = Tag(builder=soup.builder, name="sentence")
+
     sentence_tag.string = app.sentence
 
     # guaranteed replacements
@@ -118,7 +175,9 @@ def build_new_metadata(app, alpino_return=None):
     if not app.origsent_exists:
         orig_sent_tag = Tag(builder=soup.builder,
                             name="meta",
-                            attrs={'name': 'origsent', 'value': app.origsent})
+                            attrs={'name': 'origsent',
+                                   'type': 'text',
+                                   'value': app.origsent})
         meta.append(orig_sent_tag)
 
     if alpino_return:
@@ -149,6 +208,11 @@ def correct_parenthesize(original, correction):
     replace_pattern = r''
     i = 1
 
+    # if there is whitespace in the correction,
+    # return [: ] form
+    if re.search(r'\s+', correction):
+        return '{} [: {}]'.format(original, correction)
+
     # only edits at start or end
     if original in correction:
         pattern = r'(.*)({})(.*)'.format(original)
@@ -161,34 +225,38 @@ def correct_parenthesize(original, correction):
         return split_whitespace
 
     else:
-        ws_pattern = re.compile(r'(\S+)\s+(\S+)')
         pattern = r'(.*)'
         replace_pattern = r''
         i = 1
 
         for letter in original:
-            pattern += ('({})(.*)'.format(letter))
-            replace_pattern += '(\{})\{}'.format(i, i+1)
+            pattern += (r'({})(.*)'.format(letter))
+            replace_pattern += r'(\{})\{}'.format(i, i+1)
             i += 2
 
         pattern += r'(.*)'
         pattern = re.compile(pattern)
 
-        # if the pattern is not in the correction, a ()-notation is not possible
+        # if the pattern is not in the correction,
+        # a ()-notation is not possible
         # in this case, return [: ]-notation
         if not re.match(pattern, correction):
-            return '{} [:{}]'.format(original, correction)
+            return '{} [: {}]'.format(original, correction)
 
         # replace all diff with (diff)
         parenthesize = re.sub(pattern, replace_pattern, correction)
 
         # remove ()
         remove_empty = re.sub(r'\(\)', '', parenthesize)
-        print(remove_empty)
 
         # split corrections with whitespace
         split_whitespace = re.sub(r'\((\S+)(\s+)(\S+)\)',
                                   r'(\1)\2(\3)', remove_empty)
+
+        # if all else fails, just use the [: ] notation
+        if not split_whitespace.replace('(', '').replace(')', '') == correction:
+            return '{} [: {}]'.format(original, correction)
+
         return split_whitespace
 
 
@@ -200,10 +268,23 @@ def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
 
     # add spaces around punctuation
     if punctuation:
-        string = re.sub('([.,!?()\[\]])', r' \1 ', string)
+        string = re.sub(r'([.,!?()\[\]])', r' \1 ', string)
 
     # reduce double spaces to singles
     if doublespaces:
-        string = re.sub('\s{2,}', ' ', string)
+        string = re.sub(r'\s{2,}', ' ', string)
 
     return string
+
+
+def read_config_csv(csv_path):
+    out_dict = OrderedDict()
+    with open(csv_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            out_dict[row[0]] = row[1]
+    return dict(out_dict)
+
+
+def is_whitelisted_system_keybind(event):
+    return True if (event.keysym != '??') and (event.keysym in config.SYSTEM_KEYBINDS) else False

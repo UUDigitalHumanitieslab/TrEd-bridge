@@ -1,13 +1,13 @@
+from tkinter import Label as TKLabel
 from tkinter import *
 from tkinter import messagebox
-from tkinter import Label as TKLabel
 from tkinter.ttk import *
 
 from chamd.cleanCHILDESMD import cleantext
 
-from functions import (ask_input, clean_string,
-                       correct_parenthesize, hard_reset_metadata)
 import config
+from functions import (ask_input, clean_string, correct_parenthesize,
+                       hard_reset_metadata, is_whitelisted_system_keybind)
 from TK_extensions.text import TextWithCallback
 
 
@@ -36,6 +36,12 @@ class CHATPage(ttk.Frame):
         ws = self.chat_edit.index(INSERT) + " wordstart"
         we = self.chat_edit.index(INSERT) + " wordend"
         word = self.chat_edit.get(ws, we)
+
+        # when selecting at the end of the word, take the word before it
+        if word == ' ':
+            ws = self.chat_edit.index(INSERT) + "-1c wordstart"
+            we = self.chat_edit.index(INSERT) + "-1c wordend"
+            word = self.chat_edit.get(ws, we)
 
         self.chat_edit.mark_set("start_pos", ws)
         start_pos = self.chat_edit.index("start_pos")
@@ -108,6 +114,8 @@ class CHATPage(ttk.Frame):
                     exec('self.{}()'.format(bind))
                 except:
                     pass
+        if not is_whitelisted_system_keybind(event):
+            return 'break'
 
     def text_changed_callback(self, event):
         text = self.chat_edit.get("1.0", END)
@@ -137,16 +145,14 @@ class CHATPage(ttk.Frame):
 
         chat_edit_reset_button = Button(
             self, text="reset", underline=0, command=self.reset_chat_edit)
-        hard_reset_button = Button(
-            self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
-        parenthesize_button = Button(
-            self, text="parenthesize\n[<selection>] ", underline=0, command=self.parenthesize_selection)
+        # hard_reset_button = Button(
+        #     self, text="hard\nreset", style="Red.TButton", command=self.hard_reset)
+        # parenthesize_button = Button(
+        #     self, text="parenthesize\n[<selection>] ", underline=0, command=self.parenthesize_selection)
         ampersand_button = Button(
             self, text="ignore\n&<word>", underline=1, command=self.prefix_ampersand)
         correct_button = Button(self, text="correct <word>",
                                 underline=6, command=self.correct)
-        # clean_button = Button(
-        #     self, text="preview cleaning (CHAMD)", underline=2, command=self.clean)
         self.clean_preview_text = StringVar()
         clean_preview = TKLabel(
             self, textvariable=self.clean_preview_text)
@@ -156,12 +162,12 @@ class CHATPage(ttk.Frame):
         # grid
         chat_editLabel.grid(row=0, column=1, columnspan=8, sticky='NWSE')
         self.chat_edit.grid(row=1, column=1, columnspan=8, sticky='NWSE')
-        chat_edit_reset_button.grid(row=1, column=10, sticky='NWSE')
-        hard_reset_button.grid(row=1, column=9, sticky='NWSE')
-        parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
-        ampersand_button.grid(row=2, column=5, columnspan=3, sticky='NWSE')
-        correct_button.grid(row=2, column=8, columnspan=3, sticky='NWSE')
-        # clean_button.grid(row=3, column=1, columnspan=5, sticky='NWSE')
+        chat_edit_reset_button.grid(
+            row=1, column=9, columnspan=2, sticky='NWSE')
+        # hard_reset_button.grid(row=1, column=9, sticky='NWSE')
+        # parenthesize_button.grid(row=2, column=1, columnspan=4, sticky='NWSE')
+        ampersand_button.grid(row=2, column=1, columnspan=5, sticky='NWSE')
+        correct_button.grid(row=2, column=6, columnspan=5, sticky='NWSE')
         clean_preview.grid(row=3, column=1, columnspan=5, sticky='NWSE')
         continue_button.grid(row=3, column=6, columnspan=5, sticky='NWSE')
 
