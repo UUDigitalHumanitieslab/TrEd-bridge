@@ -208,6 +208,11 @@ def correct_parenthesize(original, correction):
     replace_pattern = r''
     i = 1
 
+    # if there is whitespace in the correction,
+    # return [: ] form
+    if re.search(r'\s+', correction):
+        return '{} [: {}]'.format(original, correction)
+
     # only edits at start or end
     if original in correction:
         pattern = r'(.*)({})(.*)'.format(original)
@@ -220,14 +225,13 @@ def correct_parenthesize(original, correction):
         return split_whitespace
 
     else:
-        ws_pattern = re.compile(r'(\S+)\s+(\S+)')
         pattern = r'(.*)'
         replace_pattern = r''
         i = 1
 
         for letter in original:
-            pattern += ('({})(.*)'.format(letter))
-            replace_pattern += '(\{})\{}'.format(i, i+1)
+            pattern += (r'({})(.*)'.format(letter))
+            replace_pattern += r'(\{})\{}'.format(i, i+1)
             i += 2
 
         pattern += r'(.*)'
@@ -264,11 +268,11 @@ def clean_string(string, newlines=True, punctuation=True, doublespaces=True):
 
     # add spaces around punctuation
     if punctuation:
-        string = re.sub('([.,!?()\[\]])', r' \1 ', string)
+        string = re.sub(r'([.,!?()\[\]])', r' \1 ', string)
 
     # reduce double spaces to singles
     if doublespaces:
-        string = re.sub('\s{2,}', ' ', string)
+        string = re.sub(r'\s{2,}', ' ', string)
 
     return string
 
