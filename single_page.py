@@ -40,6 +40,8 @@ class TredBridge(Tk):
         self.new_xml = ''
         self.metadata = input_info['metadata']
 
+        w, h = self.winfo_screenwidth(), self.winfo_screenheight()
+        self.maxsize(w, h)
         frame = SinglePage(
             parent=self,
             orig_utterance=self.origutt,
@@ -51,9 +53,9 @@ class TredBridge(Tk):
 class SinglePage(ttk.Frame):
     def configure_grid(self, num_rows=5, num_cols=14):
         for i in range(0, num_rows):
-            self.grid_rowconfigure(i, {'minsize': 85, 'weight': 1})
+            self.grid_rowconfigure(i, {'minsize': 75, 'weight': 1})
         for i in range(0, num_cols):
-            self.grid_columnconfigure(i, {'minsize': 45, 'weight': 1})
+            self.grid_columnconfigure(i, {'minsize': 35, 'weight': 1})
 
     def reset(self):
         app = self.winfo_toplevel()
