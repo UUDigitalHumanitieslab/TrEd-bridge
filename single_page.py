@@ -7,6 +7,7 @@ from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, WORD, Label,
                      StringVar, Tk, filedialog, messagebox, ttk)
 
 from chamd.cleanCHILDESMD import cleantext
+from requests import get
 
 import config
 from functions import (ask_input, build_new_metadata, clean_string,
@@ -114,7 +115,9 @@ class SinglePage(ttk.Frame):
             self.alp_msg.grid_remove()
 
         try:
-            contents = urllib.request.urlopen(url).read()
+            res = get(url)
+            contents = res.content
+
             new_soup = build_new_metadata(app, contents)
             app.new_xml = new_soup
             self.save_button.state(["!disabled"])

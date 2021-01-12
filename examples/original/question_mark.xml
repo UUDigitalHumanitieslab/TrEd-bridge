@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alpino_ds version="1.3">
+  <metadata>
+    <meta type="text" name="charencoding" value="UTF8"/>
+    <meta type="text" name="comment" value="LAU often uses ook@q in the meaning of nog"/>
+    <meta type="date" name="date" value="1989-12-03"/>
+    <meta type="text" name="location" value="LAU's home , Utrecht , Holland"/>
+    <meta type="text" name="session" value="laura43"/>
+    <meta type="text" name="situation" value="has changed"/>
+    <meta type="text" name="transcriber" value="Christel de Heus"/>
+    <meta type="text" name="speaker" value="LAU"/>
+    <meta type="text" name="origutt" value="ja en , eh , mas , een [/] een ringetje he , Sinterklaas?"/>
+    <meta type="int" name="uttstartlineno" value="799"/>
+    <meta type="int" name="uttendlineno" value="799"/>
+    <meta type="text" name="childage" value="3;6.28"/>
+    <meta type="int" name="childmonths" value="42"/>
+    <meta type="text" name="name" value="Laura"/>
+    <meta type="text" name="corpus" value="vankampen"/>
+    <meta type="text" name="language" value="nld"/>
+    <meta type="text" name="role" value="Child"/>
+    <meta type="int" name="uttid" value="785"/>
+    <meta type="date" name="birth_of" value="1986-05-06"/>
+    <meta type="text" name="age" value="3;6.28"/>
+    <meta type="int" name="months" value="42"/>
+    <meta type="text" name="annotators" value="230,160"/>
+    <meta type="text" name="revisedutt" value="ja en , eh , mas [: mag] , een [/] een ringetje he , Sinterklaas?"/>
+    <meta type="text" name="alpino_input" value="ja en , eh , mag , een ringetje he , Sinterklaas ? "/>
+    <meta type="text" name="origsent" value="ja en , eh , mas , een een ringetje he , Sinterklaas ?"/>
+  </metadata>
+  <node rel="top" cat="top">
+    <node rel="--" pos="punct" root="," postag="LET()" pt="let" lemma="," word="," sense="," begin="2" end="3"/>
+    <node rel="--" pos="tag" root="eh" postag="TSW()" pt="tsw" lemma="eh" word="eh" sense="eh" begin="3" end="4"/>
+    <node rel="--" pos="punct" root="," postag="LET()" pt="let" lemma="," word="," sense="," begin="4" end="5"/>
+    <node rel="--" pos="punct" root="," postag="LET()" pt="let" lemma="," word="," sense="," begin="6" end="7"/>
+    <node rel="--" pos="punct" root="," postag="LET()" pt="let" lemma="," word="," sense="," begin="10" end="11"/>
+    <node rel="--" cat="du">
+      <node rel="nucl" cat="du">
+        <node rel="nucl" cat="du">
+          <node rel="tag" pos="tag" root="ja" postag="TSW()" pt="tsw" lemma="ja" word="ja" sense="ja" begin="0" end="1"/>
+          <node rel="nucl" cat="du">
+            <node rel="dlink" pos="comp" root="en" postag="VG(neven)" pt="vg" conjtype="neven" lemma="en" word="en" sense="en" begin="1" end="2"/>
+            <node rel="nucl" cat="sv1">
+              <node rel="hd" pos="verb" root="mag" postag="WW(pv,tgw,ev)" pt="ww" wvorm="pv" pvtijd="tgw" pvagr="ev" lemma="mogen" word="mag" sense="mag" begin="5" end="6"/>
+              <node rel="obj1" cat="np">
+                <node rel="det" pos="det" root="een" postag="LID(onbep,stan,agr)" pt="lid" lwtype="onbep" naamval="stan" npagr="agr" lemma="een" word="een" sense="een" begin="7" end="8"/>
+                <node rel="hd" pos="noun" root="ring_DIM" postag="N(soort,ev,dim,onz,stan)" pt="n" ntype="soort" getal="ev" graad="dim" genus="onz" naamval="stan" lemma="ring" word="ringetje" sense="ring_DIM" begin="8" end="9"/>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node rel="tag" pos="tag" root="he" postag="TSW()" pt="tsw" lemma="he" word="he" sense="he" begin="9" end="10"/>
+      </node>
+      <node rel="tag" pos="name" root="Sinterklaas" postag="N(eigen,ev,basis,zijd,stan)" pt="n" ntype="eigen" getal="ev" graad="basis" genus="zijd" naamval="stan" lemma="Sinterklaas" word="Sinterklaas" sense="Sinterklaas" begin="11" end="12"/>
+    </node>
+  </node>
+  <sentence>ja en , eh , mag , een ringetje he , Sinterklaas</sentence>
+  <comments>
+    <comment>
+   #IC_SW mas is interpreted as a singular form of the verb mogen
+  </comment>
+    <comment>
+   Q#1|ja en , eh , mas , een een ringetje he , Sinterklaas ?|1|6|5.161320308269997
+  </comment>
+  </comments>
+</alpino_ds>

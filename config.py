@@ -2,7 +2,7 @@
 from collections import OrderedDict
 DEBUG = False
 
-PARSER_URL = 'http://gretel.hum.uu.nl/api/src/router.php/parse_sentence/'
+PARSER_URL = 'https://gretel.hum.uu.nl/api/src/router.php/parse_sentence/'
 # PARSER_URL = 'http://localhost:4200/gretel/api/src/router.php/parse_sentence/'
 
 TREE_VIS_URL = 'http:/gretel.hum.uu.nl/gretel4/ng/tree'
