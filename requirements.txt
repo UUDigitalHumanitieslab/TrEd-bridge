@@ -10,9 +10,8 @@ certifi==2020.12.5        # via requests
 chamd==0.5.2              # via -r requirements.in
 chardet==4.0.0            # via requests
 idna==2.10                # via requests
-importlib-metadata==2.0.0  # via pluggy, pytest
 iniconfig==1.1.1          # via pytest
-lxml==4.6.1               # via -r requirements.in
+lxml==4.6.2               # via -r requirements.in
 packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
 py==1.9.0                 # via pytest
@@ -23,4 +22,3 @@ six==1.15.0               # via packaging
 soupsieve==2.0.1          # via beautifulsoup4
 toml==0.10.1              # via pytest
 urllib3==1.26.2           # via requests
-zipp==3.3.1               # via importlib-metadata
