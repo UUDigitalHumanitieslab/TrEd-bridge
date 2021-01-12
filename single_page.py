@@ -7,13 +7,14 @@ from tkinter import (END, INSERT, SEL, SEL_FIRST, SEL_LAST, WORD, Label,
                      StringVar, Tk, filedialog, messagebox, ttk)
 
 from chamd.cleanCHILDESMD import cleantext
+from requests import get
 
 import config
 from functions import (ask_input, build_new_metadata, clean_string,
                        correct_parenthesize, is_whitelisted_system_keybind,
                        process_input)
 from styles import apply_styles
-from TK_extensions.text import TextWithCallback
+from TK_extensions.text import ReadonlyText, TextWithCallback
 
 
 class TredBridge(Tk):
@@ -39,7 +40,12 @@ class TredBridge(Tk):
         self.new_xml = ''
         self.metadata = input_info['metadata']
 
-        frame = SinglePage(parent=self, utterance=self.revised_utt)
+        w, h = self.winfo_screenwidth(), self.winfo_screenheight()
+        self.maxsize(w, h)
+        frame = SinglePage(
+            parent=self,
+            orig_utterance=self.origutt,
+            rev_utterance=self.revised_utt)
         frame.pack()
         frame.chat_edit.focus()
 
@@ -47,9 +53,9 @@ class TredBridge(Tk):
 class SinglePage(ttk.Frame):
     def configure_grid(self, num_rows=5, num_cols=14):
         for i in range(0, num_rows):
-            self.grid_rowconfigure(i, {'minsize': 85, 'weight': 1})
+            self.grid_rowconfigure(i, {'minsize': 75, 'weight': 1})
         for i in range(0, num_cols):
-            self.grid_columnconfigure(i, {'minsize': 45, 'weight': 1})
+            self.grid_columnconfigure(i, {'minsize': 35, 'weight': 1})
 
     def reset(self):
         app = self.winfo_toplevel()
@@ -114,7 +120,9 @@ class SinglePage(ttk.Frame):
             self.alp_msg.grid_remove()
 
         try:
-            contents = urllib.request.urlopen(url).read()
+            res = get(url)
+            contents = res.content
+
             new_soup = build_new_metadata(app, contents)
             app.new_xml = new_soup
             self.save_button.state(["!disabled"])
@@ -172,7 +180,7 @@ class SinglePage(ttk.Frame):
         text = self.chat_edit.get("1.0", END)
         cleaned_text = clean_string(
             cleantext(text, repkeep=False), punctuation=False)
-        self.clean_preview_text.set('cleaned utterance:\n'+cleaned_text)
+        self.clean_preview.set_readonly(cleaned_text)
 
     def key_callback(self, event):
         if event.state == 4:
@@ -190,21 +198,26 @@ class SinglePage(ttk.Frame):
         wraplength = event.width-12  # 12, to account for padding and borderwidth
         event.widget.configure(wraplength=wraplength)
 
-    def __init__(self, parent, utterance):
+    def __init__(self, parent, orig_utterance, rev_utterance):
         ttk.Frame.__init__(self)
         self.configure_grid()
 
         # row 0
-        utterance_label = ttk.Label(
-            self, text="Original utterance:\n" + utterance,
-            anchor='center', font=('Roboto, 20'))
-        utterance_label.grid(row=0, column=1, columnspan=8, sticky='NWSE')
-        utterance_label.bind("<Configure>", self.set_label_wrap)
+        origutt_text = ReadonlyText(
+            self, label='original utterance', default=orig_utterance,)
+        origutt_text.grid(row=0, column=1, columnspan=5,
+                          sticky='NWSE', padx=5, pady=5)
+
+        if orig_utterance != rev_utterance:
+            revutt_text = ReadonlyText(
+                self, label='revised utterance', default=rev_utterance)
+            revutt_text.grid(row=0, column=6, columnspan=5,
+                             sticky='NWSE', padx=5, pady=5)
 
         # row 1
         self.chat_edit = TextWithCallback(
-            self, height=4, borderwidth=2, font=('Roboto, 20'), wrap=WORD)
-        self.chat_edit.insert(END, utterance)
+            self, height=4, borderwidth=2, font=('Roboto, 20'), wrap=WORD, fg='white smoke')
+        self.chat_edit.insert(END, rev_utterance)
         self.chat_edit.bind("<<TextChanged>>", self.text_changed_callback)
         reset_button = ttk.Button(self, text="reset",
                                   underline=0, command=self.reset)
@@ -213,16 +226,18 @@ class SinglePage(ttk.Frame):
         reset_button.grid(row=1, column=11, columnspan=2, sticky='NWSE')
 
         # row 2
-        self.clean_preview_text = StringVar()
-        clean_preview = Label(self, textvariable=self.clean_preview_text)
+        self.clean_preview = ReadonlyText(self,
+                                          label='cleaned utterance',
+                                          bg='dimgrey',
+                                          fg='white smoke')
         ignore_button = ttk.Button(
             self, text="ignore\n&<word>", underline=1,
             command=self.prefix_ampersand)
         correct_button = correct_button = ttk.Button(
             self, text="correct <word>", underline=6, command=self.correct)
 
-        clean_preview.grid(row=2, column=1, columnspan=6, sticky='NWSE')
-        clean_preview.bind("<Configure>", self.set_label_wrap)
+        self.clean_preview.grid(
+            row=2, column=1, columnspan=6, sticky='NWSE', ipadx=5, ipady=5)
         ignore_button.grid(row=2, column=7, columnspan=3, sticky='NWSE')
         correct_button.grid(row=2, column=10, columnspan=3, sticky='NWSE')
 
@@ -242,7 +257,7 @@ class SinglePage(ttk.Frame):
             row=3, column=5, columnspan=4, sticky='NWSE')
         self.save_button.grid(row=3, column=9, columnspan=4, sticky='NWSE')
 
-        # row 5
+        # row 4
         # Output for Alpino. Full when in DEBUG, concise otherwise
         if config.DEBUG:
             self.alp_out_txt = StringVar(value="Alpino output")
