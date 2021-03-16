@@ -145,6 +145,15 @@ class SinglePage(ttk.Frame):
                 self.alp_msg.configure(background="indian red")
                 self.alp_msg.grid(
                     row=4, column=1, columnspan=4, sticky='NWSE')
+        
+        except ValueError as e:
+            if config.DEBUG:
+                self.alp_out_txt.set('{}\n{}'.format(url, e))
+            else:
+                self.alp_msg_txt.set('Parse failed: {}'.format('Too many words?'))
+                self.alp_msg.configure(background="indian red")
+                self.alp_msg.grid(
+                    row=4, column=1, columnspan=4, sticky='NWSE')
 
         self.chat_edit.focus()
 
@@ -216,7 +225,7 @@ class SinglePage(ttk.Frame):
 
         # row 1
         self.chat_edit = TextWithCallback(
-            self, height=4, borderwidth=2, font=('Roboto, 20'), wrap=WORD, fg='white smoke')
+            self, height=4, borderwidth=2, font=('Roboto, 20'), wrap=WORD)
         self.chat_edit.insert(END, rev_utterance)
         self.chat_edit.bind("<<TextChanged>>", self.text_changed_callback)
         reset_button = ttk.Button(self, text="reset",
