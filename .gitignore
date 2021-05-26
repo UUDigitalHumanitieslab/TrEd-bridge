@@ -119,3 +119,6 @@ venv.bak/
 
 # TrEd extension xml's
 !/docs/**/*.xml
+
+# Deployment
+deploy.sh
