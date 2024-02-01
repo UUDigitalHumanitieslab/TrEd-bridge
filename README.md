@@ -1,4 +1,6 @@
 # TrEd-bridge
+[![DOI](https://zenodo.org/badge/150578265.svg)](https://zenodo.org/doi/10.5281/zenodo.10604322)
+
 Program to act as a bridge between [TrEd treebank-editor](https://ufal.mff.cuni.cz/tred/) and [Alpino parser](https://www.let.rug.nl/vannoord/alp/Alpino/). 
 
 ## warning!
