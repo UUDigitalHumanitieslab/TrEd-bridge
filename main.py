@@ -1,4 +1,3 @@
-#!/Users/3248526/git/tred-bridge/.env/bin/python
 import sys
 from optparse import OptionParser
 from tkinter import Tk, messagebox, ttk
