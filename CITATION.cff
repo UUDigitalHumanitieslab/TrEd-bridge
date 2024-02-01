@@ -17,5 +17,5 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.10600256
 license: MIT
-version: 0.1.0
+version: 2.6.1
 date-released: '2024-02-01'
